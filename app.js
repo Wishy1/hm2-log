@@ -43,6 +43,8 @@ import {
   syncDemo,
   syncRequest,
   syncedState,
+  spaceSentences,
+  undupeWord,
 } from "./logic.js";
 
 const KIND_LABEL = {
@@ -909,7 +911,7 @@ function blankEntry(kind, tripId) {
     engineHours: "",
     parts: "",
     receipt: "",
-    catchName: "Dungeness",
+    catchName: "",
     count: "",
     timeOfDay: "",
     narrative: "",
@@ -1144,9 +1146,9 @@ function entrySummary(entry) {
     return [entry.tank, formatVolume(entry.quantity, entry.units), formatMoney(entry.cost, entry.currency)].filter(Boolean).join(" · ");
   }
   if (entry.kind === "pumpout") return [entry.placeId ? placeName(entry.placeId) : "", formatMoney(entry.cost, entry.currency), formatVolume(entry.quantity, entry.units), entry.notes].filter(Boolean).join(" · ");
-  if (entry.kind === "crab") return [entry.catchName, entry.count != null ? String(entry.count) : "", entry.timeOfDay, entry.notes].filter(Boolean).join(" · ");
-  if (entry.kind === "rating") return entry.narrative || entry.notes || "";
-  return entry.notes || "";
+  if (entry.kind === "crab") return [undupeWord(entry.catchName), entry.count != null ? String(entry.count) : "", entry.timeOfDay, spaceSentences(entry.notes)].filter(Boolean).join(" · ");
+  if (entry.kind === "rating") return spaceSentences(entry.narrative || entry.notes || "");
+  return spaceSentences(entry.notes || "");
 }
 
 function entryMeta(entry) {
@@ -1289,8 +1291,8 @@ function screenTrip() {
       ${trip.meter ? `<p class="meta">${esc(boat().meterLabel)}: ${esc(trip.meter)}${boat().meterOffset ? ` · true hours ≈ ${Number(trip.meter) + boat().meterOffset}` : ""}</p>` : ""}
       ${etaSummary(trip)}
       ${precheckSummary(trip)}
-      ${trip.bestMoment?.text ? `<p><strong>Best moment.</strong> ${esc(trip.bestMoment.text)}</p>` : ""}
-      ${trip.rating?.narrative ? `<p>${starsHtml(trip.rating.stars || 0)}</p><p>${esc(trip.rating.narrative)}</p>` : ""}
+      ${trip.bestMoment?.text ? `<p><strong>Best moment.</strong> ${esc(spaceSentences(trip.bestMoment.text))}</p>` : ""}
+      ${trip.rating?.narrative ? `<p>${starsHtml(trip.rating.stars || 0)}</p><p>${esc(spaceSentences(trip.rating.narrative))}</p>` : ""}
       <button type="button" class="btn block" data-action="editTrip">Edit trip details</button>
     </section>
     <div class="stack">${actions.join("")}</div>
@@ -1426,7 +1428,7 @@ function screenEntry() {
     extra += field(`Quantity (${measure.volumeLabel}, optional)`, "quantity", form.quantity, { type: "number", inputMode: "decimal", step: "0.1" });
   }
   if (form.kind === "crab") {
-    extra += field("Catch", "catchName", form.catchName);
+    extra += field("Catch", "catchName", form.catchName, { placeholder: "Dungeness" });
     extra += field("Count", "count", form.count, { type: "number", inputMode: "numeric", step: "1" });
     extra += field("Time", "timeOfDay", form.timeOfDay, { placeholder: "Late afternoon" });
   }
@@ -1962,7 +1964,7 @@ function buildEntry(form) {
       placeId: form.placeId || "",
       loggedBy: state.settings.loggedBy || "Wishy",
       title: (form.title || "").trim(),
-      notes: form.kind === "rating" ? narrative : notes,
+      notes: spaceSentences(form.kind === "rating" ? narrative : notes),
       tank: form.tank || "",
       quantity: form.quantity === "" ? null : Number(form.quantity),
       units: form.kind === "fuel" || form.kind === "water" || form.kind === "pumpout" ? boatMeasure().volume : (form.units || ""),
@@ -1972,10 +1974,10 @@ function buildEntry(form) {
       engineHours: form.engineHours === "" ? null : Number(form.engineHours),
       parts: form.parts || "",
       receipt: form.receipt || "",
-      catchName: form.catchName || "",
+      catchName: undupeWord(form.catchName || ""),
       count: form.count === "" ? null : Number(form.count),
       timeOfDay: form.timeOfDay || "",
-      narrative,
+      narrative: spaceSentences(narrative),
       stars: Number(form.stars) || 0,
       alongType: form.alongType || "",
       story: !!form.story,
@@ -2164,16 +2166,16 @@ const actions = {
       if (!trip) return;
       trip.status = "arrived";
       if (!trip.arrivedAt) trip.arrivedAt = nowIso();
-      trip.bestMoment = { text: (ui.form.bestText || "").trim(), tags: ui.form.bestTags || [] };
+      trip.bestMoment = { text: spaceSentences((ui.form.bestText || "").trim()), tags: ui.form.bestTags || [] };
       trip.film = {
         tools: ui.form.filmTools || [],
         kinds: ui.form.filmKinds || [],
         clips: ui.form.clips || "",
         photos: ui.form.photos || "",
-        note: ui.form.filmNote || "",
+        note: spaceSentences(ui.form.filmNote || ""),
       };
       trip.updatedAt = nowIso();
-      saveRating(trip, ui.form.narrative, ui.form.stars);
+      saveRating(trip, spaceSentences(ui.form.narrative), ui.form.stars);
       scoreTrip(trip);
       ui.editingWeather = false;
       await persist({ announce: "Arrived. Saved on this phone." });
@@ -2607,7 +2609,7 @@ const actions = {
       }
       Object.assign(item, {
         title: (form.title || "").trim(),
-        detail: (form.detail || "").trim(),
+        detail: spaceSentences((form.detail || "").trim()),
         status: form.status,
         type: form.type,
         photo: form.photo || "",
@@ -2660,7 +2662,7 @@ const actions = {
     return saving(async () => {
       syncFormFromDom();
       const trip = shownTrip();
-      trip.bestMoment = { text: (ui.form.bestText || "").trim(), tags: ui.form.bestTags || [] };
+      trip.bestMoment = { text: spaceSentences((ui.form.bestText || "").trim()), tags: ui.form.bestTags || [] };
       trip.updatedAt = nowIso();
       await persist({ announce: "Best moment saved" });
       finishSave(() => openScreen("trip", { force: true }));
@@ -2704,7 +2706,7 @@ const actions = {
       }
       Object.assign(ticket, {
         title: form.title.trim(),
-        detail: (form.detail || "").trim(),
+        detail: spaceSentences((form.detail || "").trim()),
         reference: form.reference || "",
         tripId: form.link ? form.tripId || "" : "",
         updatedAt: stamp,
@@ -3256,6 +3258,15 @@ function onField(el) {
   }
   if (!ui.form) return;
   ui.form[el.name] = el.type === "checkbox" ? el.checked : el.value;
+  if (typeof ui.form[el.name] === "string" && (el.name === "catchName" || el.name === "notes" || el.name === "narrative" || el.name === "bestText" || el.name === "detail" || el.name === "filmNote" || /Note$/.test(el.name))) {
+    const cleaned = el.name === "catchName" ? undupeWord(ui.form[el.name]) : spaceSentences(ui.form[el.name]);
+    if (cleaned !== el.value) {
+      const atEnd = el.selectionStart === el.value.length;
+      el.value = cleaned;
+      if (atEnd) el.setSelectionRange(cleaned.length, cleaned.length);
+    }
+    ui.form[el.name] = el.name === "catchName" ? undupeWord(cleaned) : cleaned;
+  }
   if (!["loggedBy", "placeQuery", "pickerQuery", "switchTrip"].includes(el.name)) markDirty();
   if (["quantity", "cost"].includes(el.name)) {
     const hint = document.getElementById("price-hint");

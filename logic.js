@@ -509,6 +509,17 @@ export function importPayload(state, payload) {
   return { state: normalizeState(base), stats };
 }
 
+export function spaceSentences(text) {
+  return String(text || "").replace(/([.!?])([A-Za-z])/g, "$1 $2");
+}
+
+export function undupeWord(text) {
+  const value = String(text || "").trim();
+  if (value.length < 2 || value.length % 2 !== 0) return value;
+  const half = value.length / 2;
+  return value.slice(0, half) === value.slice(half) ? value.slice(0, half) : value;
+}
+
 export function countIds(list) {
   return new Set((list || []).map((item) => item && item.id).filter(Boolean)).size;
 }

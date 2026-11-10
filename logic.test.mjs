@@ -41,6 +41,8 @@ import {
   markRetry,
   syncChange,
   syncChanges,
+  spaceSentences,
+  undupeWord,
 } from "./logic.js";
 
 assert.equal(sunDown(new Date("2026-06-21T20:00:00Z"), 48.29, -122.64), false);
@@ -283,5 +285,12 @@ googleBox = markSynced(googleBox, ["trip:t1"]);
 assert.equal(googleBox.find((item) => item.id === "trip:t1").status, "synced");
 const resent = syncRequest({ token: "chosen-by-owner" }, googleBox);
 assert.equal(resent.changes.some((item) => item.id === "t1"), false);
+
+assert.equal(spaceSentences("Calm water and an easy landing.Tied up."), "Calm water and an easy landing. Tied up.");
+assert.equal(spaceSentences("Still on the phone, not saved.Logged while offline."), "Still on the phone, not saved. Logged while offline.");
+assert.equal(spaceSentences("49°F"), "49°F");
+assert.equal(undupeWord("DungenessDungeness"), "Dungeness");
+assert.equal(undupeWord("Dungeness"), "Dungeness");
+assert.equal(undupeWord("Dungeness · 3"), "Dungeness · 3");
 
 console.log("logic.test.mjs ok");
