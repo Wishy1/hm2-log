@@ -13,7 +13,10 @@ import {
   describeWeather,
   exportPayload,
   formatHours,
+  formatMoney,
+  formatVolume,
   freshState,
+  measureOf,
   importPayload,
   makeTripCode,
   normalizeState,
@@ -287,8 +290,8 @@ function passagePrefs() {
   return state.settings.passageByBoat?.[ui.boatId] || { speed: "7", factor: "1.3" };
 }
 
-function boardUnit() {
-  return boat().units === "liters" ? "L" : "gal";
+function boatMeasure() {
+  return measureOf(ui.boatId);
 }
 
 function precheckSlice(trip) {
@@ -365,7 +368,7 @@ function scoreTrip(trip) {
 }
 
 function applyPrecheck(trip, form) {
-  const unit = boardUnit();
+  const unit = boatMeasure().volumeLabel;
   const labels = Object.fromEntries(PRECHECK);
   const stamp = nowIso();
   const items = {};
@@ -719,9 +722,9 @@ function blankEntry(kind, tripId) {
     notes: "",
     tank: kind === "water" ? "Fresh water" : kind === "fuel" ? (here.id === "hm2" ? "Main diesel" : "Main") : "",
     quantity: "",
-    units: here.units,
+    units: here.measure.volume,
     cost: "",
-    currency: here.currency,
+    currency: here.measure.currency,
     unitPrice: "",
     engineHours: "",
     parts: "",
@@ -751,9 +754,9 @@ function entryToForm(entry) {
     notes: entry.notes || "",
     tank: entry.tank || "",
     quantity: entry.quantity ?? "",
-    units: entry.units || boat().units,
+    units: entry.units || boat().measure.volume,
     cost: entry.cost ?? "",
-    currency: entry.currency || boat().currency,
+    currency: entry.currency || boat().measure.currency,
     unitPrice: entry.unitPrice ?? "",
     engineHours: entry.engineHours ?? "",
     parts: entry.parts || "",
@@ -958,9 +961,9 @@ function entryTitle(entry) {
 
 function entrySummary(entry) {
   if (entry.kind === "fuel" || entry.kind === "water") {
-    return [entry.tank, entry.quantity != null ? `${entry.quantity} ${entry.units || ""}`.trim() : "", entry.cost != null ? `${entry.cost} ${entry.currency || ""}`.trim() : ""].filter(Boolean).join(" · ");
+    return [entry.tank, formatVolume(entry.quantity, entry.units), formatMoney(entry.cost, entry.currency)].filter(Boolean).join(" · ");
   }
-  if (entry.kind === "pumpout") return [entry.placeId ? placeName(entry.placeId) : "", entry.cost != null ? `${entry.cost} ${entry.currency || ""}`.trim() : "", entry.notes].filter(Boolean).join(" · ");
+  if (entry.kind === "pumpout") return [entry.placeId ? placeName(entry.placeId) : "", formatMoney(entry.cost, entry.currency), formatVolume(entry.quantity, entry.units), entry.notes].filter(Boolean).join(" · ");
   if (entry.kind === "crab") return [entry.catchName, entry.count != null ? String(entry.count) : "", entry.timeOfDay, entry.notes].filter(Boolean).join(" · ");
   if (entry.kind === "rating") return entry.narrative || entry.notes || "";
   return entry.notes || "";
@@ -1059,7 +1062,7 @@ function etaSummary(trip) {
 function precheckSummary(trip) {
   const saved = trip.precheck;
   if (!saved) return "";
-  const unit = saved.unit || boardUnit();
+  const unit = saved.unit || boatMeasure().volumeLabel;
   const lines = [];
   if (saved.fuelOnBoard != null && saved.fuelOnBoard !== "") lines.push(`Fuel on board: ${saved.fuelOnBoard} ${unit}`);
   if (saved.waterOnBoard != null && saved.waterOnBoard !== "") lines.push(`Water on board: ${saved.waterOnBoard} ${unit}`);
@@ -1144,7 +1147,7 @@ function etaEditor(form) {
   const estimate = currentEstimate(form, departed);
   const distance = estimate.nm == null
     ? "No chart distance for these places."
-    : `≈ ${estimate.nm.toFixed(1)} nm${boat().distance === "km" ? ` (${Math.round(estimate.nm * 1.852)} km)` : ""} · straight line × ${estimate.factor}`;
+    : `≈ ${estimate.nm.toFixed(1)} nm · straight line × ${estimate.factor}`;
   const time = estimate.hours == null ? "" : `≈ ${formatHours(estimate.hours)} at ${estimate.speedKn} kn`;
   const guess = estimate.appEta ? formatClock(estimate.appEta) : "—";
   return `<section class="card" id="eta-card">
@@ -1163,7 +1166,7 @@ function etaEditor(form) {
 }
 
 function precheckEditor(form) {
-  const unit = boardUnit();
+  const unit = boatMeasure().volumeLabel;
   const row = (key, label) => {
     const status = form[`${key}Status`] || "";
     return `<div class="field"><span>${esc(label)}</span>
@@ -1230,20 +1233,17 @@ function screenEntry() {
     extra += field("Receipt", "receipt", form.receipt);
     extra += `<button type="button" class="btn block${form.openTicket ? " on" : ""}" data-action="flag" data-flag="openTicket">${form.openTicket ? "Will also open a maintenance ticket" : "Also open a maintenance ticket"}</button>`;
   }
+  const measure = boatMeasure();
   if (form.kind === "fuel" || form.kind === "water") {
     extra += field("Tank", "tank", form.tank);
-    extra += field("Quantity added", "quantity", form.quantity, { type: "number", inputMode: "decimal", step: "0.1" });
-    extra += `<label class="field"><span>Units</span><select name="units">${["gallons", "liters"].map((unit) => `<option${form.units === unit ? " selected" : ""}>${esc(unit)}</option>`).join("")}</select></label>`;
-    extra += field("Total cost", "cost", form.cost, { type: "number", inputMode: "decimal", step: "0.01" });
-    extra += `<label class="field"><span>Currency</span><select name="currency">${["USD", "EUR", "GBP", "CAD"].map((currency) => `<option${form.currency === currency ? " selected" : ""}>${currency}</option>`).join("")}</select></label>`;
-    extra += field("Unit price (optional)", "unitPrice", form.unitPrice, { type: "number", inputMode: "decimal", step: "0.01" });
+    extra += field(`Quantity added (${measure.volumeLabel})`, "quantity", form.quantity, { type: "number", inputMode: "decimal", step: "0.1" });
+    extra += field(`Total cost (${measure.symbol})`, "cost", form.cost, { type: "number", inputMode: "decimal", step: "0.01" });
+    extra += field(`Unit price (optional, ${measure.symbol} per ${measure.volumeLabel})`, "unitPrice", form.unitPrice, { type: "number", inputMode: "decimal", step: "0.01" });
     extra += `<p class="hint">${esc(priceHint(form))}</p>`;
   }
   if (form.kind === "pumpout") {
-    extra += field("Cost", "cost", form.cost, { type: "number", inputMode: "decimal", step: "0.01" });
-    extra += `<label class="field"><span>Currency</span><select name="currency">${["USD", "EUR", "GBP", "CAD"].map((currency) => `<option${form.currency === currency ? " selected" : ""}>${currency}</option>`).join("")}</select></label>`;
-    extra += `<p class="hint">Quantity only if you know it.</p>`;
-    extra += field("Quantity (optional)", "quantity", form.quantity, { type: "number", inputMode: "decimal", step: "0.1" });
+    extra += field(`Cost (${measure.symbol})`, "cost", form.cost, { type: "number", inputMode: "decimal", step: "0.01" });
+    extra += field(`Quantity (${measure.volumeLabel}, optional)`, "quantity", form.quantity, { type: "number", inputMode: "decimal", step: "0.1" });
   }
   if (form.kind === "crab") {
     extra += field("Catch", "catchName", form.catchName);
@@ -1276,7 +1276,8 @@ function priceHint(form) {
   const quantity = Number(form.quantity);
   const cost = Number(form.cost);
   if (!(quantity > 0) || form.cost === "" || Number.isNaN(cost)) return "";
-  return `About ${(cost / quantity).toFixed(2)} ${form.currency || ""} per ${form.units || "unit"}.`;
+  const measure = boatMeasure();
+  return `About ${formatMoney(cost / quantity, measure.currency)} per ${measure.volumeLabel}.`;
 }
 
 function tripChoices(selected) {
@@ -1717,9 +1718,9 @@ function buildEntry(form) {
       notes: form.kind === "rating" ? narrative : notes,
       tank: form.tank || "",
       quantity: form.quantity === "" ? null : Number(form.quantity),
-      units: form.units || "",
+      units: form.kind === "fuel" || form.kind === "water" || form.kind === "pumpout" ? boatMeasure().volume : (form.units || ""),
       cost: form.cost === "" ? null : Number(form.cost),
-      currency: form.currency || "",
+      currency: form.kind === "fuel" || form.kind === "water" || form.kind === "pumpout" ? boatMeasure().currency : (form.currency || ""),
       unitPrice: form.unitPrice === "" ? null : Number(form.unitPrice),
       engineHours: form.engineHours === "" ? null : Number(form.engineHours),
       parts: form.parts || "",
@@ -2148,7 +2149,7 @@ const actions = {
     const here = boat();
     flash("Reading conditions…");
     try {
-      const response = await fetch(weatherUrl(here.lat, here.lon, here.tempUnit));
+      const response = await fetch(weatherUrl(here.lat, here.lon, here.measure.temperature));
       if (!response.ok) throw new Error(String(response.status));
       const data = await response.json();
       const current = data.current || {};
@@ -2157,7 +2158,7 @@ const actions = {
         code: current.weather_code,
         windKn: current.wind_speed_10m,
         temp: current.temperature_2m,
-        tempUnit: here.tempUnit,
+        tempUnit: here.measure.temperature,
         isNight: night,
         visibilityM: current.visibility,
         snowfall: current.snowfall,

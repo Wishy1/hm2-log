@@ -19,6 +19,10 @@ import {
   upsertDraft,
   removeDraft,
   freshState as freshAgain,
+  measureOf,
+  formatMoney,
+  formatVolume,
+  weatherUrl,
 } from "./logic.js";
 
 assert.equal(sunDown(new Date("2026-06-21T20:00:00Z"), 48.29, -122.64), false);
@@ -151,5 +155,17 @@ assert.equal(drafts["hm2|entry-form|note|new"].form.notes, "dock");
 const clean = freshAgain();
 assert.equal(clean.places.some((place) => /deception/i.test(place.name)), false);
 assert.equal(clean.places.some((place) => place.name === "Mariner Cove"), true);
+
+const hm2 = measureOf("hm2");
+const zee = measureOf("zeeotter");
+assert.deepEqual(hm2, { volume: "gallons", volumeLabel: "gal", currency: "USD", symbol: "$", temperature: "f" });
+assert.deepEqual(zee, { volume: "liters", volumeLabel: "L", currency: "EUR", symbol: "€", temperature: "c" });
+assert.equal(formatMoney(72, "USD"), "$72.00");
+assert.equal(formatMoney(8.5, "EUR"), "€8.50");
+assert.equal(formatVolume(40, "liters"), "40 L");
+assert.equal(formatVolume(18, "gallons"), "18 gal");
+assert.match(weatherUrl(53, 5.8, zee.temperature), /temperature_unit=celsius/);
+assert.match(weatherUrl(48.29, -122.64, hm2.temperature), /temperature_unit=fahrenheit/);
+assert.match(weatherUrl(53, 5.8, zee.temperature), /wind_speed_unit=kn/);
 
 console.log("logic.test.mjs ok");

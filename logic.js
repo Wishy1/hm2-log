@@ -12,12 +12,9 @@ export const BOATS = {
     meterOffset: 1231,
     lat: 48.29,
     lon: -122.64,
-    tempUnit: "f",
-    distance: "nm",
-    units: "gallons",
-    currency: "USD",
     region: "pnw",
     pnw: true,
+    measure: { volume: "gallons", volumeLabel: "gal", currency: "USD", symbol: "$", temperature: "f" },
   },
   zeeotter: {
     id: "zeeotter",
@@ -27,14 +24,30 @@ export const BOATS = {
     meterOffset: 0,
     lat: 53,
     lon: 5.8,
-    tempUnit: "c",
-    distance: "km",
-    units: "liters",
-    currency: "EUR",
     region: "nl",
     pnw: false,
+    measure: { volume: "liters", volumeLabel: "L", currency: "EUR", symbol: "€", temperature: "c" },
   },
 };
+
+/** Volume, money, and temperature for one boat. Distance and speed stay nm and kn. */
+export function measureOf(boatId) {
+  return (BOATS[boatId] || BOATS.hm2).measure;
+}
+
+export function formatMoney(amount, currency) {
+  const value = Number(amount);
+  if (amount == null || amount === "" || Number.isNaN(value)) return "";
+  const symbol = currency === "EUR" ? "€" : currency === "USD" ? "$" : "";
+  const shown = value.toFixed(2);
+  return symbol ? `${symbol}${shown}` : `${shown} ${currency || ""}`.trim();
+}
+
+export function formatVolume(quantity, volume) {
+  if (quantity == null || quantity === "" || Number.isNaN(Number(quantity))) return "";
+  const label = volume === "liters" ? "L" : volume === "gallons" ? "gal" : (volume || "");
+  return `${quantity} ${label}`.trim();
+}
 
 /** NWS coastal zones used by the v4 forecast buttons, plus the Zeeotter links. */
 export const ZONES = {
