@@ -50,8 +50,6 @@ export const ZONES = {
   ],
 };
 
-export const DECEPTION_PASS_URL = "https://tidesandcurrents.noaa.gov/noaacurrents/predictions?id=PUG1701_33";
-
 export const PURPOSES = ["Crabbing", "Just a cruise", "Fuel stop", "Other"];
 export const ALONG_TYPES = ["Note", "Sight", "Bridge or lock", "Person", "Wildlife", "Funny"];
 export const FILM_TOOLS = ["iPhone", "GoPro", "Drone", "Insta360", "Camera"];
@@ -247,6 +245,83 @@ export function mergeById(local, incoming) {
   return { items: [...map.values()], ...stats };
 }
 
+/** Straight-line nautical miles. Same haversine the v4 ETA game used. */
+export function haversineNm(from, to) {
+  if (from?.lat == null || from?.lon == null || to?.lat == null || to?.lon == null) return null;
+  const n = Math.PI / 180;
+  const dLat = (Number(to.lat) - Number(from.lat)) * n;
+  const dLon = (Number(to.lon) - Number(from.lon)) * n;
+  const a = Math.sin(dLat / 2) ** 2
+    + Math.cos(Number(from.lat) * n) * Math.cos(Number(to.lat) * n) * Math.sin(dLon / 2) ** 2;
+  return 3440.065 * 2 * Math.asin(Math.sqrt(a));
+}
+
+export function formatHours(hours) {
+  if (hours == null || Number.isNaN(Number(hours))) return "";
+  const minutes = Math.round(Number(hours) * 60);
+  return `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
+}
+
+export function clockHHMM(date) {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) return "";
+  return `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+}
+
+/**
+ * App ETA from the v4 game: straight-line nm × factor, divided by speed.
+ * manualNm is used when the places have no coordinates.
+ */
+export function passageEstimate({ from, to, factor = 1.3, speedKn = 7, manualNm = "", departedAt = new Date() } = {}) {
+  const speed = Number(speedKn) > 0 ? Number(speedKn) : 7;
+  const water = Number(factor) > 0 ? Number(factor) : 1.3;
+  const straightNm = haversineNm(from, to);
+  let nm = null;
+  if (straightNm != null) nm = straightNm * water;
+  else if (manualNm !== "" && manualNm != null && !Number.isNaN(Number(manualNm))) nm = Number(manualNm);
+  const start = departedAt instanceof Date ? departedAt : new Date(departedAt || Date.now());
+  if (nm == null || Number.isNaN(start.getTime())) {
+    return { straightNm, nm, hours: null, appEta: "", speedKn: speed, factor: water };
+  }
+  const hours = nm / speed;
+  const eta = new Date(start.getTime() + hours * 3600000);
+  return { straightNm, nm, hours, appEta: clockHHMM(eta), speedKn: speed, factor: water };
+}
+
+/** Closest guess wins, same comparison the v4 Arrived step used. */
+export function scoreEta({ whenIso, arrivedIso, appEta, captainEta } = {}) {
+  if (!arrivedIso || !appEta || !captainEta) return null;
+  const day = String(whenIso || arrivedIso).slice(0, 10);
+  const arrivedMin = new Date(arrivedIso).getTime() / 60000;
+  const captainMin = new Date(`${day}T${captainEta}`).getTime() / 60000;
+  const appMin = new Date(`${day}T${appEta}`).getTime() / 60000;
+  if ([arrivedMin, captainMin, appMin].some((value) => Number.isNaN(value))) return null;
+  const captainOff = Math.abs(captainMin - arrivedMin);
+  const appOff = Math.abs(appMin - arrivedMin);
+  const winner = captainOff <= appOff ? "Captain" : "App";
+  return {
+    winner,
+    captainMinutes: Math.round(captainOff),
+    appMinutes: Math.round(appOff),
+    message: winner === "Captain"
+      ? `Captain wins. Off by ${Math.round(captainOff)} min, the app by ${Math.round(appOff)}.`
+      : `App wins this one. Off by ${Math.round(appOff)} min, you by ${Math.round(captainOff)}.`,
+  };
+}
+
+export function blankWeatherFields() {
+  return { text: "", windKn: null, conditions: [], source: "", at: "", kind: "", code: null, advisory: false, night: false };
+}
+
+export function upsertDraft(store, key, draft) {
+  return { ...(store || {}), [key]: draft };
+}
+
+export function removeDraft(store, key) {
+  const next = { ...(store || {}) };
+  delete next[key];
+  return next;
+}
+
 export function emptyCollections() {
   return { people: [], businesses: [], places: [], trips: [], entries: [], media: [], tickets: [], parts: [] };
 }
@@ -264,7 +339,25 @@ export function normalizeState(state) {
   if (!next.settings.loggedBy) next.settings.loggedBy = "Wishy";
   if (!BOATS[next.settings.activeBoatId]) next.settings.activeBoatId = "hm2";
   next.settings.weatherByBoat = next.settings.weatherByBoat || {};
+  next.settings.passageByBoat = next.settings.passageByBoat || {};
   for (const name of COLLECTIONS) next[name] = dedupeById(next[name]);
+  const deceptionIds = new Set(
+    next.places
+      .filter((place) => place.id === "deception-bridge" || /deception pass/i.test(place.name || ""))
+      .map((place) => place.id),
+  );
+  const deceptionUsed = new Set();
+  for (const trip of next.trips) {
+    delete trip.deception;
+    if (deceptionIds.has(trip.fromId)) deceptionUsed.add(trip.fromId);
+    if (deceptionIds.has(trip.toId)) deceptionUsed.add(trip.toId);
+  }
+  for (const entry of next.entries) {
+    if (deceptionIds.has(entry.placeId)) deceptionUsed.add(entry.placeId);
+  }
+  if (deceptionIds.size) {
+    next.places = next.places.filter((place) => !deceptionIds.has(place.id) || deceptionUsed.has(place.id));
+  }
   if (!next.people.some((person) => person.id === "myself")) {
     next.people.unshift(myselfPerson());
   } else {
@@ -326,7 +419,6 @@ export function seedPlaces() {
     place("montlake-bridge", "Montlake Bridge", "Seattle bridge.", "pnw", { tags: ["bridge"] }),
     place("university-bridge", "University Bridge", "Seattle bridge.", "pnw", { tags: ["bridge"] }),
     place("chittenden", "Hiram M. Chittenden Locks", "Ballard locks.", "pnw", { tags: ["lock"] }),
-    place("deception-bridge", "Deception Pass Bridge", "Deception Pass.", "pnw", { tags: ["bridge"] }),
     place("jirnsum", "Jirnsum (RFU)", "Home dock, Zeeotter.", "nl", { favorite: true, lat: 53.0786, lon: 5.79 }),
     place("sneek", "Sneek", "Friesland.", "nl", { lat: 53.0326, lon: 5.659 }),
     place("grou", "Grou", "Friesland.", "nl", { lat: 53.0949, lon: 5.837 }),

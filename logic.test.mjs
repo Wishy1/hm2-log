@@ -11,6 +11,14 @@ import {
   importPayload,
   countIds,
   ZONES,
+  haversineNm,
+  passageEstimate,
+  scoreEta,
+  formatHours,
+  blankWeatherFields,
+  upsertDraft,
+  removeDraft,
+  freshState as freshAgain,
 } from "./logic.js";
 
 assert.equal(sunDown(new Date("2026-06-21T20:00:00Z"), 48.29, -122.64), false);
@@ -93,5 +101,55 @@ assert.equal(ones.length, 1);
 assert.equal(ones[0].notes, "duplicate newer");
 
 assert.throws(() => importPayload(state, { version: 4 }), /v5/);
+
+const cove = { lat: 48.291, lon: -122.521 };
+const conner = { lat: 48.3833, lon: -122.4831 };
+const straight = haversineNm(cove, conner);
+assert.ok(straight > 4 && straight < 12, `distance ${straight}`);
+const passage = passageEstimate({
+  from: cove,
+  to: conner,
+  factor: 1.3,
+  speedKn: 7,
+  departedAt: new Date("2026-11-10T15:00:00"),
+});
+assert.ok(Math.abs(passage.nm - straight * 1.3) < 0.01);
+assert.equal(passage.hours, passage.nm / 7);
+assert.match(passage.appEta, /^\d{2}:\d{2}$/);
+assert.match(formatHours(1.5), /1h 30m/);
+const manual = passageEstimate({ manualNm: "10", speedKn: 5, departedAt: new Date("2026-11-10T15:00:00") });
+assert.equal(manual.nm, 10);
+assert.equal(manual.hours, 2);
+
+const race = scoreEta({
+  whenIso: "2026-11-10T18:00:00",
+  arrivedIso: "2026-11-10T19:10:00",
+  appEta: "19:00",
+  captainEta: "20:30",
+});
+assert.equal(race.winner, "App");
+assert.equal(race.appMinutes, 10);
+assert.ok(race.captainMinutes > race.appMinutes);
+assert.equal(scoreEta({ arrivedIso: "2026-11-10T19:10:00", appEta: "19:00" }), null);
+
+const blankWind = blankWeatherFields();
+assert.equal(blankWind.windKn, null);
+assert.equal(blankWind.text, "");
+assert.deepEqual(blankWind.conditions, []);
+
+let drafts = {};
+drafts = upsertDraft(drafts, "hm2|trip-form|trip|new", { form: { title: "first" }, updatedAt: "2026-11-10T01:00:00.000Z" });
+drafts = upsertDraft(drafts, "hm2|trip-form|trip|new", { form: { title: "second" }, updatedAt: "2026-11-10T02:00:00.000Z" });
+assert.equal(Object.keys(drafts).length, 1);
+assert.equal(drafts["hm2|trip-form|trip|new"].form.title, "second");
+drafts = upsertDraft(drafts, "hm2|entry-form|note|new", { form: { notes: "dock" } });
+assert.equal(Object.keys(drafts).length, 2);
+drafts = removeDraft(drafts, "hm2|trip-form|trip|new");
+assert.equal(Object.keys(drafts).length, 1);
+assert.equal(drafts["hm2|entry-form|note|new"].form.notes, "dock");
+
+const clean = freshAgain();
+assert.equal(clean.places.some((place) => /deception/i.test(place.name)), false);
+assert.equal(clean.places.some((place) => place.name === "Mariner Cove"), true);
 
 console.log("logic.test.mjs ok");

@@ -4,7 +4,6 @@ import {
   BEST_TAGS,
   BOATS,
   CONDITIONS,
-  DECEPTION_PASS_URL,
   FILM_KINDS,
   FILM_TOOLS,
   PERSON_CATEGORIES,
@@ -13,13 +12,18 @@ import {
   ZONES,
   describeWeather,
   exportPayload,
+  formatHours,
   freshState,
   importPayload,
   makeTripCode,
   normalizeState,
   nowIso,
+  passageEstimate,
+  removeDraft,
+  scoreEta,
   sentenceFromChips,
   uid,
+  upsertDraft,
   weatherUrl,
 } from "./logic.js";
 
@@ -69,7 +73,25 @@ const ui = {
   mediaScope: "planned",
   ticketId: null,
   ticketTab: "details",
+  dirty: false,
+  showingDraft: false,
+  draftKey: "",
+  guardStep: "",
+  editingWeather: false,
+  zonesOpen: false,
 };
+const FORM_SCREENS = new Set(["trip-form", "entry-form", "media-form", "person-form", "place-form", "ticket-form", "part-form", "wrap", "best"]);
+const DRAFT_STORE = "hm2log-v5-drafts";
+const PRECHECK = [
+  ["engine", "Engine room check"],
+  ["oil", "Oil check"],
+  ["coolant", "Coolant check"],
+];
+const navStack = [];
+let navReady = false;
+let lastSig = "";
+let ignorePop = false;
+let guardAction = null;
 let state = null;
 let saveTimer = 0;
 let paintedScreen = "";
@@ -105,6 +127,365 @@ function saveLabel() {
 function updateSaveLabel() {
   const node = document.getElementById("save-state");
   if (node) node.textContent = saveLabel();
+}
+
+function fmtTime(iso) {
+  if (!iso) return "";
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+}
+
+function formatClock(hhmm) {
+  if (!hhmm || !hhmm.includes(":")) return hhmm || "";
+  const [hour, minute] = hhmm.split(":").map(Number);
+  if (Number.isNaN(hour) || Number.isNaN(minute)) return hhmm;
+  const date = new Date();
+  date.setHours(hour, minute, 0, 0);
+  return date.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+}
+
+function formIsOpen() {
+  return FORM_SCREENS.has(ui.screen) || (ui.screen === "trip" && ui.editingWeather);
+}
+
+function readDraftMap() {
+  try {
+    return JSON.parse(localStorage.getItem(DRAFT_STORE)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function writeDraftMap(map) {
+  const slim = {};
+  for (const [key, value] of Object.entries(map || {})) {
+    const form = { ...(value.form || {}) };
+    if (form.photo && String(form.photo).length > 120000) delete form.photo;
+    slim[key] = { ...value, form };
+  }
+  try {
+    localStorage.setItem(DRAFT_STORE, JSON.stringify(slim));
+  } catch {
+    /* The log itself is untouched if a draft is too large. */
+  }
+}
+
+function draftKeyFor(screen, form) {
+  const mode = screen === "trip" && ui.editingWeather ? "conditions" : screen;
+  const kind = form?.kind || form?._kind || mode;
+  const id = form?.id || (mode === "conditions" ? (ui.tripId || "new") : "new");
+  return `${ui.boatId}|${mode}|${kind}|${id}`;
+}
+
+function draftLabel() {
+  if (ui.editingWeather) return "Conditions";
+  if (ui.screen === "trip-form") return "Trip";
+  if (ui.screen === "entry-form") return KIND_LABEL[ui.form?.kind] || "Entry";
+  if (ui.screen === "person-form") return "Person";
+  if (ui.screen === "place-form") return "Place";
+  if (ui.screen === "ticket-form" || ui.screen === "part-form") return "Maintenance";
+  if (ui.screen === "media-form") return "Media";
+  if (ui.screen === "wrap") return "Wrap-up";
+  if (ui.screen === "best") return "Best moment";
+  return "Entry";
+}
+
+function rememberDraft() {
+  if (!ui.form || !formIsOpen()) return;
+  const key = ui.draftKey || draftKeyFor(ui.screen, ui.form);
+  ui.draftKey = key;
+  const draft = {
+    key,
+    boatId: ui.boatId,
+    screen: ui.screen,
+    editingWeather: !!ui.editingWeather,
+    tripId: ui.tripId,
+    label: draftLabel(),
+    form: ui.form,
+    updatedAt: new Date().toISOString(),
+  };
+  writeDraftMap(upsertDraft(readDraftMap(), key, draft));
+  const top = navStack[navStack.length - 1];
+  if (top && top.sig === lastSig) {
+    top.form = { ...ui.form };
+    top.dirty = true;
+    top.draftKey = key;
+    top.showingDraft = true;
+  }
+}
+
+function clearDraftKey(key) {
+  const id = key || ui.draftKey;
+  if (!id) return;
+  writeDraftMap(removeDraft(readDraftMap(), id));
+}
+
+function latestDraft() {
+  return Object.values(readDraftMap())
+    .filter((item) => item.boatId === ui.boatId)
+    .sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)))[0] || null;
+}
+
+function markDirty() {
+  if (!ui.form || !formIsOpen()) return;
+  ui.dirty = true;
+  ui.showingDraft = true;
+  rememberDraft();
+}
+
+function beginForm(screen, fresh) {
+  const key = draftKeyFor(screen, fresh);
+  const draft = readDraftMap()[key];
+  ui.draftKey = key;
+  ui.editingWeather = false;
+  if (draft?.form) {
+    ui.form = draft.form;
+    ui.dirty = true;
+    ui.showingDraft = true;
+  } else {
+    ui.form = fresh;
+    ui.dirty = false;
+    ui.showingDraft = false;
+  }
+  ui.screen = screen;
+  paint();
+}
+
+function blankWeatherSlice(night) {
+  return {
+    weatherText: "",
+    generated: "",
+    wind: "",
+    advisory: false,
+    night: !!night,
+    conditions: [],
+    weatherKind: "",
+    weatherSource: "",
+    weatherAt: "",
+    weatherCode: null,
+  };
+}
+
+function weatherSlice(trip) {
+  const weather = trip?.weather || {};
+  return {
+    weatherText: weather.text || "",
+    generated: weather.text || "",
+    wind: weather.windKn == null || weather.windKn === "" ? "" : String(weather.windKn),
+    advisory: !!weather.advisory,
+    night: !!weather.night,
+    conditions: weather.conditions || [],
+    weatherKind: weather.kind || "",
+    weatherSource: weather.source || "",
+    weatherAt: weather.at || "",
+    weatherCode: weather.code ?? null,
+  };
+}
+
+function passagePrefs() {
+  return state.settings.passageByBoat?.[ui.boatId] || { speed: "7", factor: "1.3" };
+}
+
+function boardUnit() {
+  return boat().units === "liters" ? "L" : "gal";
+}
+
+function precheckSlice(trip) {
+  const saved = trip?.precheck || {};
+  const item = (key) => saved[key] || {};
+  return {
+    fuelOnBoard: saved.fuelOnBoard ?? "",
+    waterOnBoard: saved.waterOnBoard ?? "",
+    engineStatus: item("engine").status || "",
+    engineNote: item("engine").note || "",
+    engineTicket: !!item("engine").ticketId,
+    engineTicketId: item("engine").ticketId || "",
+    oilStatus: item("oil").status || "",
+    oilNote: item("oil").note || "",
+    oilTicket: !!item("oil").ticketId,
+    oilTicketId: item("oil").ticketId || "",
+    coolantStatus: item("coolant").status || "",
+    coolantNote: item("coolant").note || "",
+    coolantTicket: !!item("coolant").ticketId,
+    coolantTicketId: item("coolant").ticketId || "",
+  };
+}
+
+function etaSlice(trip) {
+  const prefs = passagePrefs();
+  const eta = trip?.eta || {};
+  return {
+    etaSpeed: eta.speedKn != null ? String(eta.speedKn) : (prefs.speed || "7"),
+    etaFactor: eta.factor != null ? String(eta.factor) : (prefs.factor || "1.3"),
+    manualNm: eta.manualNm || "",
+    captainEta: eta.captainEta || "",
+  };
+}
+
+function currentEstimate(form, departedAt) {
+  return passageEstimate({
+    from: placeById(form.fromId),
+    to: placeById(form.toId),
+    factor: form.etaFactor,
+    speedKn: form.etaSpeed,
+    manualNm: form.manualNm,
+    departedAt: departedAt || new Date(),
+  });
+}
+
+function etaRecord(form, departedAt, previous) {
+  const estimate = currentEstimate(form, departedAt);
+  return {
+    nm: estimate.nm,
+    straightNm: estimate.straightNm,
+    hours: estimate.hours,
+    speedKn: estimate.speedKn,
+    factor: estimate.factor,
+    manualNm: form.manualNm || "",
+    appEta: estimate.appEta,
+    captainEta: form.captainEta || "",
+    winner: previous?.winner || "",
+    message: previous?.message || "",
+    captainMinutes: previous?.captainMinutes ?? null,
+    appMinutes: previous?.appMinutes ?? null,
+  };
+}
+
+function scoreTrip(trip) {
+  if (!trip?.eta?.appEta || !trip.eta.captainEta || !trip.arrivedAt) return;
+  const scored = scoreEta({
+    whenIso: trip.departedAt || trip.arrivedAt,
+    arrivedIso: trip.arrivedAt,
+    appEta: trip.eta.appEta,
+    captainEta: trip.eta.captainEta,
+  });
+  if (!scored) return;
+  trip.eta = { ...trip.eta, ...scored };
+}
+
+function applyPrecheck(trip, form) {
+  const unit = boardUnit();
+  const labels = Object.fromEntries(PRECHECK);
+  const stamp = nowIso();
+  const items = {};
+  for (const [key, label] of PRECHECK) {
+    const status = form[`${key}Status`] || "";
+    const note = (form[`${key}Note`] || "").trim();
+    let ticketId = form[`${key}TicketId`] || "";
+    if (status === "attention" && form[`${key}Ticket`] && !ticketId) {
+      ticketId = uid();
+      state.tickets.push({
+        id: ticketId,
+        boatId: ui.boatId,
+        tripId: trip.id,
+        entryId: "",
+        title: `${label} needs attention`,
+        detail: note,
+        status: "open",
+        reference: "",
+        createdAt: stamp,
+        updatedAt: stamp,
+        closedAt: "",
+      });
+    }
+    items[key] = { status, note, ticketId };
+  }
+  trip.precheck = {
+    fuelOnBoard: form.fuelOnBoard === "" || form.fuelOnBoard == null ? null : Number(form.fuelOnBoard),
+    waterOnBoard: form.waterOnBoard === "" || form.waterOnBoard == null ? null : Number(form.waterOnBoard),
+    unit,
+    ...items,
+  };
+}
+
+function failSave(message) {
+  ui.afterLeave = null;
+  ui.guardStep = "";
+  guardAction = null;
+  flash(message);
+  paint();
+}
+
+function finishSave(fallback) {
+  clearDraftKey(ui.draftKey);
+  ui.dirty = false;
+  ui.showingDraft = false;
+  ui.draftKey = "";
+  const next = ui.afterLeave;
+  ui.afterLeave = null;
+  ui.guardStep = "";
+  guardAction = null;
+  if (next) next();
+  else fallback();
+}
+
+function navSig() {
+  return [ui.screen, ui.editingWeather ? "1" : "0", ui.tripId || "", ui.ticketId || "", ui.form?.id || "", ui.form?.kind || ui.form?._kind || ""].join("~");
+}
+
+function pushHistory() {
+  if (!navReady) return;
+  const sig = navSig();
+  if (sig === lastSig) return;
+  lastSig = sig;
+  navStack.push({
+    sig,
+    screen: ui.screen,
+    tripId: ui.tripId,
+    ticketId: ui.ticketId,
+    journalScope: ui.journalScope,
+    maintScope: ui.maintScope,
+    mediaScope: ui.mediaScope,
+    editingWeather: !!ui.editingWeather,
+    zonesOpen: !!ui.zonesOpen,
+    form: ui.form ? { ...ui.form } : null,
+    dirty: !!ui.dirty,
+    draftKey: ui.draftKey || "",
+    showingDraft: !!ui.showingDraft,
+  });
+  history.pushState({ i: navStack.length - 1 }, "");
+}
+
+function applyNav(entry) {
+  if (!entry) return;
+  ui.screen = entry.screen;
+  ui.tripId = entry.tripId;
+  ui.ticketId = entry.ticketId;
+  ui.journalScope = entry.journalScope || ui.journalScope;
+  ui.maintScope = entry.maintScope || ui.maintScope;
+  ui.mediaScope = entry.mediaScope || ui.mediaScope;
+  ui.editingWeather = !!entry.editingWeather;
+  ui.zonesOpen = !!entry.zonesOpen;
+  ui.draftKey = entry.draftKey || "";
+  const draft = ui.draftKey ? readDraftMap()[ui.draftKey] : null;
+  ui.form = draft?.form || entry.form || null;
+  ui.dirty = !!(draft || entry.dirty);
+  ui.showingDraft = !!(draft || entry.showingDraft);
+  lastSig = entry.sig;
+  paint();
+}
+
+function onPopState(event) {
+  if (!navReady || ignorePop) return;
+  if (!event.state || typeof event.state.i !== "number") {
+    ignorePop = true;
+    history.pushState({ i: Math.max(0, navStack.length - 1) }, "");
+    ignorePop = false;
+    return;
+  }
+  if (ui.dirty && formIsOpen()) {
+    ignorePop = true;
+    history.pushState({ i: Math.max(0, navStack.length - 1) }, "");
+    ignorePop = false;
+    guardAction = () => history.back();
+    ui.guardStep = "ask";
+    paint();
+    return;
+  }
+  const entry = navStack[event.state.i];
+  navStack.length = event.state.i + 1;
+  applyNav(entry);
 }
 
 function fmt(iso) {
@@ -277,9 +658,7 @@ function writeWeather(announce) {
   const trip = tripById(ui.tripId);
   if (!trip || !ui.form || ui.form._kind !== "weather") return;
   trip.weather = weatherFromForm(ui.form);
-  trip.deception = !!ui.form.deception;
   trip.updatedAt = nowIso();
-  if (trip.weather.text || trip.weather.night) state.settings.weatherByBoat[trip.boatId] = { ...trip.weather };
   if (announce) persist({ announce });
   else queueSave();
 }
@@ -304,26 +683,12 @@ function leaveScreen() {
 }
 
 function weatherForm(trip) {
-  const weather = trip.weather || {};
-  return {
-    _kind: "weather",
-    weatherText: weather.text || "",
-    generated: weather.text || "",
-    wind: weather.windKn == null || weather.windKn === "" ? "" : String(weather.windKn),
-    advisory: !!weather.advisory,
-    night: !!weather.night,
-    conditions: weather.conditions || [],
-    weatherKind: weather.kind || "",
-    weatherSource: weather.source || "",
-    weatherAt: weather.at || "",
-    weatherCode: weather.code ?? null,
-    deception: !!trip.deception,
-  };
+  return { _kind: "weather", ...weatherSlice(trip) };
 }
 
 function tripForm(trip) {
   const night = sunIsDown();
-  const weather = trip?.weather || {};
+  const weather = trip ? weatherSlice(trip) : blankWeatherSlice(night);
   return {
     _kind: "trip",
     id: trip?.id || null,
@@ -334,17 +699,9 @@ function tripForm(trip) {
     peopleIds: trip?.peopleIds || ["myself"],
     notes: trip?.notes || "",
     meter: trip?.meter || "",
-    deception: !!trip?.deception,
-    weatherText: weather.text || "",
-    generated: weather.text || "",
-    wind: weather.windKn == null || weather.windKn === "" ? "" : String(weather.windKn),
-    advisory: !!weather.advisory,
-    night: trip ? !!weather.night : night,
-    conditions: weather.conditions || [],
-    weatherKind: weather.kind || "",
-    weatherSource: weather.source || "",
-    weatherAt: weather.at || "",
-    weatherCode: weather.code ?? null,
+    ...weather,
+    ...precheckSlice(trip),
+    ...etaSlice(trip),
   };
 }
 
@@ -505,17 +862,31 @@ function statusLabel(status) {
   return "Planned";
 }
 
-function weatherMeta(weather) {
-  if (!weather || (!weather.text && !weather.night)) return "No conditions saved on this phone yet.";
-  const kind = weather.kind === "forecast" ? "Forecast" : weather.kind === "observed" ? "What I saw" : "Noted";
-  const when = weather.at ? fmt(weather.at) : "";
-  return `${kind} · ${weather.source || "Manual"}${when ? ` · ${when}` : ""}. Saved on this phone, not a live warning.`;
+function conditionsLine(weather) {
+  if (!weather) return "No conditions yet";
+  const parts = [];
+  if (weather.text) parts.push(weather.text);
+  if (weather.windKn != null && weather.windKn !== "" && !/wind/i.test(weather.text || "")) parts.push(`wind ${weather.windKn} kn`);
+  const kind = weather.kind === "forecast" ? "Forecast" : weather.kind === "observed" ? "What I saw" : "";
+  const when = weather.at ? fmtTime(weather.at) : "";
+  const tail = [kind, when].filter(Boolean).join(" ");
+  if (tail) parts.push(tail);
+  return parts.join(" · ") || "No conditions yet";
+}
+
+function meteoNote(form) {
+  if (!form || form.weatherSource !== "Open-Meteo" || !form.weatherAt) return "";
+  if (!form.wind && !(form.weatherText || "").trim()) return "";
+  return `From Open-Meteo, ${fmtTime(form.weatherAt)}`;
 }
 
 function zoneLinks() {
   const links = (ZONES[ui.boatId] || []).map((zone) => `<a class="btn block" href="${esc(zone.url)}" target="_blank" rel="noopener">${esc(zone.name)}</a>`);
-  if (boat().pnw) links.push(`<a class="btn block" href="${DECEPTION_PASS_URL}" target="_blank" rel="noopener">Deception Pass current · NOAA</a>`);
   return `<div class="stack">${links.join("")}</div>`;
+}
+
+function zoneFolder() {
+  return `<button type="button" class="btn block" data-action="toggleZones">${ui.zonesOpen ? "Hide forecast zones" : "Forecast zones"}</button>${ui.zonesOpen ? zoneLinks() : ""}`;
 }
 
 function weatherEditor(form) {
@@ -524,21 +895,16 @@ function weatherEditor(form) {
   return `<section class="card">
     <p class="kicker">Conditions</p>
     <button type="button" class="btn block${night ? " on" : ""}" id="night-toggle" data-action="night">${night ? "Night weather on" : "Night weather off"}</button>
-    <p class="hint">${night ? "Sun is down, or you turned Night on. Clear is not called sunny." : "Turn Night on after dark. Sunny is only used when you mean it, or a sky code says so."}</p>
     ${chips("conditions", options, form.conditions || [], true)}
     ${field("Plain-language conditions", "weatherText", form.weatherText || "", { area: true, placeholder: "Cloudy, windy, light rain" })}
     ${field("Wind (kn)", "wind", form.wind || "", { type: "number", inputMode: "decimal", step: "1" })}
+    ${meteoNote(form) ? `<p class="hint">${esc(meteoNote(form))}</p>` : ""}
     <div class="split">
       <button type="button" class="btn${form.weatherKind === "forecast" ? " on" : ""}" data-action="weatherKind" data-value="forecast">Forecast</button>
       <button type="button" class="btn${form.weatherKind === "observed" ? " on" : ""}" data-action="weatherKind" data-value="observed">What I saw</button>
     </div>
-    <p class="meta" id="weather-meta">${esc(weatherMeta(weatherFromForm(form)))}</p>
     <button type="button" class="btn block" data-action="forecast">Read conditions</button>
-    <p class="hint">Read conditions needs a signal. It uses the sky, rain, snow, fog, and wind actually returned. Wind alone is not called sunny.</p>
     <button type="button" class="btn block${form.advisory ? " on" : ""}" data-action="flag" data-flag="advisory">${form.advisory ? "Small craft / wind warning posted" : "No advisory"}</button>
-    ${boat().pnw ? `<button type="button" class="btn block${form.deception ? " on" : ""}" data-action="flag" data-flag="deception">${form.deception ? "Deception Pass: timing for slack" : "Deception Pass not on this plan"}</button>` : ""}
-    <p class="hint">Forecast zones, same pages as before. They open in the browser and need a signal.</p>
-    ${zoneLinks()}
   </section>`;
 }
 
@@ -667,7 +1033,43 @@ function screenHome() {
     </section>
     ${other.length ? `<section class="card"><h2>Also planned</h2><div class="stack">${other.map((trip) => `<button type="button" class="rowmain" data-action="openTrip" data-id="${esc(trip.id)}"><span class="rowtitle">${esc(trip.title)}</span><span class="rowmeta">${esc(statusLabel(trip.status))} · ${esc(trip.tripCode || "")}</span></button>`).join("")}</div></section>` : ""}
     ${past.length ? `<section class="card"><h2>Arrived</h2><div class="stack">${past.map((trip) => `<button type="button" class="rowmain" data-action="openTrip" data-id="${esc(trip.id)}"><span class="rowtitle">${esc(trip.title)}</span><span class="rowmeta">${esc(fmt(trip.arrivedAt || trip.departedAt))} · ${esc(trip.tripCode || "")}</span></button>`).join("")}</div></section>` : ""}
-    <section class="card"><h2>Forecast</h2><p>${saved?.text ? esc(saved.text) : "No conditions saved yet."}</p><p class="meta">${esc(weatherMeta(saved))}</p>${zoneLinks()}<button type="button" class="btn block" data-action="forecast">Read conditions</button></section>`;
+    <section class="card"><h2>Forecast</h2><p>${esc(saved?.text || saved?.windKn != null ? conditionsLine(saved) : "No conditions saved yet.")}</p>${zoneFolder()}<button type="button" class="btn block" data-action="forecast">Read conditions</button></section>`;
+}
+
+function etaSummary(trip) {
+  const eta = trip.eta;
+  if (!eta || (!eta.appEta && !eta.captainEta && eta.nm == null)) return "";
+  let tally = "First ETA race is up for grabs.";
+  let captain = 0;
+  let appWins = 0;
+  for (const item of boatTrips()) {
+    if (item.eta?.winner === "Captain") captain += 1;
+    else if (item.eta?.winner === "App") appWins += 1;
+  }
+  if (captain || appWins) {
+    tally = captain > appWins
+      ? `The Captain knows these waters. ${captain}–${appWins}`
+      : captain === appWins
+        ? `Dead even, ${captain}–${appWins}.`
+        : `The app is ahead, ${appWins}–${captain}.`;
+  }
+  return `<p class="meta">App ${esc(formatClock(eta.appEta) || "—")} · You ${esc(formatClock(eta.captainEta) || "—")}${eta.nm != null ? ` · ${esc(eta.nm.toFixed(1))} nm` : ""}</p>${eta.message ? `<p>${esc(eta.message)}</p>` : ""}<p class="hint">${esc(tally)}</p>`;
+}
+
+function precheckSummary(trip) {
+  const saved = trip.precheck;
+  if (!saved) return "";
+  const unit = saved.unit || boardUnit();
+  const lines = [];
+  if (saved.fuelOnBoard != null && saved.fuelOnBoard !== "") lines.push(`Fuel on board: ${saved.fuelOnBoard} ${unit}`);
+  if (saved.waterOnBoard != null && saved.waterOnBoard !== "") lines.push(`Water on board: ${saved.waterOnBoard} ${unit}`);
+  for (const [key, label] of PRECHECK) {
+    const item = saved[key];
+    if (!item?.status) continue;
+    lines.push(`${label}: ${item.status === "ok" ? "OK" : "Needs attention"}${item.note ? ` — ${item.note}` : ""}`);
+  }
+  if (!lines.length) return "";
+  return `<h2>Before departure</h2>${lines.map((line) => `<p>${esc(line)}</p>`).join("")}`;
 }
 
 function screenTrip() {
@@ -676,30 +1078,41 @@ function screenTrip() {
     return `<p class="kicker">Trip</p><h1>No trip yet</h1><p>The trip is the log. Notes, crab, photos, and the rating hang off it.</p><button type="button" class="btn primary" data-action="startTrip">Start a trip</button>`;
   }
   const weather = trip.weather || {};
+  const actions = [
+    `<button type="button" class="btn primary" data-action="journal" data-scope="trip">Journal</button>`,
+    `<button type="button" class="btn" data-action="newEntry" data-kind="rating" data-link="1">Narrative rating</button>`,
+    `<button type="button" class="btn" data-action="newEntry" data-kind="crab" data-link="1">Crab catch</button>`,
+    `<button type="button" class="btn" data-action="nav" data-screen="media">Media</button>`,
+    `<button type="button" class="btn" data-action="newEntry" data-kind="repair" data-link="1">Repair</button>`,
+  ];
+  if (trip.status !== "underway") actions.push(`<button type="button" class="btn" data-action="newEntry" data-kind="note" data-link="1">Trip note</button>`);
+  actions.push(
+    `<button type="button" class="btn" data-action="best">Best moment</button>`,
+    `<button type="button" class="btn" data-action="newTicket" data-link="1">Maintenance ticket</button>`,
+    `<button type="button" class="btn primary" data-action="arrive">${trip.status === "underway" ? "Arrived — wrap up" : "Edit wrap-up"}</button>`,
+  );
+  const conditions = ui.editingWeather && ui.form?._kind === "weather"
+    ? `${weatherEditor(ui.form)}<button type="button" class="btn primary" data-action="saveConditions">Save conditions</button><button type="button" class="btn quiet block" data-action="cancelConditions">Cancel</button>`
+    : `<section class="card"><p>${esc(conditionsLine(weather))}</p><button type="button" class="btn block" data-action="updateConditions">Update conditions</button></section>`;
   return `<p class="kicker">Trip</p>${tripSwitch(trip.id)}
-    <h1>${esc(trip.title)}</h1>
-    <p><span class="pill${trip.status === "underway" ? " warn" : trip.status === "arrived" ? " ok" : ""}">${esc(statusLabel(trip.status))}</span></p>
-    <p class="meta">Trip ID <strong>${esc(trip.tripCode || "")}</strong></p>
-    <section class="card"><p>${esc(placeName(trip.fromId))} → ${esc(placeName(trip.toId))}</p><p>${esc(trip.purpose || "")}</p>${faces(trip)}<p>${esc(aboardLine(trip))}</p>
+    <section class="card">
+      <h1>${esc(trip.title)}</h1>
+      <p><span class="pill${trip.status === "underway" ? " warn" : trip.status === "arrived" ? " ok" : ""}">${esc(statusLabel(trip.status))}</span>${weather.advisory ? ` <span class="pill warn">Small craft / wind warning</span>` : ""}</p>
+      <p class="meta">Trip ID <strong>${esc(trip.tripCode || "")}</strong></p>
+      <p>${esc(placeName(trip.fromId))} → ${esc(placeName(trip.toId))}</p>
+      <p>${esc(trip.purpose || "")}</p>
+      ${faces(trip)}
+      <p>${esc(aboardLine(trip))}</p>
       ${trip.meter ? `<p class="meta">${esc(boat().meterLabel)}: ${esc(trip.meter)}${boat().meterOffset ? ` · true hours ≈ ${Number(trip.meter) + boat().meterOffset}` : ""}</p>` : ""}
-      <button type="button" class="btn quiet block" data-action="editTrip">Edit trip</button>
+      ${etaSummary(trip)}
+      ${precheckSummary(trip)}
+      ${trip.bestMoment?.text ? `<p><strong>Best moment.</strong> ${esc(trip.bestMoment.text)}</p>` : ""}
+      ${trip.rating?.narrative ? `<p>${starsHtml(trip.rating.stars || 0)}</p><p>${esc(trip.rating.narrative)}</p>` : ""}
+      <button type="button" class="btn block" data-action="editTrip">Edit trip details</button>
     </section>
-    ${trip.status === "underway" ? `<button type="button" class="btn alert" data-action="addNote" data-id="${esc(trip.id)}">Add note underway</button>` : ""}
-    ${weatherEditor(ui.form && ui.form._kind === "weather" ? ui.form : weatherForm(trip))}
-    <div class="stack">
-      <button type="button" class="btn primary" data-action="journal" data-scope="trip">Journal</button>
-      <button type="button" class="btn" data-action="newEntry" data-kind="rating" data-link="1">Narrative rating</button>
-      <button type="button" class="btn" data-action="newEntry" data-kind="crab" data-link="1">Crab catch</button>
-      <button type="button" class="btn" data-action="nav" data-screen="media">Media</button>
-      <button type="button" class="btn" data-action="newEntry" data-kind="repair" data-link="1">Repair</button>
-      <button type="button" class="btn" data-action="newEntry" data-kind="note" data-link="1">Trip note</button>
-      <button type="button" class="btn" data-action="best">Best moment</button>
-      <button type="button" class="btn" data-action="newTicket" data-link="1">Maintenance ticket</button>
-    </div>
-    ${trip.bestMoment?.text ? `<section class="card"><h2>Best moment</h2><p>${esc(trip.bestMoment.text)}</p><p class="meta">${esc((trip.bestMoment.tags || []).join(" · "))}</p></section>` : ""}
-    ${trip.rating?.narrative ? `<section class="card"><h2>Narrative</h2>${starsHtml(trip.rating.stars || 0)}<p>${esc(trip.rating.narrative)}</p></section>` : ""}
-    ${trip.status === "underway" ? `<button type="button" class="btn primary" data-action="arrive">Arrived — wrap up</button>` : `<button type="button" class="btn" data-action="arrive">Edit wrap-up</button>`}
-    <p class="hint">${weather.advisory ? "Small craft / wind warning was marked on this trip. " : ""}${trip.deception ? "Deception Pass is on this plan." : ""}</p>`;
+    <div class="stack">${actions.join("")}</div>
+    ${conditions}
+    ${zoneFolder()}`;
 }
 
 function screenTripForm() {
@@ -716,11 +1129,59 @@ function screenTripForm() {
     ${field(boat().meterLabel, "meter", form.meter, { type: "number", inputMode: "decimal", step: "0.1" })}
     <p class="hint" id="meter-hint">${esc(meterHint(form.meter))}</p>
     ${field("Trip note", "notes", form.notes, { area: true })}
+    ${etaEditor(form)}
+    ${precheckEditor(form)}
     ${weatherEditor(form)}
+    ${zoneFolder()}
     ${showDepart ? `<button type="button" class="btn primary" data-action="saveTrip" data-mode="depart">Depart</button>` : ""}
     <button type="button" class="btn block" data-action="saveTrip" data-mode="${editing ? "save" : "plan"}">${editing ? "Save changes" : "Save as planned"}</button>
-    ${editing ? `<button type="button" class="btn danger block" data-action="deleteTrip">Delete trip</button>` : ""}
-    ${backBtn()}`;
+    <button type="button" class="btn quiet block" data-action="cancelForm">Cancel</button>
+    ${editing ? `<button type="button" class="btn danger block" data-action="deleteTrip">Delete trip</button>` : ""}`;
+}
+
+function etaEditor(form) {
+  const departed = form.id && tripById(form.id)?.departedAt ? new Date(tripById(form.id).departedAt) : new Date();
+  const estimate = currentEstimate(form, departed);
+  const distance = estimate.nm == null
+    ? "No chart distance for these places."
+    : `≈ ${estimate.nm.toFixed(1)} nm${boat().distance === "km" ? ` (${Math.round(estimate.nm * 1.852)} km)` : ""} · straight line × ${estimate.factor}`;
+  const time = estimate.hours == null ? "" : `≈ ${formatHours(estimate.hours)} at ${estimate.speedKn} kn`;
+  const guess = estimate.appEta ? formatClock(estimate.appEta) : "—";
+  return `<section class="card" id="eta-card">
+    <h2>ETA game</h2>
+    <p id="eta-distance">${esc(distance)}</p>
+    ${estimate.straightNm == null ? field("Distance (nm)", "manualNm", form.manualNm || "", { type: "number", inputMode: "decimal", step: "0.1" }) : ""}
+    <div class="split">
+      ${field("Speed (kn)", "etaSpeed", form.etaSpeed || "7", { type: "number", inputMode: "decimal", step: "0.1" })}
+      ${field("Water factor", "etaFactor", form.etaFactor || "1.3", { type: "number", inputMode: "decimal", step: "0.1" })}
+    </div>
+    <p class="meta" id="eta-readout">${esc(time)}</p>
+    <p id="eta-guess"><strong>App's guess: ${esc(guess)}</strong></p>
+    ${field("Your guess", "captainEta", form.captainEta || "", { type: "time" })}
+    <p class="hint">Optional. Closest guess wins when you mark Arrived.</p>
+  </section>`;
+}
+
+function precheckEditor(form) {
+  const unit = boardUnit();
+  const row = (key, label) => {
+    const status = form[`${key}Status`] || "";
+    return `<div class="field"><span>${esc(label)}</span>
+      <div class="split">
+        <button type="button" class="btn${status === "ok" ? " on" : ""}" data-action="setCheck" data-check="${key}" data-value="ok">OK</button>
+        <button type="button" class="btn${status === "attention" ? " on" : ""}" data-action="setCheck" data-check="${key}" data-value="attention">Needs attention</button>
+      </div>
+      ${status === "attention" ? `${field("Note", `${key}Note`, form[`${key}Note`] || "", { placeholder: "Optional" })}
+        <button type="button" class="btn block${form[`${key}Ticket`] ? " on" : ""}" data-action="markTicket" data-check="${key}">${form[`${key}Ticket`] ? "Ticket will open when you save" : "Open a maintenance ticket"}</button>` : ""}
+    </div>`;
+  };
+  return `<section class="card">
+    <h2>Before you go</h2>
+    <p class="hint">Optional. These do not block departing.</p>
+    ${field(`Fuel on board (${unit})`, "fuelOnBoard", form.fuelOnBoard ?? "", { type: "number", inputMode: "decimal", step: "0.1" })}
+    ${field(`Water on board (${unit})`, "waterOnBoard", form.waterOnBoard ?? "", { type: "number", inputMode: "decimal", step: "0.1" })}
+    ${PRECHECK.map(([key, label]) => row(key, label)).join("")}
+  </section>`;
 }
 
 function meterHint(value) {
@@ -1146,24 +1607,59 @@ function screenHtml() {
   return (screens[ui.screen] || screenHome)();
 }
 
+function backButton() {
+  if (navStack.length < 2) return "";
+  return `<button type="button" class="back" data-action="goBack">‹ Back</button>`;
+}
+
+function draftBanner() {
+  if (formIsOpen()) return "";
+  const draft = latestDraft();
+  if (!draft) return "";
+  return `<button type="button" class="banner" data-action="resumeDraft">Unfinished entry: Finish it</button>`;
+}
+
+function guardHtml() {
+  if (!ui.guardStep) return "";
+  if (ui.guardStep === "confirm") {
+    return `<div class="sheet" role="dialog"><h1>Discard this unfinished entry?</h1><p>The draft on this phone will be deleted.</p><button type="button" class="btn primary" data-action="guardKeep">Keep working</button><button type="button" class="btn danger block" data-action="guardDiscardYes">Discard</button></div>`;
+  }
+  return `<div class="sheet" role="dialog"><h1>You have an unfinished entry</h1><p>A draft is kept on this phone until you save or discard it.</p><button type="button" class="btn primary" data-action="guardKeep">Keep working</button><button type="button" class="btn block" data-action="guardSave">Save it</button><button type="button" class="btn danger block" data-action="guardDiscard">Discard</button></div>`;
+}
+
+function draftNoteHtml() {
+  if (!formIsOpen() || (!ui.showingDraft && !ui.dirty)) return "";
+  return `<p class="hint">Draft kept on this phone.</p><button type="button" class="btn quiet block" data-action="discardDraft">Discard draft</button>`;
+}
+
 function paint() {
-  const changed = paintedScreen !== ui.screen;
-  paintedScreen = ui.screen;
-  app.innerHTML = `${header()}${underwayBar()}<div id="flash" class="flash"${ui.flash ? "" : " hidden"}>${esc(ui.flash)}</div><main class="main">${confirmHtml()}${screenHtml()}</main>${navHtml()}${pickerHtml()}`;
+  const changed = paintedScreen !== `${ui.screen}:${ui.editingWeather}`;
+  paintedScreen = `${ui.screen}:${ui.editingWeather}`;
+  pushHistory();
+  app.innerHTML = `${header()}${underwayBar()}${draftBanner()}<div id="flash" class="flash"${ui.flash ? "" : " hidden"}>${esc(ui.flash)}</div><main class="main">${backButton()}${draftNoteHtml()}${confirmHtml()}${screenHtml()}</main>${navHtml()}${pickerHtml()}${guardHtml()}`;
   document.title = `HM2 Log v5 · ${boat().name}`;
   if (changed) window.scrollTo(0, 0);
 }
 
-function openScreen(screen) {
+function openScreen(screen, opts = {}) {
+  if (!opts.force && ui.dirty && formIsOpen() && screen !== ui.screen) {
+    guardAction = () => openScreen(screen, { force: true });
+    ui.guardStep = "ask";
+    paint();
+    return;
+  }
   leaveScreen();
   ui.picker = null;
   ui.confirm = null;
   ui.screen = screen;
-  if (["home", "more", "people", "places", "maint", "backup", "journal"].includes(screen)) ui.form = null;
+  ui.editingWeather = false;
+  if (["home", "more", "people", "places", "maint", "backup", "journal", "trip"].includes(screen)) {
+    ui.form = null;
+    ui.dirty = false;
+  }
   if (screen === "trip") {
     const trip = shownTrip();
     ui.tripId = trip ? trip.id : null;
-    ui.form = trip ? weatherForm(trip) : null;
   }
   if (screen === "media") {
     const trip = shownTrip();
@@ -1304,9 +1800,7 @@ const actions = {
     persist().then(() => paint());
   },
   startTrip() {
-    ui.form = tripForm(null);
-    ui.screen = "trip-form";
-    paint();
+    beginForm("trip-form", tripForm(null));
   },
   openTrip(btn) {
     ui.tripId = btn.dataset.id;
@@ -1315,15 +1809,13 @@ const actions = {
   editTrip() {
     const trip = shownTrip();
     if (!trip) return;
-    ui.form = tripForm(trip);
-    ui.screen = "trip-form";
-    paint();
+    beginForm("trip-form", tripForm(trip));
   },
   saveTrip(btn) {
     return saving(async () => {
       const form = ui.form;
       if (!form.fromId || !form.toId) {
-        flash("Choose a departure and a destination.");
+        failSave("Choose a departure and a destination.");
         return;
       }
       const stamp = nowIso();
@@ -1349,8 +1841,12 @@ const actions = {
       trip.peopleIds = Array.from(new Set(["myself", ...(form.peopleIds || [])]));
       trip.notes = form.notes || "";
       trip.meter = form.meter || "";
-      trip.deception = !!form.deception;
       trip.weather = weatherFromForm(form);
+      const departedForEta = btn.dataset.mode === "depart" ? new Date() : (trip.departedAt ? new Date(trip.departedAt) : new Date());
+      trip.eta = etaRecord(form, departedForEta, trip.eta);
+      applyPrecheck(trip, form);
+      state.settings.passageByBoat = state.settings.passageByBoat || {};
+      state.settings.passageByBoat[ui.boatId] = { speed: form.etaSpeed || "7", factor: form.etaFactor || "1.3" };
       trip.updatedAt = stamp;
       if (btn.dataset.mode === "depart") {
         trip.status = trip.status === "arrived" ? "arrived" : "underway";
@@ -1358,12 +1854,14 @@ const actions = {
       }
       touchPlace(form.fromId);
       touchPlace(form.toId);
-      if (trip.weather.text) state.settings.weatherByBoat[ui.boatId] = { ...trip.weather };
       ui.tripId = trip.id;
-      ui.form = weatherForm(trip);
-      ui.screen = "trip";
+      ui.editingWeather = false;
       await persist({ announce: btn.dataset.mode === "depart" && trip.status === "underway" ? "Underway. Saved on this phone." : "Trip saved on this phone." });
-      paint();
+      finishSave(() => {
+        ui.form = null;
+        ui.screen = "trip";
+        paint();
+      });
     });
   },
   deleteTrip() {
@@ -1426,10 +1924,14 @@ const actions = {
       };
       trip.updatedAt = nowIso();
       saveRating(trip, ui.form.narrative, ui.form.stars);
-      ui.form = weatherForm(trip);
-      ui.screen = "trip";
+      scoreTrip(trip);
+      ui.editingWeather = false;
       await persist({ announce: "Arrived. Saved on this phone." });
-      paint();
+      finishSave(() => {
+        ui.form = null;
+        ui.screen = "trip";
+        paint();
+      });
     });
   },
   skipWrap() {
@@ -1438,19 +1940,23 @@ const actions = {
       trip.status = "arrived";
       if (!trip.arrivedAt) trip.arrivedAt = nowIso();
       trip.updatedAt = nowIso();
-      ui.form = weatherForm(trip);
-      ui.screen = "trip";
+      scoreTrip(trip);
+      ui.editingWeather = false;
       await persist({ announce: "Arrived. Saved on this phone." });
-      paint();
+      finishSave(() => {
+        ui.form = null;
+        ui.screen = "trip";
+        paint();
+      });
     });
   },
   addNote(btn) {
     const trip = tripById(btn.dataset.id) || boatTrips().find((item) => item.status === "underway");
     if (!trip) return;
     ui.tripId = trip.id;
-    ui.form = blankEntry("note", trip.id);
-    ui.screen = "entry-form";
-    paint();
+    const fresh = blankEntry("note", trip.id);
+    fresh.link = true;
+    beginForm("entry-form", fresh);
   },
   journal(btn) {
     ui.activityPrompt = false;
@@ -1478,31 +1984,29 @@ const actions = {
       return;
     }
     const link = btn.dataset.link === "1" && !!trip;
+    let fresh;
     if (kind === "rating" && trip) {
       const existing = state.entries.find((entry) => entry.id === `rating-${trip.id}`);
-      ui.form = existing ? entryToForm(existing) : blankEntry("rating", trip.id);
-      ui.form.link = true;
-      ui.form.tripId = trip.id;
+      fresh = existing ? entryToForm(existing) : blankEntry("rating", trip.id);
+      fresh.link = true;
+      fresh.tripId = trip.id;
     } else {
-      ui.form = blankEntry(kind, link ? trip.id : "");
-      ui.form.link = link || kind === "crab";
-      if (ui.form.link && trip) ui.form.tripId = trip.id;
+      fresh = blankEntry(kind, link ? trip.id : "");
+      fresh.link = link || kind === "crab";
+      if (fresh.link && trip) fresh.tripId = trip.id;
     }
-    ui.screen = "entry-form";
-    paint();
+    beginForm("entry-form", fresh);
   },
   openEntry(btn) {
     const entry = state.entries.find((item) => item.id === btn.dataset.id);
     if (!entry) return;
-    ui.form = entryToForm(entry);
-    ui.screen = "entry-form";
-    paint();
+    beginForm("entry-form", entryToForm(entry));
   },
   saveEntry() {
     return saving(async () => {
       const built = buildEntry(ui.form);
       if (built.error) {
-        flash(built.error);
+        failSave(built.error);
         return;
       }
       const { entry } = built;
@@ -1531,10 +2035,12 @@ const actions = {
       }
       ui.journalScope = entry.tripId ? "trip" : "all";
       if (entry.tripId) ui.tripId = entry.tripId;
-      ui.form = null;
-      ui.screen = "journal";
       await persist({ announce: "Saved on this phone." });
-      paint();
+      finishSave(() => {
+        ui.form = null;
+        ui.screen = "journal";
+        paint();
+      });
     });
   },
   deleteEntry() {
@@ -1570,7 +2076,8 @@ const actions = {
   flag(btn) {
     const name = btn.dataset.flag;
     ui.form[name] = !ui.form[name];
-    if (ui.form._kind === "weather" && (name === "advisory" || name === "deception")) writeWeather(false);
+    if (ui.form._kind === "weather" && name === "advisory") writeWeather(false);
+    markDirty();
     paint();
   },
   chip(btn) {
@@ -1598,11 +2105,10 @@ const actions = {
       ui.form.weatherAt = ui.form.weatherAt || nowIso();
       const input = document.querySelector('[name="weatherText"]');
       if (input) input.value = next;
-      const meta = document.getElementById("weather-meta");
-      if (meta) meta.textContent = weatherMeta(weatherFromForm(ui.form));
       if (ui.form._kind === "weather") writeWeather(false);
     }
     if (group === "filmTools" || group === "filmKinds") writeFilm();
+    markDirty();
   },
   personToggle(btn) {
     const id = btn.dataset.id;
@@ -1622,6 +2128,7 @@ const actions = {
       ui.form.generated = next;
     }
     if (ui.form._kind === "weather") writeWeather(false);
+    markDirty();
     paint();
   },
   weatherKind(btn) {
@@ -1630,6 +2137,7 @@ const actions = {
     if (btn.dataset.value === "forecast" && !ui.form.weatherSource) ui.form.weatherSource = "Manual";
     ui.form.weatherAt = ui.form.weatherAt || nowIso();
     if (ui.form._kind === "weather") writeWeather(false);
+    markDirty();
     paint();
   },
   async forecast() {
@@ -1681,6 +2189,7 @@ const actions = {
         ui.form.wind = weather.windKn == null ? "" : String(weather.windKn);
         ui.form.night = night;
         if (ui.form._kind === "weather") writeWeather(false);
+        markDirty();
       }
       await persist({ announce: "Forecast saved on this phone." });
       paint();
@@ -1698,7 +2207,7 @@ const actions = {
     ui.form[ui.picker.field] = btn.dataset.id;
     touchPlace(btn.dataset.id);
     ui.picker = null;
-    queueSave();
+    markDirty();
     paint();
   },
   closePicker() {
@@ -1753,11 +2262,14 @@ const actions = {
         ui.stash.form[fieldName] = place.id;
         place.lastUsedAt = stamp;
       }
-      const back = !!ui.stash;
-      if (back) restoreStash();
-      else openScreen("places");
+      const backToForm = !!ui.stash;
       await persist({ announce: "Place saved" });
-      if (back) paint();
+      finishSave(() => {
+        if (backToForm) {
+          restoreStash();
+          paint();
+        } else openScreen("places", { force: true });
+      });
     });
   },
   deletePlace() {
@@ -1848,7 +2360,7 @@ const actions = {
       });
       ui.mediaScope = item.status;
       await persist({ announce: "Saved on this phone." });
-      openScreen("media");
+      finishSave(() => openScreen("media", { force: true }));
     });
   },
   deleteMedia() {
@@ -1894,7 +2406,7 @@ const actions = {
       trip.bestMoment = { text: (ui.form.bestText || "").trim(), tags: ui.form.bestTags || [] };
       trip.updatedAt = nowIso();
       await persist({ announce: "Best moment saved" });
-      openScreen("trip");
+      finishSave(() => openScreen("trip", { force: true }));
     });
   },
   newTicket(btn) {
@@ -1923,7 +2435,7 @@ const actions = {
     return saving(async () => {
       const form = ui.form;
       if (!(form.title || "").trim()) {
-        flash("Give the ticket a title.");
+        failSave("Give the ticket a title.");
         return;
       }
       const stamp = nowIso();
@@ -1942,10 +2454,12 @@ const actions = {
       });
       ui.ticketId = ticket.id;
       ui.ticketTab = "details";
-      ui.form = null;
-      ui.screen = "ticket";
       await persist({ announce: "Ticket saved" });
-      paint();
+      finishSave(() => {
+        ui.form = null;
+        ui.screen = "ticket";
+        paint();
+      });
     });
   },
   ticketStatus(btn) {
@@ -2007,7 +2521,7 @@ const actions = {
   savePart() {
     return saving(async () => {
       if (!(ui.form.name || "").trim()) {
-        flash("Name the part.");
+        failSave("Name the part.");
         return;
       }
       const stamp = nowIso();
@@ -2031,7 +2545,7 @@ const actions = {
         updatedAt: stamp,
       });
       await persist({ announce: "Part saved" });
-      openScreen("maint");
+      finishSave(() => openScreen("maint", { force: true }));
     });
   },
   deletePart() {
@@ -2114,14 +2628,18 @@ const actions = {
       }
       Object.assign(person, { name, categories, serviceTags, businessId, phone: ui.form.phone || "", notes: ui.form.notes || "", photo: ui.form.photo || "", updatedAt: stamp });
       if (ui.stash?.form?.peopleIds) ui.stash.form.peopleIds = Array.from(new Set([...(ui.stash.form.peopleIds || []), person.id, "myself"]));
-      const back = !!ui.stash;
-      if (back) restoreStash();
-      else {
-        ui.form = null;
-        ui.screen = "people";
-      }
+      const backToTrip = !!ui.stash;
       await persist({ announce: "Contact saved" });
-      paint();
+      finishSave(() => {
+        if (backToTrip) {
+          restoreStash();
+          paint();
+        } else {
+          ui.form = null;
+          ui.screen = "people";
+          paint();
+        }
+      });
     });
   },
   deletePerson() {
@@ -2153,6 +2671,10 @@ const actions = {
     if (ui.stash) {
       restoreStash();
       paint();
+      return;
+    }
+    if (navStack.length > 1) {
+      history.back();
       return;
     }
     const map = {
@@ -2194,6 +2716,144 @@ const actions = {
   importPick() {
     document.getElementById("import-file")?.click();
   },
+  goBack() {
+    if (navStack.length < 2) return;
+    history.back();
+  },
+  toggleZones() {
+    ui.zonesOpen = !ui.zonesOpen;
+    paint();
+  },
+  updateConditions() {
+    const trip = shownTrip();
+    if (!trip) return;
+    ui.tripId = trip.id;
+    ui.editingWeather = true;
+    const fresh = weatherForm(trip);
+    const key = draftKeyFor("trip", fresh);
+    const draft = readDraftMap()[key];
+    ui.draftKey = key;
+    ui.screen = "trip";
+    if (draft?.form) {
+      ui.form = draft.form;
+      ui.dirty = true;
+      ui.showingDraft = true;
+    } else {
+      ui.form = fresh;
+      ui.dirty = false;
+      ui.showingDraft = false;
+    }
+    paint();
+  },
+  saveConditions() {
+    return saving(async () => {
+      writeWeather(false);
+      await persist({ announce: "Conditions saved" });
+      ui.editingWeather = false;
+      finishSave(() => {
+        ui.form = null;
+        ui.screen = "trip";
+        paint();
+      });
+    });
+  },
+  cancelConditions() {
+    ui.editingWeather = false;
+    ui.form = null;
+    ui.dirty = false;
+    clearDraftKey(ui.draftKey);
+    ui.showingDraft = false;
+    paint();
+  },
+  cancelForm() {
+    const dest = ui.screen === "trip-form" && ui.form?.id ? "trip" : "home";
+    ui.dirty = false;
+    clearDraftKey(ui.draftKey);
+    ui.showingDraft = false;
+    openScreen(dest, { force: true });
+  },
+  setCheck(btn) {
+    const key = btn.dataset.check;
+    const value = btn.dataset.value;
+    ui.form[`${key}Status`] = ui.form[`${key}Status`] === value ? "" : value;
+    if (ui.form[`${key}Status`] !== "attention") ui.form[`${key}Ticket`] = false;
+    markDirty();
+    paint();
+  },
+  markTicket(btn) {
+    const key = btn.dataset.check;
+    if (ui.form[`${key}TicketId`]) return;
+    ui.form[`${key}Ticket`] = !ui.form[`${key}Ticket`];
+    markDirty();
+    paint();
+  },
+  guardKeep() {
+    guardAction = null;
+    ui.guardStep = "";
+    ui.afterLeave = null;
+    paint();
+  },
+  guardSave() {
+    const next = guardAction;
+    guardAction = null;
+    ui.guardStep = "";
+    ui.afterLeave = next;
+    const screen = ui.editingWeather ? "conditions" : ui.screen;
+    if (screen === "conditions") return actions.saveConditions();
+    if (screen === "trip-form") return actions.saveTrip({ dataset: { mode: ui.form?.id ? "save" : "plan" } });
+    if (screen === "entry-form") return actions.saveEntry();
+    if (screen === "media-form") return actions.saveMedia();
+    if (screen === "ticket-form") return actions.saveTicket();
+    if (screen === "part-form") return actions.savePart();
+    if (screen === "person-form") return actions.savePerson();
+    if (screen === "place-form") return actions.savePlace();
+    if (screen === "wrap") return actions.saveWrap();
+    if (screen === "best") return actions.saveBest();
+    ui.afterLeave = null;
+    flash("Save this from the form, then leave.");
+  },
+  guardDiscard() {
+    ui.guardStep = "confirm";
+    paint();
+  },
+  guardDiscardYes() {
+    const next = guardAction;
+    guardAction = null;
+    ui.guardStep = "";
+    clearDraftKey(ui.draftKey);
+    ui.dirty = false;
+    ui.showingDraft = false;
+    ui.form = null;
+    ui.editingWeather = false;
+    if (next) next();
+    else paint();
+  },
+  discardDraft() {
+    guardAction = () => {
+      clearDraftKey(ui.draftKey);
+      ui.dirty = false;
+      ui.showingDraft = false;
+      if (ui.screen === "trip-form") ui.form = ui.form?.id ? tripForm(tripById(ui.form.id)) : tripForm(null);
+      else if (ui.editingWeather) ui.form = weatherForm(shownTrip());
+      else if (ui.screen === "entry-form") ui.form = ui.form?.id ? entryToForm(state.entries.find((entry) => entry.id === ui.form.id) || blankEntry(ui.form.kind, ui.form.tripId)) : blankEntry(ui.form?.kind || "note", ui.form?.tripId || "");
+      paint();
+    };
+    ui.guardStep = "confirm";
+    paint();
+  },
+  resumeDraft() {
+    const draft = latestDraft();
+    if (!draft) return;
+    ui.boatId = draft.boatId || ui.boatId;
+    ui.tripId = draft.tripId || ui.tripId;
+    ui.editingWeather = !!draft.editingWeather;
+    ui.form = draft.form;
+    ui.draftKey = draft.key;
+    ui.dirty = true;
+    ui.showingDraft = true;
+    ui.screen = draft.screen || "home";
+    paint();
+  },
   confirmYes() {
     const run = ui.confirm?.run;
     if (run) run();
@@ -2228,8 +2888,9 @@ function onField(el) {
   }
   if (el.name === "switchTrip") {
     ui.tripId = el.value;
-    const trip = shownTrip();
-    ui.form = trip ? weatherForm(trip) : null;
+    ui.editingWeather = false;
+    ui.form = null;
+    ui.dirty = false;
     paint();
     return;
   }
@@ -2243,6 +2904,15 @@ function onField(el) {
   }
   if (!ui.form) return;
   ui.form[el.name] = el.type === "checkbox" ? el.checked : el.value;
+  if (!["loggedBy", "placeQuery", "pickerQuery", "switchTrip"].includes(el.name)) markDirty();
+  if (["etaSpeed", "etaFactor", "manualNm", "fromId", "toId"].includes(el.name)) {
+    const departed = ui.form.id && tripById(ui.form.id)?.departedAt ? new Date(tripById(ui.form.id).departedAt) : new Date();
+    const estimate = currentEstimate(ui.form, departed);
+    const readout = document.getElementById("eta-readout");
+    const guess = document.getElementById("eta-guess");
+    if (readout) readout.textContent = estimate.hours == null ? "" : `≈ ${formatHours(estimate.hours)} at ${estimate.speedKn} kn`;
+    if (guess) guess.innerHTML = `<strong>App's guess: ${esc(estimate.appEta ? formatClock(estimate.appEta) : "—")}</strong>`;
+  }
   if (el.name === "meter") {
     const hint = document.getElementById("meter-hint");
     if (hint) hint.textContent = meterHint(el.value);
@@ -2254,8 +2924,7 @@ function onField(el) {
       ui.form.weatherAt = ui.form.weatherAt || nowIso();
     }
     writeWeather(false);
-    const meta = document.getElementById("weather-meta");
-    if (meta) meta.textContent = weatherMeta(weatherFromForm(ui.form));
+    markDirty();
   }
   if (ui.form._kind === "film" && ["clips", "photos", "filmNote"].includes(el.name)) writeFilm();
   if ((ui.form._kind === "trip" || ui.form._kind === "entry" || ui.form._kind === "wrap") && el.name === "weatherText") {
@@ -2288,11 +2957,21 @@ async function onFile(input) {
   }
 }
 
+const LEAVE_ACTIONS = new Set(["nav", "goHome", "goBack", "back", "boat", "editTrip", "updateConditions", "addNote", "newEntry", "openEntry", "journal", "activity", "startTrip", "openTrip", "arrive", "best", "newMedia", "openMedia", "newTicket", "openTicket", "editTicket", "newPart", "openPart", "newPlace", "openPlace", "addPerson", "openPerson", "resumeDraft", "cancelForm", "cancelConditions"]);
+
 app.addEventListener("click", (event) => {
   const btn = event.target.closest("[data-action]");
   if (!btn || !app.contains(btn)) return;
-  const run = actions[btn.dataset.action];
+  const name = btn.dataset.action;
+  const run = actions[name];
   if (!run) return;
+  if (ui.guardStep && !name.startsWith("guard") && name !== "discardDraft") return;
+  if (!ui.guardStep && LEAVE_ACTIONS.has(name) && ui.dirty && formIsOpen()) {
+    guardAction = () => run(btn);
+    ui.guardStep = "ask";
+    paint();
+    return;
+  }
   Promise.resolve(run(btn)).catch((error) => {
     console.error(error);
     flash("Something went wrong. The last successful save is still on this phone.");
@@ -2336,12 +3015,31 @@ app.addEventListener("change", (event) => {
   onField(event.target);
 });
 
-async function boot() {
+  async function boot() {
   const loaded = await loadState();
   state = normalizeState(loaded || freshState());
   ui.boatId = state.settings.activeBoatId || "hm2";
   if (!loaded) await saveState(state);
+  navStack.push({
+    sig: navSig(),
+    screen: "home",
+    tripId: null,
+    ticketId: null,
+    journalScope: "trip",
+    maintScope: "open",
+    mediaScope: "planned",
+    editingWeather: false,
+    zonesOpen: false,
+    form: null,
+    dirty: false,
+    draftKey: "",
+    showingDraft: false,
+  });
+  lastSig = navSig();
+  history.replaceState({ i: 0 }, "");
+  navReady = true;
   paint();
+  window.addEventListener("popstate", onPopState);
   window.addEventListener("online", () => {
     ui.online = true;
     updateSaveLabel();
