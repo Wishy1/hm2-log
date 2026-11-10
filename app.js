@@ -404,10 +404,45 @@ function applyPrecheck(trip, form) {
 
 function failSave(message) {
   ui.afterLeave = null;
+  ui.leaveViaHistory = false;
   ui.guardStep = "";
   guardAction = null;
   flash(message);
   paint();
+}
+
+function sealHistory() {
+  const top = navStack[navStack.length - 1];
+  if (!top || top.sig !== lastSig) return;
+  top.dirty = false;
+  top.showingDraft = false;
+  top.draftKey = "";
+}
+
+function syncFormFromDom() {
+  if (!ui.form) return;
+  document.querySelectorAll("input[name], textarea[name], select[name]").forEach((el) => {
+    if (["placeQuery", "pickerQuery", "loggedBy", "switchTrip", "reference"].includes(el.name)) return;
+    ui.form[el.name] = el.type === "checkbox" ? el.checked : el.value;
+  });
+}
+
+function retireFrame(then) {
+  const top = navStack[navStack.length - 1];
+  if (!top || top.sig !== lastSig || navStack.length < 2) {
+    then();
+    return;
+  }
+  navStack.pop();
+  lastSig = navStack[navStack.length - 1]?.sig || "";
+  ignorePop = true;
+  const done = () => {
+    window.removeEventListener("popstate", done);
+    ignorePop = false;
+    then();
+  };
+  window.addEventListener("popstate", done);
+  history.back();
 }
 
 function finishSave(fallback) {
@@ -416,11 +451,24 @@ function finishSave(fallback) {
   ui.showingDraft = false;
   ui.draftKey = "";
   const next = ui.afterLeave;
+  const viaHistory = ui.leaveViaHistory;
   ui.afterLeave = null;
+  ui.leaveViaHistory = false;
   ui.guardStep = "";
   guardAction = null;
-  if (next) next();
-  else fallback();
+  const go = () => {
+    if (next) next();
+    else fallback();
+  };
+  if (viaHistory) {
+    if (navStack.length > 1 && navStack[navStack.length - 1]?.sig === lastSig) {
+      navStack.pop();
+      lastSig = navStack[navStack.length - 1]?.sig || "";
+    }
+    go();
+    return;
+  }
+  retireFrame(go);
 }
 
 function navSig() {
@@ -463,8 +511,8 @@ function applyNav(entry) {
   ui.draftKey = entry.draftKey || "";
   const draft = ui.draftKey ? readDraftMap()[ui.draftKey] : null;
   ui.form = draft?.form || entry.form || null;
-  ui.dirty = !!(draft || entry.dirty);
-  ui.showingDraft = !!(draft || entry.showingDraft);
+  ui.dirty = !!draft;
+  ui.showingDraft = !!draft;
   lastSig = entry.sig;
   paint();
 }
@@ -482,6 +530,7 @@ function onPopState(event) {
     history.pushState({ i: Math.max(0, navStack.length - 1) }, "");
     ignorePop = false;
     guardAction = () => history.back();
+    ui.leaveViaHistory = true;
     ui.guardStep = "ask";
     paint();
     return;
@@ -1036,7 +1085,7 @@ function screenHome() {
     </section>
     ${other.length ? `<section class="card"><h2>Also planned</h2><div class="stack">${other.map((trip) => `<button type="button" class="rowmain" data-action="openTrip" data-id="${esc(trip.id)}"><span class="rowtitle">${esc(trip.title)}</span><span class="rowmeta">${esc(statusLabel(trip.status))} · ${esc(trip.tripCode || "")}</span></button>`).join("")}</div></section>` : ""}
     ${past.length ? `<section class="card"><h2>Arrived</h2><div class="stack">${past.map((trip) => `<button type="button" class="rowmain" data-action="openTrip" data-id="${esc(trip.id)}"><span class="rowtitle">${esc(trip.title)}</span><span class="rowmeta">${esc(fmt(trip.arrivedAt || trip.departedAt))} · ${esc(trip.tripCode || "")}</span></button>`).join("")}</div></section>` : ""}
-    <section class="card"><h2>Forecast</h2><p>${esc(saved?.text || saved?.windKn != null ? conditionsLine(saved) : "No conditions saved yet.")}</p>${zoneFolder()}<button type="button" class="btn block" data-action="forecast">Read conditions</button></section>`;
+    <section class="card"><h2>Forecast</h2><p>${esc(saved && (saved.text || saved.windKn != null) ? conditionsLine(saved) : "No conditions saved yet.")}</p>${zoneFolder()}<button type="button" class="btn block" data-action="forecast">Read conditions</button></section>`;
 }
 
 function etaSummary(trip) {
@@ -1239,7 +1288,7 @@ function screenEntry() {
     extra += field(`Quantity added (${measure.volumeLabel})`, "quantity", form.quantity, { type: "number", inputMode: "decimal", step: "0.1" });
     extra += field(`Total cost (${measure.symbol})`, "cost", form.cost, { type: "number", inputMode: "decimal", step: "0.01" });
     extra += field(`Unit price (optional, ${measure.symbol} per ${measure.volumeLabel})`, "unitPrice", form.unitPrice, { type: "number", inputMode: "decimal", step: "0.01" });
-    extra += `<p class="hint">${esc(priceHint(form))}</p>`;
+    extra += `<p class="hint" id="price-hint">${esc(priceHint(form))}</p>`;
   }
   if (form.kind === "pumpout") {
     extra += field(`Cost (${measure.symbol})`, "cost", form.cost, { type: "number", inputMode: "decimal", step: "0.01" });
@@ -1629,7 +1678,7 @@ function guardHtml() {
 }
 
 function draftNoteHtml() {
-  if (!formIsOpen() || (!ui.showingDraft && !ui.dirty)) return "";
+  if (!formIsOpen() || !ui.draftKey || !readDraftMap()[ui.draftKey]) return "";
   return `<p class="hint">Draft kept on this phone.</p><button type="button" class="btn quiet block" data-action="discardDraft">Discard draft</button>`;
 }
 
@@ -1814,6 +1863,7 @@ const actions = {
   },
   saveTrip(btn) {
     return saving(async () => {
+      syncFormFromDom();
       const form = ui.form;
       if (!form.fromId || !form.toId) {
         failSave("Choose a departure and a destination.");
@@ -1911,6 +1961,7 @@ const actions = {
   },
   saveWrap() {
     return saving(async () => {
+      syncFormFromDom();
       const trip = shownTrip();
       if (!trip) return;
       trip.status = "arrived";
@@ -2005,6 +2056,7 @@ const actions = {
   },
   saveEntry() {
     return saving(async () => {
+      syncFormFromDom();
       const built = buildEntry(ui.form);
       if (built.error) {
         failSave(built.error);
@@ -2235,9 +2287,10 @@ const actions = {
   },
   savePlace() {
     return saving(async () => {
+      syncFormFromDom();
       const name = (ui.form.name || "").trim();
       if (!name) {
-        flash("Name the place.");
+        failSave("Name the place.");
         return;
       }
       const duplicate = state.places.find((place) => place.name.toLowerCase() === name.toLowerCase() && place.id !== ui.form.id);
@@ -2269,7 +2322,10 @@ const actions = {
         if (backToForm) {
           restoreStash();
           paint();
-        } else openScreen("places", { force: true });
+        } else {
+          ui.placeQuery = "";
+          openScreen("places", { force: true });
+        }
       });
     });
   },
@@ -2338,6 +2394,7 @@ const actions = {
   },
   saveMedia() {
     return saving(async () => {
+      syncFormFromDom();
       const form = ui.form;
       if (!(form.title || "").trim() && !(form.detail || "").trim() && !form.photo) {
         flash("Add a title, a note, or a photo.");
@@ -2403,6 +2460,7 @@ const actions = {
   },
   saveBest() {
     return saving(async () => {
+      syncFormFromDom();
       const trip = shownTrip();
       trip.bestMoment = { text: (ui.form.bestText || "").trim(), tags: ui.form.bestTags || [] };
       trip.updatedAt = nowIso();
@@ -2434,6 +2492,7 @@ const actions = {
   },
   saveTicket() {
     return saving(async () => {
+      syncFormFromDom();
       const form = ui.form;
       if (!(form.title || "").trim()) {
         failSave("Give the ticket a title.");
@@ -2521,6 +2580,7 @@ const actions = {
   },
   savePart() {
     return saving(async () => {
+      syncFormFromDom();
       if (!(ui.form.name || "").trim()) {
         failSave("Name the part.");
         return;
@@ -2599,10 +2659,11 @@ const actions = {
   },
   savePerson() {
     return saving(async () => {
+      syncFormFromDom();
       const myself = ui.form.id === "myself";
       const name = myself ? "Myself" : (ui.form.name || "").trim();
       if (!name) {
-        flash("Name the person.");
+        failSave("Name the person.");
         return;
       }
       const stamp = nowIso();
@@ -2748,6 +2809,7 @@ const actions = {
   },
   saveConditions() {
     return saving(async () => {
+      syncFormFromDom();
       writeWeather(false);
       await persist({ announce: "Conditions saved" });
       ui.editingWeather = false;
@@ -2792,6 +2854,7 @@ const actions = {
     guardAction = null;
     ui.guardStep = "";
     ui.afterLeave = null;
+    ui.leaveViaHistory = false;
     paint();
   },
   guardSave() {
@@ -2821,6 +2884,7 @@ const actions = {
     const next = guardAction;
     guardAction = null;
     ui.guardStep = "";
+    ui.leaveViaHistory = false;
     clearDraftKey(ui.draftKey);
     ui.dirty = false;
     ui.showingDraft = false;
@@ -2834,6 +2898,8 @@ const actions = {
       clearDraftKey(ui.draftKey);
       ui.dirty = false;
       ui.showingDraft = false;
+      ui.draftKey = "";
+      sealHistory();
       if (ui.screen === "trip-form") ui.form = ui.form?.id ? tripForm(tripById(ui.form.id)) : tripForm(null);
       else if (ui.editingWeather) ui.form = weatherForm(shownTrip());
       else if (ui.screen === "entry-form") ui.form = ui.form?.id ? entryToForm(state.entries.find((entry) => entry.id === ui.form.id) || blankEntry(ui.form.kind, ui.form.tripId)) : blankEntry(ui.form?.kind || "note", ui.form?.tripId || "");
@@ -2906,6 +2972,10 @@ function onField(el) {
   if (!ui.form) return;
   ui.form[el.name] = el.type === "checkbox" ? el.checked : el.value;
   if (!["loggedBy", "placeQuery", "pickerQuery", "switchTrip"].includes(el.name)) markDirty();
+  if (["quantity", "cost"].includes(el.name)) {
+    const hint = document.getElementById("price-hint");
+    if (hint) hint.textContent = priceHint(ui.form);
+  }
   if (["etaSpeed", "etaFactor", "manualNm", "fromId", "toId"].includes(el.name)) {
     const departed = ui.form.id && tripById(ui.form.id)?.departedAt ? new Date(tripById(ui.form.id).departedAt) : new Date();
     const estimate = currentEstimate(ui.form, departed);
