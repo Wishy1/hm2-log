@@ -708,9 +708,9 @@ function screenTripForm() {
   const existingStatus = editing ? tripById(form.id)?.status : "";
   const showDepart = !editing || existingStatus === "planned";
   return `<p class="kicker">${editing ? "Edit trip" : "Start a trip"}</p><h1>${editing ? "Trip details" : "Depart"}</h1>
-    ${field("Title", "title", form.title, { placeholder: "Filled in from the places if you leave it blank" })}
     ${placeButton("Departure", "fromId")}
     ${placeButton("Destination", "toId")}
+    ${field("Trip name (optional)", "title", form.title, { placeholder: "Leave blank to use the places" })}
     <div class="field"><span>Purpose</span>${chips("purpose", PURPOSES.map((item) => ({ value: item, label: item })), form.purpose, false)}</div>
     ${peoplePicker(form.peopleIds)}
     ${field(boat().meterLabel, "meter", form.meter, { type: "number", inputMode: "decimal", step: "0.1" })}
