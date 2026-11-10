@@ -28,6 +28,14 @@ import {
   uid,
   upsertDraft,
   weatherUrl,
+  DEMO_ENDPOINT_LABEL,
+  demoChanges,
+  journalFromState,
+  outboxLabel,
+  queueDemo,
+  sheetFromState,
+  syncDemo,
+  syncedState,
 } from "./logic.js";
 
 const KIND_LABEL = {
@@ -74,6 +82,7 @@ const ui = {
   placeQuery: "",
   placeShow: 12,
   mediaScope: "planned",
+  sheetTab: "Trips",
   ticketId: null,
   ticketTab: "details",
   dirty: false,
@@ -124,7 +133,11 @@ function flash(message) {
 }
 
 function saveLabel() {
-  return ui.online ? "Saved on this phone." : "No signal. Saved on this phone.";
+  const base = ui.online ? "Saved on this phone." : "No signal. Saved on this phone.";
+  if (!state?.settings?.demoSync) return base;
+  const waiting = outboxLabel(readOutbox());
+  if (waiting === "Nothing waiting") return base;
+  return `${base} ${waiting}.`;
 }
 
 function updateSaveLabel() {
@@ -659,9 +672,30 @@ async function saveState(next) {
   if (!saved) localStorage.setItem("hm2log-v5", JSON.stringify(next));
 }
 
+const DEMO_OUTBOX_KEY = "hm2log-v5-demo-outbox";
+
+function readOutbox() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(DEMO_OUTBOX_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function writeOutbox(items) {
+  localStorage.setItem(DEMO_OUTBOX_KEY, JSON.stringify(items));
+}
+
+function rememberDemo(since = state.settings.demoSince || "") {
+  if (!state.settings.demoSync) return;
+  writeOutbox(queueDemo(readOutbox(), demoChanges(state, since)));
+}
+
 async function persist(options = {}) {
   state = normalizeState(state);
   await saveState(state);
+  rememberDemo();
   updateSaveLabel();
   if (options.announce) flash(options.announce);
 }
@@ -1572,7 +1606,58 @@ function screenMore() {
       <button type="button" class="btn" data-action="nav" data-screen="people">People & Services</button>
       <button type="button" class="btn" data-action="nav" data-screen="places">Places</button>
       <button type="button" class="btn" data-action="nav" data-screen="backup">Backup</button>
+      <button type="button" class="btn" data-action="nav" data-screen="sync">Google sync</button>
     </div>`;
+}
+
+function demoBanner() {
+  return `<p class="demo-banner">Sample demo. Not your Google account. Nothing is shared and nothing leaves this phone.</p>`;
+}
+
+function screenSync() {
+  const on = !!state.settings.demoSync;
+  const label = outboxLabel(readOutbox());
+  if (!on) {
+    return `<p class="kicker">Google sync</p><h1>Sync is off</h1>
+      <p>The log stays on this phone. No Google account is connected, and there is no sync address.</p>
+      <button type="button" class="btn primary" data-action="enableDemo">Turn on sample demo</button>
+      <p class="hint">The sample demo draws a pretend Sheet and a pretend trip journal on this phone. It does not talk to Google.</p>`;
+  }
+  return `<p class="kicker">Google sync</p><h1>Sample demo</h1>
+    ${demoBanner()}
+    <p>Endpoint</p>
+    <p class="endpoint">${esc(DEMO_ENDPOINT_LABEL)}</p>
+    <p class="outbox-count">${esc(label)}</p>
+    <p class="hint">${label === "All synced" ? "The sample Sheet and journal have the latest save." : "Sync now copies the waiting items into the sample Sheet and journal."}</p>
+    <button type="button" class="btn primary" data-action="syncNow">Sync now</button>
+    <button type="button" class="btn block" data-action="openSampleSheet">Sample Sheet</button>
+    <button type="button" class="btn block" data-action="openSampleDoc">Sample journal</button>
+    <button type="button" class="btn quiet block" data-action="queueLog">Queue the log on this phone</button>
+    <button type="button" class="btn quiet block" data-action="disableDemo">Turn sample demo off</button>`;
+}
+
+function screenSampleSheet() {
+  const preview = sheetFromState(syncedState(state, readOutbox()));
+  const names = Object.keys(preview);
+  const tab = names.includes(ui.sheetTab) ? ui.sheetTab : names[0];
+  const rows = preview[tab] || [];
+  const columns = rows[0] ? Object.keys(rows[0]) : [];
+  const head = columns.map((column) => `<th>${esc(column)}</th>`).join("");
+  const body = rows.map((row) => `<tr>${columns.map((column) => `<td>${esc(row[column] ?? "")}</td>`).join("")}</tr>`).join("");
+  return `<p class="kicker">Sample Sheet</p><h1>HM2 Log</h1>
+    ${demoBanner()}
+    <div class="chiprow">${names.map((name) => `<button type="button" class="chip${name === tab ? " on" : ""}" data-action="sheetTab" data-value="${esc(name)}">${esc(name)}</button>`).join("")}</div>
+    ${rows.length ? `<div class="sheet-scroll"><table class="sheet-table"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>` : `<p class="empty">Nothing synced yet.</p>`}`;
+}
+
+function screenSampleDoc() {
+  const sections = journalFromState(syncedState(state, readOutbox()));
+  const body = sections.length
+    ? sections.map((section) => `<section class="doc-section"><h2>${esc(section.title)}</h2>${section.lines.map((line) => `<p>${esc(line)}</p>`).join("")}${section.notes.length ? `<h3>Notes</h3>${section.notes.map((line) => `<p>${esc(line)}</p>`).join("")}` : ""}${section.catches.length ? `<h3>Catches</h3>${section.catches.map((line) => `<p>${esc(line)}</p>`).join("")}` : ""}${section.repairs.length ? `<h3>Repairs</h3>${section.repairs.map((line) => `<p>${esc(line)}</p>`).join("")}` : ""}</section>`).join("")
+    : `<p class="empty">Nothing synced yet.</p>`;
+  return `<p class="kicker">Sample journal</p><article class="doc"><h1>HM2 Log - Trip Journal</h1>
+    ${demoBanner()}
+    ${body}</article>`;
 }
 
 function screenBackup() {
@@ -1627,7 +1712,7 @@ function navHtml() {
     if (name === "trip") return ["trip", "trip-form", "wrap", "best"].includes(ui.screen);
     if (name === "journal") return ["journal", "entry-form"].includes(ui.screen);
     if (name === "media") return ["media", "media-form"].includes(ui.screen);
-    return ["more", "maint", "ticket", "ticket-form", "part-form", "people", "person-form", "places", "place-form", "backup"].includes(ui.screen);
+    return ["more", "maint", "ticket", "ticket-form", "part-form", "people", "person-form", "places", "place-form", "backup", "sync", "sample-sheet", "sample-doc"].includes(ui.screen);
   };
   return `<nav class="nav">${items.map(([id, label]) => `<button type="button" data-action="nav" data-screen="${id}" class="${active(id) ? "on" : ""}">${label}</button>`).join("")}</nav>`;
 }
@@ -1653,6 +1738,9 @@ function screenHtml() {
     "place-form": screenPlace,
     more: screenMore,
     backup: screenBackup,
+    sync: screenSync,
+    "sample-sheet": screenSampleSheet,
+    "sample-doc": screenSampleDoc,
   };
   return (screens[ui.screen] || screenHome)();
 }
@@ -2760,6 +2848,43 @@ const actions = {
   star(btn) {
     const count = Number(btn.dataset.value);
     ui.form.stars = ui.form.stars === count ? 0 : count;
+    paint();
+  },
+  enableDemo() {
+    state.settings.demoSync = true;
+    state.settings.demoSince = nowIso();
+    writeOutbox([]);
+    return persist({ announce: "Sample demo on. Nothing leaves this phone." }).then(() => paint());
+  },
+  disableDemo() {
+    state.settings.demoSync = false;
+    state.settings.demoSince = "";
+    localStorage.removeItem(DEMO_OUTBOX_KEY);
+    return persist({ announce: "Sample demo off." }).then(() => paint());
+  },
+  queueLog() {
+    if (!state.settings.demoSync) return;
+    rememberDemo("");
+    flash(outboxLabel(readOutbox()));
+    paint();
+  },
+  syncNow() {
+    if (!state.settings.demoSync) return;
+    writeOutbox(syncDemo(readOutbox()));
+    flash("All synced");
+    updateSaveLabel();
+    paint();
+  },
+  openSampleSheet() {
+    ui.screen = "sample-sheet";
+    paint();
+  },
+  openSampleDoc() {
+    ui.screen = "sample-doc";
+    paint();
+  },
+  sheetTab(btn) {
+    ui.sheetTab = btn.dataset.value || "Trips";
     paint();
   },
   exportJson() {

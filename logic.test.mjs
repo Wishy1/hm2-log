@@ -23,6 +23,16 @@ import {
   formatMoney,
   formatVolume,
   weatherUrl,
+  DEMO_ENDPOINT_LABEL,
+  TRIP_FIELD_MAP,
+  demoChanges,
+  queueDemo,
+  syncDemo,
+  outboxLabel,
+  syncedState,
+  sheetFromState,
+  journalFromState,
+  tripSheetRow,
 } from "./logic.js";
 
 assert.equal(sunDown(new Date("2026-06-21T20:00:00Z"), 48.29, -122.64), false);
@@ -167,5 +177,70 @@ assert.equal(formatVolume(18, "gallons"), "18 gal");
 assert.match(weatherUrl(53, 5.8, zee.temperature), /temperature_unit=celsius/);
 assert.match(weatherUrl(48.29, -122.64, hm2.temperature), /temperature_unit=fahrenheit/);
 assert.match(weatherUrl(53, 5.8, zee.temperature), /wind_speed_unit=kn/);
+
+assert.equal(freshState().settings.demoSync, false);
+assert.equal(DEMO_ENDPOINT_LABEL, "demo endpoint");
+assert.equal(TRIP_FIELD_MAP.some((row) => row.join(" ").toLowerCase().includes("token")), false);
+
+const sample = freshState();
+sample.people.push({ id: "sam", name: "Sam", categories: ["crew"], serviceTags: [], updatedAt: "2026-11-10T12:00:00.000Z" });
+sample.trips.push({
+  id: "t1",
+  boatId: "hm2",
+  tripCode: "HM2-20261110-WDEMO",
+  title: "Mariner Cove → La Conner",
+  status: "arrived",
+  fromId: "mariner-cove",
+  toId: "la-conner",
+  peopleIds: ["myself", "sam"],
+  meter: "10",
+  eta: { captainEta: "09:30", appEta: "09:12", message: "App wins by 18 min" },
+  weather: { text: "Mostly clear, light wind" },
+  bestMoment: { text: "Quiet water past the point." },
+  rating: { stars: 4, narrative: "Calm water." },
+  departedAt: "2026-11-10T16:00:00.000Z",
+  arrivedAt: "2026-11-10T18:00:00.000Z",
+  updatedAt: "2026-11-10T18:00:00.000Z",
+});
+sample.entries.push(
+  { id: "n1", boatId: "hm2", tripId: "t1", kind: "note", notes: "Left the dock.", at: "2026-11-10T16:05:00.000Z", updatedAt: "2026-11-10T16:05:00.000Z", loggedBy: "Wishy" },
+  { id: "f1", boatId: "hm2", tripId: "t1", kind: "fuel", quantity: 10, units: "gallons", cost: 40, currency: "USD", tank: "Main diesel", notes: "", at: "2026-11-10T15:00:00.000Z", updatedAt: "2026-11-10T15:00:00.000Z" },
+);
+sample.tickets.push({ id: "k1", boatId: "hm2", tripId: "t1", title: "Chart light flicker", detail: "Flicker at the helm.", status: "open", updatedAt: "2026-11-10T17:00:00.000Z" });
+
+const row = tripSheetRow(sample, sample.trips[0]);
+assert.equal(row.Title, "Mariner Cove → La Conner");
+assert.equal(row["Trip ID"], "HM2-20261110-WDEMO");
+assert.equal(row.Departure, "Mariner Cove");
+assert.equal(row.Crew.includes("Sam"), true);
+assert.equal(row["Your guess"], "09:30");
+assert.equal(row.Starfish, "4");
+
+let box = queueDemo([], demoChanges(sample, "2026-11-10T18:00:00.000Z"));
+assert.equal(outboxLabel(box), "1 waiting");
+box = queueDemo(box, demoChanges(sample, ""));
+assert.equal(outboxLabel(box), "4 waiting");
+assert.equal(box.length, 4);
+box = syncDemo(box);
+assert.equal(outboxLabel(box), "All synced");
+const preview = syncedState(sample, box);
+const tabs = sheetFromState(preview);
+assert.equal(tabs.Trips.length, 1);
+assert.equal(tabs["Boat Activities"][0].Quantity, "10");
+assert.equal(tabs["Boat Activities"][0].Unit, "gallons");
+assert.equal(tabs["Boat Activities"][0].Currency, "USD");
+assert.equal(tabs["Notes & Journal"][0].Text, "Left the dock.");
+assert.equal(tabs["Maintenance Tickets"][0].Title, "Chart light flicker");
+assert.equal(tabs.People.some((person) => person.Name === "Sam"), true);
+const doc = journalFromState(preview);
+assert.match(doc[0].lines.join(" "), /Trip ID HM2-20261110-WDEMO/);
+assert.equal(doc[0].notes[0], "Left the dock.");
+const again = queueDemo(box, demoChanges(sample, ""));
+assert.equal(outboxLabel(again), "All synced");
+sample.entries[0].updatedAt = "2026-11-10T19:00:00.000Z";
+const edited = queueDemo(again, demoChanges(sample, "2026-11-10T19:00:00.000Z"));
+assert.equal(outboxLabel(edited), "1 waiting");
+const packed = JSON.stringify({ tabs, doc, box: edited, endpoint: DEMO_ENDPOINT_LABEL });
+assert.equal(/token|secret|@|apps\.script|http/i.test(packed), false);
 
 console.log("logic.test.mjs ok");

@@ -296,3 +296,12 @@ input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-
 }
 .empty { color: var(--muted); margin: 8px 0; }
 code { font-size: 15px; }
+.demo-banner { background: var(--warnbg); border: 2px solid var(--gold); border-radius: 16px; padding: 12px 14px; }
+.endpoint { font-size: 22px; font-weight: 700; margin: 0 0 8px; }
+.outbox-count { font-size: 32px; font-weight: 700; margin: 8px 0; }
+.sheet-scroll { overflow-x: auto; margin: 8px 0 16px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+.sheet-table { border-collapse: collapse; min-width: 720px; font-size: 16px; }
+.sheet-table th, .sheet-table td { border-bottom: 1px solid var(--line); padding: 10px 12px; text-align: left; white-space: nowrap; }
+.sheet-table th { background: var(--accent-bg); }
+.doc h1, .doc h2, .doc h3 { font-family: Georgia, "Iowan Old Style", serif; }
+.doc-section { margin: 16px 0; }

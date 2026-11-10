@@ -350,6 +350,7 @@ export function normalizeState(state) {
   next.version = APP_VERSION;
   next.settings = next.settings || {};
   if (!next.settings.loggedBy) next.settings.loggedBy = "Wishy";
+  next.settings.demoSync = next.settings.demoSync === true;
   if (!BOATS[next.settings.activeBoatId]) next.settings.activeBoatId = "hm2";
   next.settings.weatherByBoat = next.settings.weatherByBoat || {};
   next.settings.passageByBoat = next.settings.passageByBoat || {};
@@ -510,4 +511,234 @@ export function importPayload(state, payload) {
 
 export function countIds(list) {
   return new Set((list || []).map((item) => item && item.id).filter(Boolean)).size;
+}
+
+/** Shown in the sample demo. Not a real address and not a secret. */
+export const DEMO_ENDPOINT_LABEL = "demo endpoint";
+
+export const TRIP_FIELD_MAP = [
+  ["Trip name", "title", "Title"],
+  ["Trip ID", "tripCode", "Trip ID"],
+  ["Boat", "boatId", "Boat"],
+  ["Status", "status", "Status"],
+  ["Departure", "fromId", "Departure"],
+  ["Destination", "toId", "Destination"],
+  ["Crew", "peopleIds", "Crew"],
+  ["Hour meter", "meter", "Hour meter"],
+  ["Your guess", "eta.captainEta", "Your guess"],
+  ["App's guess", "eta.appEta", "App guess"],
+  ["ETA result", "eta.message", "ETA result"],
+  ["Conditions", "weather.text", "Conditions"],
+  ["Best moment", "bestMoment.text", "Best moment"],
+  ["Starfish", "rating.stars", "Starfish"],
+  ["Departed", "departedAt", "Departed"],
+  ["Arrived", "arrivedAt", "Arrived"],
+];
+
+function byId(list, id) {
+  return (list || []).find((item) => item.id === id) || null;
+}
+
+function boatName(id) {
+  return BOATS[id]?.name || id || "";
+}
+
+function crewNames(state, ids) {
+  return (ids || []).map((id) => byId(state.people, id)?.name || "").filter(Boolean).join(", ");
+}
+
+export function tripSheetRow(state, trip) {
+  return {
+    "Trip ID": trip.tripCode || "",
+    Boat: boatName(trip.boatId),
+    Title: trip.title || "",
+    Status: trip.status || "",
+    Departure: byId(state.places, trip.fromId)?.name || "",
+    Destination: byId(state.places, trip.toId)?.name || "",
+    Crew: crewNames(state, trip.peopleIds),
+    "Hour meter": trip.meter || "",
+    "Your guess": trip.eta?.captainEta || "",
+    "App guess": trip.eta?.appEta || "",
+    "ETA result": trip.eta?.message || "",
+    Conditions: trip.weather?.text || "",
+    "Best moment": trip.bestMoment?.text || "",
+    Starfish: trip.rating?.stars ? String(trip.rating.stars) : "",
+    Departed: trip.departedAt || "",
+    Arrived: trip.arrivedAt || "",
+  };
+}
+
+function tripTitle(state, tripId) {
+  return byId(state.trips, tripId)?.title || "";
+}
+
+export function sheetFromState(state) {
+  const notes = [];
+  const activities = [];
+  for (const entry of state.entries || []) {
+    const trip = tripTitle(state, entry.tripId);
+    const boat = boatName(entry.boatId);
+    if (entry.kind === "fuel" || entry.kind === "water" || entry.kind === "wash" || entry.kind === "pumpout") {
+      activities.push({
+        When: entry.at || "",
+        Kind: entry.kind,
+        Quantity: entry.quantity == null ? "" : String(entry.quantity),
+        Unit: entry.units || "",
+        Cost: entry.cost == null ? "" : String(entry.cost),
+        Currency: entry.currency || "",
+        Tank: entry.tank || "",
+        Notes: entry.notes || "",
+        Trip: trip,
+        Boat: boat,
+      });
+    } else {
+      const text = entry.kind === "crab"
+        ? [entry.catchName, entry.count, entry.notes].filter((part) => part != null && part !== "").join(", ")
+        : (entry.narrative || entry.notes || "");
+      notes.push({
+        When: entry.at || "",
+        Kind: entry.kind || "",
+        Text: text,
+        Trip: trip,
+        Boat: boat,
+        "Logged by": entry.loggedBy || "",
+      });
+    }
+  }
+  return {
+    Trips: (state.trips || []).map((trip) => tripSheetRow(state, trip)),
+    "Notes & Journal": notes,
+    "Boat Activities": activities,
+    "Maintenance Tickets": (state.tickets || []).map((ticket) => ({
+      Title: ticket.title || "",
+      Detail: ticket.detail || "",
+      Status: ticket.status || "",
+      Boat: boatName(ticket.boatId),
+      Trip: tripTitle(state, ticket.tripId),
+    })),
+    Parts: (state.parts || []).map((part) => ({
+      Name: part.name || "",
+      "Part number": part.partNumber || "",
+      Boat: boatName(part.boatId),
+      Checked: part.verified ? "Number checked" : "Number not checked",
+    })),
+    People: (state.people || []).map((person) => ({
+      Name: person.name || "",
+      Categories: (person.categories || []).join(", "),
+    })),
+    Places: (state.places || []).map((place) => ({
+      Name: place.name || "",
+      Notes: place.detail || "",
+    })),
+  };
+}
+
+export function journalFromState(state) {
+  return (state.trips || []).map((trip) => {
+    const onTrip = (kind) => (state.entries || []).filter((entry) => entry.tripId === trip.id && entry.kind === kind);
+    const lines = [
+      `${boatName(trip.boatId)} · ${trip.status || "planned"}`,
+      trip.tripCode ? `Trip ID ${trip.tripCode}` : "",
+      `${byId(state.places, trip.fromId)?.name || "Departure"} → ${byId(state.places, trip.toId)?.name || "Destination"}`,
+      crewNames(state, trip.peopleIds) ? `Crew: ${crewNames(state, trip.peopleIds)}` : "",
+      trip.weather?.text ? `Conditions: ${trip.weather.text}` : "",
+      trip.eta?.captainEta || trip.eta?.appEta
+        ? `ETA game: app ${trip.eta?.appEta || "—"}, you ${trip.eta?.captainEta || "—"}${trip.eta?.message ? `. ${trip.eta.message}` : ""}`
+        : "",
+      trip.rating?.stars ? `Starfish: ${trip.rating.stars}` : "",
+      trip.bestMoment?.text ? `Best moment: ${trip.bestMoment.text}` : "",
+    ].filter(Boolean);
+    const notes = onTrip("note").map((entry) => entry.notes).filter(Boolean);
+    const catches = onTrip("crab").map((entry) => [entry.catchName, entry.count].filter((part) => part != null && part !== "").join(", ")).filter(Boolean);
+    const repairs = onTrip("repair").map((entry) => entry.notes || entry.parts).filter(Boolean);
+    return { title: trip.title || "Trip", lines, notes, catches, repairs };
+  });
+}
+
+function changeItem(kind, record, label) {
+  return {
+    id: `${kind}:${record.id}`,
+    kind,
+    recordId: record.id,
+    label,
+    updatedAt: record.updatedAt || record.createdAt || "",
+    status: "waiting",
+  };
+}
+
+export function demoChanges(state, since = "") {
+  const ready = (record) => !since || String(record.updatedAt || record.createdAt || "") >= String(since);
+  const changes = [];
+  for (const trip of state.trips || []) {
+    if (ready(trip)) changes.push(changeItem("trip", trip, trip.title || trip.tripCode || "Trip"));
+  }
+  for (const entry of state.entries || []) {
+    if (!ready(entry)) continue;
+    const label = entry.kind === "fuel" ? "Fuel fill" : entry.kind === "note" ? (entry.notes || "Note") : (entry.title || entry.kind || "Entry");
+    changes.push(changeItem("entry", entry, label));
+  }
+  for (const ticket of state.tickets || []) {
+    if (ready(ticket)) changes.push(changeItem("ticket", ticket, ticket.title || "Ticket"));
+  }
+  for (const part of state.parts || []) {
+    if (ready(part)) changes.push(changeItem("part", part, part.name || "Part"));
+  }
+  return changes;
+}
+
+export function queueDemo(outbox, changes) {
+  const next = (outbox || []).map((item) => ({ ...item }));
+  const byId = new Map(next.map((item) => [item.id, item]));
+  for (const change of changes || []) {
+    const prev = byId.get(change.id);
+    if (!prev) {
+      next.push({ ...change, status: "waiting" });
+      byId.set(change.id, next[next.length - 1]);
+    } else if (prev.status === "synced" && String(change.updatedAt || "") > String(prev.updatedAt || "")) {
+      prev.status = "waiting";
+      prev.label = change.label;
+      prev.updatedAt = change.updatedAt;
+    } else if (prev.status === "waiting") {
+      prev.label = change.label;
+      prev.updatedAt = change.updatedAt || prev.updatedAt;
+    }
+  }
+  return next;
+}
+
+export function syncDemo(outbox) {
+  return (outbox || []).map((item) => ({ ...item, status: "synced" }));
+}
+
+export function outboxLabel(outbox) {
+  const waiting = (outbox || []).filter((item) => item.status === "waiting").length;
+  if (waiting > 0) return `${waiting} waiting`;
+  if ((outbox || []).some((item) => item.status === "synced")) return "All synced";
+  return "Nothing waiting";
+}
+
+export function syncedState(state, outbox) {
+  const synced = new Set((outbox || []).filter((item) => item.status === "synced").map((item) => item.id));
+  const keep = (kind, list) => (list || []).filter((item) => synced.has(`${kind}:${item.id}`));
+  const trips = keep("trip", state.trips);
+  const entries = keep("entry", state.entries);
+  const tickets = keep("ticket", state.tickets);
+  const parts = keep("part", state.parts);
+  const peopleIds = new Set(["myself"]);
+  const placeIds = new Set();
+  for (const trip of trips) {
+    for (const id of trip.peopleIds || []) peopleIds.add(id);
+    if (trip.fromId) placeIds.add(trip.fromId);
+    if (trip.toId) placeIds.add(trip.toId);
+  }
+  for (const entry of entries) if (entry.placeId) placeIds.add(entry.placeId);
+  return {
+    ...state,
+    trips,
+    entries,
+    tickets,
+    parts,
+    people: (state.people || []).filter((person) => peopleIds.has(person.id)),
+    places: (state.places || []).filter((place) => placeIds.has(place.id)),
+  };
 }
