@@ -717,6 +717,200 @@ export function outboxLabel(outbox) {
   return "Nothing waiting";
 }
 
+export function emptyGoogleSync() {
+  return { url: "", token: "", auto: false, lastSyncAt: "", sheetUrl: "", docUrl: "", lastError: "" };
+}
+
+export function googleConfigured(config) {
+  const url = String(config?.url || "");
+  return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(url) && String(config?.token || "").trim().length > 0;
+}
+
+export function syncRequest(config, changes, test = false) {
+  const waiting = (changes || []).filter((item) => item.status === "waiting");
+  return {
+    token: String(config?.token || ""),
+    test: !!test,
+    changes: waiting.map((item) => ({
+      id: item.recordId,
+      kind: item.kind,
+      updatedAt: item.updatedAt || "",
+      row: item.row || {},
+      journal: item.journal || null,
+    })),
+  };
+}
+
+export function queueSync(outbox, changes) {
+  const next = (outbox || []).map((item) => ({ ...item }));
+  const byId = new Map(next.map((item) => [item.id, item]));
+  for (const change of changes || []) {
+    const prev = byId.get(change.id);
+    if (!prev) {
+      const item = { ...change, status: "waiting", error: "" };
+      next.push(item);
+      byId.set(change.id, item);
+    } else if (prev.status !== "waiting" && String(change.updatedAt || "") > String(prev.updatedAt || "")) {
+      Object.assign(prev, change, { status: "waiting", error: "" });
+    } else if (prev.status === "waiting") {
+      Object.assign(prev, change, { status: "waiting", error: prev.error || "" });
+    }
+  }
+  return next;
+}
+
+export function markSynced(outbox, ids) {
+  const sent = new Set(ids || []);
+  return (outbox || []).map((item) => (sent.has(item.id) ? { ...item, status: "synced", error: "" } : { ...item }));
+}
+
+export function markRetry(outbox, ids, message) {
+  const sent = new Set(ids || []);
+  return (outbox || []).map((item) => (
+    sent.has(item.id)
+      ? { ...item, status: "waiting", attempts: (item.attempts || 0) + 1, error: message || "Not sent" }
+      : { ...item }
+  ));
+}
+
+function entryText(entry) {
+  if (entry.kind === "crab") return [entry.catchName, entry.count, entry.notes].filter((part) => part != null && part !== "").join(", ");
+  return entry.narrative || entry.notes || "";
+}
+
+export function syncChange(state, kind, record) {
+  const boat = boatName(record.boatId);
+  const trip = tripTitle(state, record.tripId);
+  const updatedAt = record.updatedAt || record.createdAt || "";
+  if (kind === "trip") {
+    const sheet = tripSheetRow(state, record);
+    const notes = (state.entries || []).filter((entry) => entry.tripId === record.id && entry.kind === "note").map((entry) => entry.notes).filter(Boolean);
+    const catches = (state.entries || []).filter((entry) => entry.tripId === record.id && entry.kind === "crab").map((entry) => entryText(entry)).filter(Boolean);
+    const repairs = (state.entries || []).filter((entry) => entry.tripId === record.id && entry.kind === "repair").map((entry) => entry.notes || entry.parts).filter(Boolean);
+    const journal = record.status === "arrived" ? {
+      id: record.id,
+      boat,
+      title: record.title || "Trip",
+      lines: [
+        `Trip ID ${record.tripCode || record.id}`,
+        `Ref ${record.id}`,
+        sheet.Departed || sheet.Arrived ? `${sheet.Departed || ""}${sheet.Arrived ? ` to ${sheet.Arrived}` : ""}` : "",
+        sheet.Crew ? `Crew: ${sheet.Crew}` : "",
+        `${sheet.Departure || "Departure"} → ${sheet.Destination || "Destination"}`,
+        sheet.Conditions ? `Conditions: ${sheet.Conditions}` : "",
+        sheet["Your guess"] || sheet["App guess"] ? `ETA game: app ${sheet["App guess"] || "—"}, you ${sheet["Your guess"] || "—"}${sheet["ETA result"] ? `. ${sheet["ETA result"]}` : ""}` : "",
+        sheet.Starfish ? `Starfish: ${sheet.Starfish}` : "",
+        sheet["Best moment"] ? `Best moment: ${sheet["Best moment"]}` : "",
+      ].filter(Boolean),
+      notes,
+      catches,
+      repairs,
+    } : null;
+    return {
+      id: `trip:${record.id}`,
+      kind: "trip",
+      recordId: record.id,
+      updatedAt,
+      row: { ...sheet, Id: record.id, Updated: updatedAt },
+      journal,
+    };
+  }
+  if (kind === "entry") {
+    const activity = record.kind === "fuel" || record.kind === "water" || record.kind === "wash" || record.kind === "pumpout";
+    const row = activity
+      ? {
+        Id: record.id,
+        Boat: boat,
+        Trip: trip,
+        When: record.at || "",
+        Kind: record.kind,
+        Quantity: record.quantity == null ? "" : String(record.quantity),
+        Unit: record.units || "",
+        Cost: record.cost == null ? "" : String(record.cost),
+        Currency: record.currency || "",
+        Tank: record.tank || "",
+        Notes: record.notes || "",
+        Updated: updatedAt,
+      }
+      : {
+        Id: record.id,
+        Boat: boat,
+        Trip: trip,
+        When: record.at || "",
+        Kind: record.kind || "",
+        Text: entryText(record),
+        "Logged by": record.loggedBy || "",
+        Updated: updatedAt,
+      };
+    return { id: `entry:${record.id}`, kind: activity ? "activity" : "note", recordId: record.id, updatedAt, row, journal: null };
+  }
+  if (kind === "ticket") {
+    return {
+      id: `ticket:${record.id}`,
+      kind: "ticket",
+      recordId: record.id,
+      updatedAt,
+      journal: null,
+      row: {
+        Id: record.id,
+        Boat: boat,
+        Trip: trip,
+        Title: record.title || "",
+        Detail: record.detail || "",
+        Status: record.status || "",
+        Updated: updatedAt,
+      },
+    };
+  }
+  if (kind === "part") {
+    return {
+      id: `part:${record.id}`,
+      kind: "part",
+      recordId: record.id,
+      updatedAt,
+      journal: null,
+      row: {
+        Id: record.id,
+        Boat: boat,
+        Name: record.name || "",
+        "Part number": record.partNumber || "",
+        Checked: record.verified ? "Number checked" : "Number not checked",
+        Updated: updatedAt,
+      },
+    };
+  }
+  if (kind === "person") {
+    return {
+      id: `person:${record.id}`,
+      kind: "person",
+      recordId: record.id,
+      updatedAt,
+      journal: null,
+      row: { Id: record.id, Name: record.name || "", Categories: (record.categories || []).join(", "), Updated: updatedAt },
+    };
+  }
+  return {
+    id: `place:${record.id}`,
+    kind: "place",
+    recordId: record.id,
+    updatedAt,
+    journal: null,
+    row: { Id: record.id, Name: record.name || "", Notes: record.detail || "", Updated: updatedAt },
+  };
+}
+
+export function syncChanges(state, since = "") {
+  const ready = (record) => record?.id && (!since || String(record.updatedAt || record.createdAt || "") >= String(since));
+  const changes = [];
+  for (const trip of state.trips || []) if (ready(trip)) changes.push(syncChange(state, "trip", trip));
+  for (const entry of state.entries || []) if (ready(entry)) changes.push(syncChange(state, "entry", entry));
+  for (const ticket of state.tickets || []) if (ready(ticket)) changes.push(syncChange(state, "ticket", ticket));
+  for (const part of state.parts || []) if (ready(part)) changes.push(syncChange(state, "part", part));
+  for (const person of state.people || []) if (ready(person)) changes.push(syncChange(state, "person", person));
+  for (const place of state.places || []) if (ready(place)) changes.push(syncChange(state, "place", place));
+  return changes;
+}
+
 export function syncedState(state, outbox) {
   const synced = new Set((outbox || []).filter((item) => item.status === "synced").map((item) => item.id));
   const keep = (kind, list) => (list || []).filter((item) => synced.has(`${kind}:${item.id}`));

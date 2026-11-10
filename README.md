@@ -4,6 +4,10 @@ The log lives on the phone, in this browser. IndexedDB database `hm2log-v5` hold
 
 While the phone is offline, a save still lands in that store. The header says “No signal. Saved on this phone.” When the signal returns, the header goes back to “Saved on this phone.”
 
+## Google sync
+
+The address and token are blank until you add them on the phone. Deploy steps are in [google-sync/README.md](google-sync/README.md). The script is not deployed from this repo.
+
 ## Sample demo for Google sync
 
 Google sync is **off** for everyone. The live app has no sync address and does not connect to a Google account.

@@ -33,6 +33,14 @@ import {
   sheetFromState,
   journalFromState,
   tripSheetRow,
+  emptyGoogleSync,
+  googleConfigured,
+  syncRequest,
+  queueSync,
+  markSynced,
+  markRetry,
+  syncChange,
+  syncChanges,
 } from "./logic.js";
 
 assert.equal(sunDown(new Date("2026-06-21T20:00:00Z"), 48.29, -122.64), false);
@@ -242,5 +250,38 @@ const edited = queueDemo(again, demoChanges(sample, "2026-11-10T19:00:00.000Z"))
 assert.equal(outboxLabel(edited), "1 waiting");
 const packed = JSON.stringify({ tabs, doc, box: edited, endpoint: DEMO_ENDPOINT_LABEL });
 assert.equal(/token|secret|@|apps\.script|http/i.test(packed), false);
+
+assert.deepEqual(emptyGoogleSync(), { url: "", token: "", auto: false, lastSyncAt: "", sheetUrl: "", docUrl: "", lastError: "" });
+assert.equal(googleConfigured(emptyGoogleSync()), false);
+assert.equal(googleConfigured({ url: "https://example.com/exec", token: "secret" }), false);
+assert.equal(googleConfigured({ url: "https://script.google.com/macros/s/ABC/exec", token: "chosen-by-owner" }), true);
+
+const fuelChange = syncChange(sample, "entry", sample.entries[1]);
+assert.equal(fuelChange.kind, "activity");
+assert.equal(fuelChange.row.Quantity, "10");
+assert.equal(fuelChange.row.Unit, "gallons");
+assert.equal(fuelChange.row.Cost, "40");
+assert.equal(fuelChange.row.Currency, "USD");
+assert.equal(fuelChange.row.Boat, "Halve Maan II");
+const tripChange = syncChange(sample, "trip", sample.trips[0]);
+assert.equal(tripChange.journal.lines.some((line) => line.includes("Ref t1")), true);
+assert.equal(tripChange.journal.notes[0], "Left the dock.");
+assert.equal(syncChange(sample, "trip", { ...sample.trips[0], status: "underway" }).journal, null);
+
+let googleBox = queueSync([], syncChanges(sample, "2026-11-10T18:00:00.000Z"));
+assert.equal(googleBox.some((item) => item.id === "trip:t1"), true);
+assert.equal(googleBox.some((item) => item.id === "entry:f1"), false);
+googleBox = queueSync(googleBox, [tripChange]);
+assert.equal(googleBox.filter((item) => item.id === "trip:t1").length, 1);
+const request = syncRequest({ token: "chosen-by-owner" }, googleBox);
+assert.equal(request.token, "chosen-by-owner");
+assert.equal(request.changes.every((item) => item.row && item.id), true);
+assert.equal(JSON.stringify(request).includes("https://"), false);
+googleBox = markRetry(googleBox, googleBox.map((item) => item.id), "No signal");
+assert.equal(googleBox.every((item) => item.status === "waiting" && item.attempts === 1), true);
+googleBox = markSynced(googleBox, ["trip:t1"]);
+assert.equal(googleBox.find((item) => item.id === "trip:t1").status, "synced");
+const resent = syncRequest({ token: "chosen-by-owner" }, googleBox);
+assert.equal(resent.changes.some((item) => item.id === "t1"), false);
 
 console.log("logic.test.mjs ok");

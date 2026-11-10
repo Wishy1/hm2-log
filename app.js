@@ -30,11 +30,18 @@ import {
   weatherUrl,
   DEMO_ENDPOINT_LABEL,
   demoChanges,
+  emptyGoogleSync,
+  googleConfigured,
   journalFromState,
+  markRetry,
+  markSynced,
   outboxLabel,
   queueDemo,
+  queueSync,
   sheetFromState,
+  syncChanges,
   syncDemo,
+  syncRequest,
   syncedState,
 } from "./logic.js";
 
@@ -134,10 +141,17 @@ function flash(message) {
 
 function saveLabel() {
   const base = ui.online ? "Saved on this phone." : "No signal. Saved on this phone.";
+  const google = readGoogle();
+  if (googleConfigured(google)) {
+    const waiting = readSyncOutbox().filter((item) => item.status === "waiting").length;
+    if (waiting) return `${base} ${waiting} waiting to send.`;
+    if (google.lastSyncAt) return `${base} Sent.`;
+    return base;
+  }
   if (!state?.settings?.demoSync) return base;
-  const waiting = outboxLabel(readOutbox());
-  if (waiting === "Nothing waiting") return base;
-  return `${base} ${waiting}.`;
+  const demo = outboxLabel(readOutbox());
+  if (demo === "Nothing waiting") return base;
+  return `${base} ${demo}.`;
 }
 
 function updateSaveLabel() {
@@ -673,6 +687,8 @@ async function saveState(next) {
 }
 
 const DEMO_OUTBOX_KEY = "hm2log-v5-demo-outbox";
+const GOOGLE_KEY = "hm2log-v5-google";
+const SYNC_OUTBOX_KEY = "hm2log-v5-outbox";
 
 function readOutbox() {
   try {
@@ -692,12 +708,93 @@ function rememberDemo(since = state.settings.demoSince || "") {
   writeOutbox(queueDemo(readOutbox(), demoChanges(state, since)));
 }
 
+function readGoogle() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(GOOGLE_KEY) || "{}");
+    return { ...emptyGoogleSync(), ...parsed };
+  } catch (error) {
+    return emptyGoogleSync();
+  }
+}
+
+function writeGoogle(config) {
+  localStorage.setItem(GOOGLE_KEY, JSON.stringify({ ...emptyGoogleSync(), ...config }));
+}
+
+function readSyncOutbox() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(SYNC_OUTBOX_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function writeSyncOutbox(items) {
+  localStorage.setItem(SYNC_OUTBOX_KEY, JSON.stringify(items));
+}
+
+let syncing = false;
+async function flushSync(options = {}) {
+  const config = readGoogle();
+  if (!googleConfigured(config) || syncing) return;
+  const waiting = readSyncOutbox().filter((item) => item.status === "waiting");
+  if (!options.test && !waiting.length) {
+    if (!options.quiet) flash("Nothing is waiting.");
+    return;
+  }
+  if (!ui.online) {
+    const message = "No signal. Waiting items stay on this phone.";
+    writeGoogle({ ...readGoogle(), lastError: message });
+    flash(message);
+    if (ui.screen === "sync") paint();
+    return;
+  }
+  syncing = true;
+  try {
+    const response = await fetch(config.url, {
+      method: "POST",
+      redirect: "follow",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(syncRequest(config, options.test ? [] : waiting, !!options.test)),
+    });
+    const data = await response.json();
+    if (!data || data.ok !== true) throw new Error((data && data.error) || "Google did not accept the sync.");
+    if (!options.test) writeSyncOutbox(markSynced(readSyncOutbox(), waiting.map((item) => item.id)));
+    const next = readGoogle();
+    next.lastSyncAt = nowIso();
+    next.lastError = "";
+    if (data.sheetUrl) next.sheetUrl = data.sheetUrl;
+    if (data.docUrl) next.docUrl = data.docUrl;
+    writeGoogle(next);
+    flash(options.test ? "Connection works." : "Sent.");
+  } catch (error) {
+    const message = error?.message || "The sync did not go through. Waiting items stay on this phone.";
+    if (!options.test && waiting.length) writeSyncOutbox(markRetry(readSyncOutbox(), waiting.map((item) => item.id), message));
+    writeGoogle({ ...readGoogle(), lastError: message });
+    flash(message);
+  } finally {
+    syncing = false;
+    updateSaveLabel();
+    if (ui.screen === "sync") paint();
+  }
+}
+
+function rememberGoogle() {
+  const config = readGoogle();
+  if (!googleConfigured(config) || !config.since) return;
+  writeSyncOutbox(queueSync(readSyncOutbox(), syncChanges(state, config.since)));
+}
+
 async function persist(options = {}) {
   state = normalizeState(state);
   await saveState(state);
   rememberDemo();
+  rememberGoogle();
   updateSaveLabel();
   if (options.announce) flash(options.announce);
+  const config = readGoogle();
+  if (googleConfigured(config) && config.auto && ui.online) flushSync({ quiet: true });
 }
 
 function queueSave() {
@@ -1615,25 +1712,38 @@ function demoBanner() {
 }
 
 function screenSync() {
-  const on = !!state.settings.demoSync;
-  const label = outboxLabel(readOutbox());
-  if (!on) {
-    return `<p class="kicker">Google sync</p><h1>Sync is off</h1>
-      <p>The log stays on this phone. No Google account is connected, and there is no sync address.</p>
-      <button type="button" class="btn primary" data-action="enableDemo">Turn on sample demo</button>
-      <p class="hint">The sample demo draws a pretend Sheet and a pretend trip journal on this phone. It does not talk to Google.</p>`;
-  }
-  return `<p class="kicker">Google sync</p><h1>Sample demo</h1>
-    ${demoBanner()}
-    <p>Endpoint</p>
-    <p class="endpoint">${esc(DEMO_ENDPOINT_LABEL)}</p>
-    <p class="outbox-count">${esc(label)}</p>
-    <p class="hint">${label === "All synced" ? "The sample Sheet and journal have the latest save." : "Sync now copies the waiting items into the sample Sheet and journal."}</p>
-    <button type="button" class="btn primary" data-action="syncNow">Sync now</button>
-    <button type="button" class="btn block" data-action="openSampleSheet">Sample Sheet</button>
-    <button type="button" class="btn block" data-action="openSampleDoc">Sample journal</button>
-    <button type="button" class="btn quiet block" data-action="queueLog">Queue the log on this phone</button>
-    <button type="button" class="btn quiet block" data-action="disableDemo">Turn sample demo off</button>`;
+  const google = readGoogle();
+  const configured = googleConfigured(google);
+  const waiting = readSyncOutbox().filter((item) => item.status === "waiting").length;
+  const count = waiting ? `${waiting} waiting` : google.lastSyncAt ? "All synced" : "Nothing waiting";
+  const links = [
+    google.sheetUrl ? `<a class="btn block" href="${esc(google.sheetUrl)}" target="_blank" rel="noopener">Open my Sheet</a>` : "",
+    google.docUrl ? `<a class="btn block" href="${esc(google.docUrl)}" target="_blank" rel="noopener">Open my Doc</a>` : "",
+  ].filter(Boolean).join("");
+  const demoOn = !!state.settings.demoSync;
+  const demoLabel = outboxLabel(readOutbox());
+  return `<p class="kicker">Google sync</p><h1>${configured ? "Connected" : "Not connected"}</h1>
+    <p>${configured ? "New saves can go to your Google Sheet and trip journal." : "The log stays on this phone until you add the web app address and token."}</p>
+    ${field("Web app address", "googleUrl", google.url, { placeholder: "https://script.google.com/macros/s/…/exec" })}
+    ${field("Token", "googleToken", "", { type: "password", placeholder: google.token ? "Saved on this phone. Type to replace it." : "The token from the script" })}
+    <button type="button" class="btn primary" data-action="saveGoogle">Save connection</button>
+    <button type="button" class="btn block" data-action="testGoogle">Test connection</button>
+    <button type="button" class="btn block${google.auto ? " on" : ""}" data-action="toggleAuto">${google.auto ? "Sending new saves automatically" : "Send new saves automatically"}</button>
+    <p class="outbox-count">${esc(count)}</p>
+    ${google.lastSyncAt ? `<p class="hint">Last sent ${esc(fmt(google.lastSyncAt))}.</p>` : ""}
+    ${google.lastError ? `<p>${esc(google.lastError)}</p>` : `<p class="hint">${configured ? "Sync now sends whatever is still waiting." : "Nothing is sent until a connection is saved."}</p>`}
+    <button type="button" class="btn block" data-action="syncNow">Sync now</button>
+    <button type="button" class="btn quiet block" data-action="sendLog">Send the log on this phone</button>
+    ${links}
+    <h2>Practice on this phone</h2>
+    ${demoOn ? `${demoBanner()}<p class="endpoint">${esc(DEMO_ENDPOINT_LABEL)}</p><p class="outbox-count">${esc(demoLabel)}</p>
+      <button type="button" class="btn block" data-action="syncDemoNow">Sync the sample</button>
+      <button type="button" class="btn block" data-action="openSampleSheet">Sample Sheet</button>
+      <button type="button" class="btn block" data-action="openSampleDoc">Sample journal</button>
+      <button type="button" class="btn quiet block" data-action="queueLog">Queue the sample log</button>
+      <button type="button" class="btn quiet block" data-action="disableDemo">Turn sample demo off</button>`
+      : `<p class="hint">The sample demo draws a pretend Sheet and journal on this phone. It does not talk to Google.</p>
+      <button type="button" class="btn quiet block" data-action="enableDemo">Turn on sample demo</button>`}`;
 }
 
 function screenSampleSheet() {
@@ -2868,10 +2978,60 @@ const actions = {
     flash(outboxLabel(readOutbox()));
     paint();
   },
+  saveGoogle() {
+    const current = readGoogle();
+    const url = (document.querySelector('[name="googleUrl"]')?.value || "").trim();
+    const typed = document.querySelector('[name="googleToken"]')?.value || "";
+    const token = typed.trim() || current.token;
+    const next = { ...current, url, token };
+    if (!googleConfigured(next)) {
+      flash(url.startsWith("https://script.google.com/") ? "Add the token from the script." : "Use the web app link that ends in /exec.");
+      return;
+    }
+    if (!current.since) next.since = nowIso();
+    next.lastError = "";
+    writeGoogle(next);
+    flash("Connection saved on this phone.");
+    paint();
+  },
+  testGoogle() {
+    actions.saveGoogle();
+    if (!googleConfigured(readGoogle())) return;
+    return flushSync({ test: true });
+  },
+  toggleAuto() {
+    const config = readGoogle();
+    if (!googleConfigured(config)) {
+      flash("Save the connection first.");
+      return;
+    }
+    config.auto = !config.auto;
+    writeGoogle(config);
+    paint();
+    if (config.auto && ui.online) return flushSync();
+  },
   syncNow() {
+    if (!googleConfigured(readGoogle())) {
+      flash("Save the connection first.");
+      return;
+    }
+    return flushSync();
+  },
+  sendLog() {
+    if (!googleConfigured(readGoogle())) {
+      flash("Save the connection first.");
+      return;
+    }
+    writeSyncOutbox(queueSync(readSyncOutbox(), syncChanges(state, "")));
+    updateSaveLabel();
+    paint();
+    if (ui.online) return flushSync();
+    flash("Queued on this phone. It sends when you have a signal.");
+  },
+  syncDemoNow() {
     if (!state.settings.demoSync) return;
     writeOutbox(syncDemo(readOutbox()));
-    flash("All synced");
+    flash("Sample synced on this phone.");
     updateSaveLabel();
     paint();
   },
@@ -3239,6 +3399,8 @@ app.addEventListener("change", (event) => {
   window.addEventListener("online", () => {
     ui.online = true;
     updateSaveLabel();
+    const config = readGoogle();
+    if (googleConfigured(config) && config.auto) flushSync({ quiet: true });
   });
   window.addEventListener("offline", () => {
     ui.online = false;
