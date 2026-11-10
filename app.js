@@ -1089,7 +1089,7 @@ function screenTrip() {
   actions.push(
     `<button type="button" class="btn" data-action="best">Best moment</button>`,
     `<button type="button" class="btn" data-action="newTicket" data-link="1">Maintenance ticket</button>`,
-    `<button type="button" class="btn primary" data-action="arrive">${trip.status === "underway" ? "Arrived — wrap up" : "Edit wrap-up"}</button>`,
+    `<button type="button" class="btn arrived" data-action="arrive">${trip.status === "underway" ? "Arrived — wrap up" : "Edit wrap-up"}</button>`,
   );
   const conditions = ui.editingWeather && ui.form?._kind === "weather"
     ? `${weatherEditor(ui.form)}<button type="button" class="btn primary" data-action="saveConditions">Save conditions</button><button type="button" class="btn quiet block" data-action="cancelConditions">Cancel</button>`
@@ -1168,8 +1168,8 @@ function precheckEditor(form) {
     const status = form[`${key}Status`] || "";
     return `<div class="field"><span>${esc(label)}</span>
       <div class="split">
-        <button type="button" class="btn${status === "ok" ? " on" : ""}" data-action="setCheck" data-check="${key}" data-value="ok">OK</button>
-        <button type="button" class="btn${status === "attention" ? " on" : ""}" data-action="setCheck" data-check="${key}" data-value="attention">Needs attention</button>
+        <button type="button" class="btn${status === "ok" ? " ok" : ""}" data-action="setCheck" data-check="${key}" data-value="ok">OK</button>
+        <button type="button" class="btn${status === "attention" ? " attention" : ""}" data-action="setCheck" data-check="${key}" data-value="attention">Needs attention</button>
       </div>
       ${status === "attention" ? `${field("Note", `${key}Note`, form[`${key}Note`] || "", { placeholder: "Optional" })}
         <button type="button" class="btn block${form[`${key}Ticket`] ? " on" : ""}" data-action="markTicket" data-check="${key}">${form[`${key}Ticket`] ? "Ticket will open when you save" : "Open a maintenance ticket"}</button>` : ""}
