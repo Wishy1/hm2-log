@@ -1,56 +1,2361 @@
-(()=>{var Fp=Object.create;var ya=Object.defineProperty;var Ap=Object.getOwnPropertyDescriptor;var jp=Object.getOwnPropertyNames;var Hp=Object.getPrototypeOf,Up=Object.prototype.hasOwnProperty;var Lo=(e,t,n)=>()=>{if(n)throw n[0];try{return e&&(t=e(e=0)),t}catch(r){throw n=[r],r}};var ht=(e,t)=>()=>{try{return t||e((t={exports:{}}).exports,t),t.exports}catch(n){throw t=0,n}};var Wp=(e,t,n,r)=>{if(t&&typeof t=="object"||typeof t=="function")for(let o of jp(t))!Up.call(e,o)&&o!==n&&ya(e,o,{get:()=>t[o],enumerable:!(r=Ap(t,o))||r.enumerable});return e};var cn=(e,t,n)=>(n=e!=null?Fp(Hp(e)):{},Wp(t||!e||!e.__esModule?ya(n,"default",{value:e,enumerable:!0}):n,e));var za=ht(A=>{"use strict";var _r=Symbol.for("react.element"),Bp=Symbol.for("react.portal"),Vp=Symbol.for("react.fragment"),Qp=Symbol.for("react.strict_mode"),Kp=Symbol.for("react.profiler"),Yp=Symbol.for("react.provider"),Gp=Symbol.for("react.context"),bp=Symbol.for("react.forward_ref"),Jp=Symbol.for("react.suspense"),Zp=Symbol.for("react.memo"),Xp=Symbol.for("react.lazy"),wa=Symbol.iterator;function qp(e){return e===null||typeof e!="object"?null:(e=wa&&e[wa]||e["@@iterator"],typeof e=="function"?e:null)}var Ea={isMounted:function(){return!1},enqueueForceUpdate:function(){},enqueueReplaceState:function(){},enqueueSetState:function(){}},xa=Object.assign,Ca={};function Dn(e,t,n){this.props=e,this.context=t,this.refs=Ca,this.updater=n||Ea}Dn.prototype.isReactComponent={};Dn.prototype.setState=function(e,t){if(typeof e!="object"&&typeof e!="function"&&e!=null)throw Error("setState(...): takes an object of state variables to update or a function which returns an object of state variables.");this.updater.enqueueSetState(this,e,t,"setState")};Dn.prototype.forceUpdate=function(e){this.updater.enqueueForceUpdate(this,e,"forceUpdate")};function Ta(){}Ta.prototype=Dn.prototype;function _l(e,t,n){this.props=e,this.context=t,this.refs=Ca,this.updater=n||Ea}var Pl=_l.prototype=new Ta;Pl.constructor=_l;xa(Pl,Dn.prototype);Pl.isPureReactComponent=!0;var Sa=Array.isArray,_a=Object.prototype.hasOwnProperty,Nl={current:null},Pa={key:!0,ref:!0,__self:!0,__source:!0};function Na(e,t,n){var r,o={},i=null,l=null;if(t!=null)for(r in t.ref!==void 0&&(l=t.ref),t.key!==void 0&&(i=""+t.key),t)_a.call(t,r)&&!Pa.hasOwnProperty(r)&&(o[r]=t[r]);var s=arguments.length-2;if(s===1)o.children=n;else if(1<s){for(var a=Array(s),p=0;p<s;p++)a[p]=arguments[p+2];o.children=a}if(e&&e.defaultProps)for(r in s=e.defaultProps,s)o[r]===void 0&&(o[r]=s[r]);return{$$typeof:_r,type:e,key:i,ref:l,props:o,_owner:Nl.current}}function em(e,t){return{$$typeof:_r,type:e.type,key:t,ref:e.ref,props:e.props,_owner:e._owner}}function Ml(e){return typeof e=="object"&&e!==null&&e.$$typeof===_r}function tm(e){var t={"=":"=0",":":"=2"};return"$"+e.replace(/[=:]/g,function(n){return t[n]})}var ka=/\/+/g;function Tl(e,t){return typeof e=="object"&&e!==null&&e.key!=null?tm(""+e.key):t.toString(36)}function Oo(e,t,n,r,o){var i=typeof e;(i==="undefined"||i==="boolean")&&(e=null);var l=!1;if(e===null)l=!0;else switch(i){case"string":case"number":l=!0;break;case"object":switch(e.$$typeof){case _r:case Bp:l=!0}}if(l)return l=e,o=o(l),e=r===""?"."+Tl(l,0):r,Sa(o)?(n="",e!=null&&(n=e.replace(ka,"$&/")+"/"),Oo(o,t,n,"",function(p){return p})):o!=null&&(Ml(o)&&(o=em(o,n+(!o.key||l&&l.key===o.key?"":(""+o.key).replace(ka,"$&/")+"/")+e)),t.push(o)),1;if(l=0,r=r===""?".":r+":",Sa(e))for(var s=0;s<e.length;s++){i=e[s];var a=r+Tl(i,s);l+=Oo(i,t,n,a,o)}else if(a=qp(e),typeof a=="function")for(e=a.call(e),s=0;!(i=e.next()).done;)i=i.value,a=r+Tl(i,s++),l+=Oo(i,t,n,a,o);else if(i==="object")throw t=String(e),Error("Objects are not valid as a React child (found: "+(t==="[object Object]"?"object with keys {"+Object.keys(e).join(", ")+"}":t)+"). If you meant to render a collection of children, use an array instead.");return l}function Ro(e,t,n){if(e==null)return e;var r=[],o=0;return Oo(e,r,"","",function(i){return t.call(n,i,o++)}),r}function nm(e){if(e._status===-1){var t=e._result;t=t(),t.then(function(n){(e._status===0||e._status===-1)&&(e._status=1,e._result=n)},function(n){(e._status===0||e._status===-1)&&(e._status=2,e._result=n)}),e._status===-1&&(e._status=0,e._result=t)}if(e._status===1)return e._result.default;throw e._result}var Ne={current:null},Do={transition:null},rm={ReactCurrentDispatcher:Ne,ReactCurrentBatchConfig:Do,ReactCurrentOwner:Nl};function Ma(){throw Error("act(...) is not supported in production builds of React.")}A.Children={map:Ro,forEach:function(e,t,n){Ro(e,function(){t.apply(this,arguments)},n)},count:function(e){var t=0;return Ro(e,function(){t++}),t},toArray:function(e){return Ro(e,function(t){return t})||[]},only:function(e){if(!Ml(e))throw Error("React.Children.only expected to receive a single React element child.");return e}};A.Component=Dn;A.Fragment=Vp;A.Profiler=Kp;A.PureComponent=_l;A.StrictMode=Qp;A.Suspense=Jp;A.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED=rm;A.act=Ma;A.cloneElement=function(e,t,n){if(e==null)throw Error("React.cloneElement(...): The argument must be a React element, but you passed "+e+".");var r=xa({},e.props),o=e.key,i=e.ref,l=e._owner;if(t!=null){if(t.ref!==void 0&&(i=t.ref,l=Nl.current),t.key!==void 0&&(o=""+t.key),e.type&&e.type.defaultProps)var s=e.type.defaultProps;for(a in t)_a.call(t,a)&&!Pa.hasOwnProperty(a)&&(r[a]=t[a]===void 0&&s!==void 0?s[a]:t[a])}var a=arguments.length-2;if(a===1)r.children=n;else if(1<a){s=Array(a);for(var p=0;p<a;p++)s[p]=arguments[p+2];r.children=s}return{$$typeof:_r,type:e.type,key:o,ref:i,props:r,_owner:l}};A.createContext=function(e){return e={$$typeof:Gp,_currentValue:e,_currentValue2:e,_threadCount:0,Provider:null,Consumer:null,_defaultValue:null,_globalName:null},e.Provider={$$typeof:Yp,_context:e},e.Consumer=e};A.createElement=Na;A.createFactory=function(e){var t=Na.bind(null,e);return t.type=e,t};A.createRef=function(){return{current:null}};A.forwardRef=function(e){return{$$typeof:bp,render:e}};A.isValidElement=Ml;A.lazy=function(e){return{$$typeof:Xp,_payload:{_status:-1,_result:e},_init:nm}};A.memo=function(e,t){return{$$typeof:Zp,type:e,compare:t===void 0?null:t}};A.startTransition=function(e){var t=Do.transition;Do.transition={};try{e()}finally{Do.transition=t}};A.unstable_act=Ma;A.useCallback=function(e,t){return Ne.current.useCallback(e,t)};A.useContext=function(e){return Ne.current.useContext(e)};A.useDebugValue=function(){};A.useDeferredValue=function(e){return Ne.current.useDeferredValue(e)};A.useEffect=function(e,t){return Ne.current.useEffect(e,t)};A.useId=function(){return Ne.current.useId()};A.useImperativeHandle=function(e,t,n){return Ne.current.useImperativeHandle(e,t,n)};A.useInsertionEffect=function(e,t){return Ne.current.useInsertionEffect(e,t)};A.useLayoutEffect=function(e,t){return Ne.current.useLayoutEffect(e,t)};A.useMemo=function(e,t){return Ne.current.useMemo(e,t)};A.useReducer=function(e,t,n){return Ne.current.useReducer(e,t,n)};A.useRef=function(e){return Ne.current.useRef(e)};A.useState=function(e){return Ne.current.useState(e)};A.useSyncExternalStore=function(e,t,n){return Ne.current.useSyncExternalStore(e,t,n)};A.useTransition=function(){return Ne.current.useTransition()};A.version="18.3.1"});var Pr=ht((Fg,La)=>{"use strict";La.exports=za()});var Ua=ht(G=>{"use strict";function Ol(e,t){var n=e.length;e.push(t);e:for(;0<n;){var r=n-1>>>1,o=e[r];if(0<Io(o,t))e[r]=t,e[n]=o,n=r;else break e}}function st(e){return e.length===0?null:e[0]}function Fo(e){if(e.length===0)return null;var t=e[0],n=e.pop();if(n!==t){e[0]=n;e:for(var r=0,o=e.length,i=o>>>1;r<i;){var l=2*(r+1)-1,s=e[l],a=l+1,p=e[a];if(0>Io(s,n))a<o&&0>Io(p,s)?(e[r]=p,e[a]=n,r=a):(e[r]=s,e[l]=n,r=l);else if(a<o&&0>Io(p,n))e[r]=p,e[a]=n,r=a;else break e}}return t}function Io(e,t){var n=e.sortIndex-t.sortIndex;return n!==0?n:e.id-t.id}typeof performance=="object"&&typeof performance.now=="function"?(Ra=performance,G.unstable_now=function(){return Ra.now()}):(zl=Date,Oa=zl.now(),G.unstable_now=function(){return zl.now()-Oa});var Ra,zl,Oa,gt=[],Ht=[],om=1,Ze=null,Ee=3,Ao=!1,dn=!1,Mr=!1,$a=typeof setTimeout=="function"?setTimeout:null,Fa=typeof clearTimeout=="function"?clearTimeout:null,Da=typeof setImmediate!="undefined"?setImmediate:null;typeof navigator!="undefined"&&navigator.scheduling!==void 0&&navigator.scheduling.isInputPending!==void 0&&navigator.scheduling.isInputPending.bind(navigator.scheduling);function Dl(e){for(var t=st(Ht);t!==null;){if(t.callback===null)Fo(Ht);else if(t.startTime<=e)Fo(Ht),t.sortIndex=t.expirationTime,Ol(gt,t);else break;t=st(Ht)}}function Il(e){if(Mr=!1,Dl(e),!dn)if(st(gt)!==null)dn=!0,Fl($l);else{var t=st(Ht);t!==null&&Al(Il,t.startTime-e)}}function $l(e,t){dn=!1,Mr&&(Mr=!1,Fa(zr),zr=-1),Ao=!0;var n=Ee;try{for(Dl(t),Ze=st(gt);Ze!==null&&(!(Ze.expirationTime>t)||e&&!Ha());){var r=Ze.callback;if(typeof r=="function"){Ze.callback=null,Ee=Ze.priorityLevel;var o=r(Ze.expirationTime<=t);t=G.unstable_now(),typeof o=="function"?Ze.callback=o:Ze===st(gt)&&Fo(gt),Dl(t)}else Fo(gt);Ze=st(gt)}if(Ze!==null)var i=!0;else{var l=st(Ht);l!==null&&Al(Il,l.startTime-t),i=!1}return i}finally{Ze=null,Ee=n,Ao=!1}}var jo=!1,$o=null,zr=-1,Aa=5,ja=-1;function Ha(){return!(G.unstable_now()-ja<Aa)}function Ll(){if($o!==null){var e=G.unstable_now();ja=e;var t=!0;try{t=$o(!0,e)}finally{t?Nr():(jo=!1,$o=null)}}else jo=!1}var Nr;typeof Da=="function"?Nr=function(){Da(Ll)}:typeof MessageChannel!="undefined"?(Rl=new MessageChannel,Ia=Rl.port2,Rl.port1.onmessage=Ll,Nr=function(){Ia.postMessage(null)}):Nr=function(){$a(Ll,0)};var Rl,Ia;function Fl(e){$o=e,jo||(jo=!0,Nr())}function Al(e,t){zr=$a(function(){e(G.unstable_now())},t)}G.unstable_IdlePriority=5;G.unstable_ImmediatePriority=1;G.unstable_LowPriority=4;G.unstable_NormalPriority=3;G.unstable_Profiling=null;G.unstable_UserBlockingPriority=2;G.unstable_cancelCallback=function(e){e.callback=null};G.unstable_continueExecution=function(){dn||Ao||(dn=!0,Fl($l))};G.unstable_forceFrameRate=function(e){0>e||125<e?console.error("forceFrameRate takes a positive int between 0 and 125, forcing frame rates higher than 125 fps is not supported"):Aa=0<e?Math.floor(1e3/e):5};G.unstable_getCurrentPriorityLevel=function(){return Ee};G.unstable_getFirstCallbackNode=function(){return st(gt)};G.unstable_next=function(e){switch(Ee){case 1:case 2:case 3:var t=3;break;default:t=Ee}var n=Ee;Ee=t;try{return e()}finally{Ee=n}};G.unstable_pauseExecution=function(){};G.unstable_requestPaint=function(){};G.unstable_runWithPriority=function(e,t){switch(e){case 1:case 2:case 3:case 4:case 5:break;default:e=3}var n=Ee;Ee=e;try{return t()}finally{Ee=n}};G.unstable_scheduleCallback=function(e,t,n){var r=G.unstable_now();switch(typeof n=="object"&&n!==null?(n=n.delay,n=typeof n=="number"&&0<n?r+n:r):n=r,e){case 1:var o=-1;break;case 2:o=250;break;case 5:o=1073741823;break;case 4:o=1e4;break;default:o=5e3}return o=n+o,e={id:om++,callback:t,priorityLevel:e,startTime:n,expirationTime:o,sortIndex:-1},n>r?(e.sortIndex=n,Ol(Ht,e),st(gt)===null&&e===st(Ht)&&(Mr?(Fa(zr),zr=-1):Mr=!0,Al(Il,n-r))):(e.sortIndex=o,Ol(gt,e),dn||Ao||(dn=!0,Fl($l))),e};G.unstable_shouldYield=Ha;G.unstable_wrapCallback=function(e){var t=Ee;return function(){var n=Ee;Ee=t;try{return e.apply(this,arguments)}finally{Ee=n}}}});var Ba=ht((jg,Wa)=>{"use strict";Wa.exports=Ua()});var Gf=ht(Ye=>{"use strict";var im=Pr(),Qe=Ba();function E(e){for(var t="https://reactjs.org/docs/error-decoder.html?invariant="+e,n=1;n<arguments.length;n++)t+="&args[]="+encodeURIComponent(arguments[n]);return"Minified React error #"+e+"; visit "+t+" for the full message or use the non-minified dev environment for full errors and additional helpful warnings."}var Jc=new Set,Xr={};function Cn(e,t){tr(e,t),tr(e+"Capture",t)}function tr(e,t){for(Xr[e]=t,e=0;e<t.length;e++)Jc.add(t[e])}var Mt=!(typeof window=="undefined"||typeof window.document=="undefined"||typeof window.document.createElement=="undefined"),ss=Object.prototype.hasOwnProperty,lm=/^[:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD][:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\-.0-9\u00B7\u0300-\u036F\u203F-\u2040]*$/,Va={},Qa={};function sm(e){return ss.call(Qa,e)?!0:ss.call(Va,e)?!1:lm.test(e)?Qa[e]=!0:(Va[e]=!0,!1)}function um(e,t,n,r){if(n!==null&&n.type===0)return!1;switch(typeof t){case"function":case"symbol":return!0;case"boolean":return r?!1:n!==null?!n.acceptsBooleans:(e=e.toLowerCase().slice(0,5),e!=="data-"&&e!=="aria-");default:return!1}}function am(e,t,n,r){if(t===null||typeof t=="undefined"||um(e,t,n,r))return!0;if(r)return!1;if(n!==null)switch(n.type){case 3:return!t;case 4:return t===!1;case 5:return isNaN(t);case 6:return isNaN(t)||1>t}return!1}function Le(e,t,n,r,o,i,l){this.acceptsBooleans=t===2||t===3||t===4,this.attributeName=r,this.attributeNamespace=o,this.mustUseProperty=n,this.propertyName=e,this.type=t,this.sanitizeURL=i,this.removeEmptyString=l}var ye={};"children dangerouslySetInnerHTML defaultValue defaultChecked innerHTML suppressContentEditableWarning suppressHydrationWarning style".split(" ").forEach(function(e){ye[e]=new Le(e,0,!1,e,null,!1,!1)});[["acceptCharset","accept-charset"],["className","class"],["htmlFor","for"],["httpEquiv","http-equiv"]].forEach(function(e){var t=e[0];ye[t]=new Le(t,1,!1,e[1],null,!1,!1)});["contentEditable","draggable","spellCheck","value"].forEach(function(e){ye[e]=new Le(e,2,!1,e.toLowerCase(),null,!1,!1)});["autoReverse","externalResourcesRequired","focusable","preserveAlpha"].forEach(function(e){ye[e]=new Le(e,2,!1,e,null,!1,!1)});"allowFullScreen async autoFocus autoPlay controls default defer disabled disablePictureInPicture disableRemotePlayback formNoValidate hidden loop noModule noValidate open playsInline readOnly required reversed scoped seamless itemScope".split(" ").forEach(function(e){ye[e]=new Le(e,3,!1,e.toLowerCase(),null,!1,!1)});["checked","multiple","muted","selected"].forEach(function(e){ye[e]=new Le(e,3,!0,e,null,!1,!1)});["capture","download"].forEach(function(e){ye[e]=new Le(e,4,!1,e,null,!1,!1)});["cols","rows","size","span"].forEach(function(e){ye[e]=new Le(e,6,!1,e,null,!1,!1)});["rowSpan","start"].forEach(function(e){ye[e]=new Le(e,5,!1,e.toLowerCase(),null,!1,!1)});var qs=/[\-:]([a-z])/g;function eu(e){return e[1].toUpperCase()}"accent-height alignment-baseline arabic-form baseline-shift cap-height clip-path clip-rule color-interpolation color-interpolation-filters color-profile color-rendering dominant-baseline enable-background fill-opacity fill-rule flood-color flood-opacity font-family font-size font-size-adjust font-stretch font-style font-variant font-weight glyph-name glyph-orientation-horizontal glyph-orientation-vertical horiz-adv-x horiz-origin-x image-rendering letter-spacing lighting-color marker-end marker-mid marker-start overline-position overline-thickness paint-order panose-1 pointer-events rendering-intent shape-rendering stop-color stop-opacity strikethrough-position strikethrough-thickness stroke-dasharray stroke-dashoffset stroke-linecap stroke-linejoin stroke-miterlimit stroke-opacity stroke-width text-anchor text-decoration text-rendering underline-position underline-thickness unicode-bidi unicode-range units-per-em v-alphabetic v-hanging v-ideographic v-mathematical vector-effect vert-adv-y vert-origin-x vert-origin-y word-spacing writing-mode xmlns:xlink x-height".split(" ").forEach(function(e){var t=e.replace(qs,eu);ye[t]=new Le(t,1,!1,e,null,!1,!1)});"xlink:actuate xlink:arcrole xlink:role xlink:show xlink:title xlink:type".split(" ").forEach(function(e){var t=e.replace(qs,eu);ye[t]=new Le(t,1,!1,e,"http://www.w3.org/1999/xlink",!1,!1)});["xml:base","xml:lang","xml:space"].forEach(function(e){var t=e.replace(qs,eu);ye[t]=new Le(t,1,!1,e,"http://www.w3.org/XML/1998/namespace",!1,!1)});["tabIndex","crossOrigin"].forEach(function(e){ye[e]=new Le(e,1,!1,e.toLowerCase(),null,!1,!1)});ye.xlinkHref=new Le("xlinkHref",1,!1,"xlink:href","http://www.w3.org/1999/xlink",!0,!1);["src","href","action","formAction"].forEach(function(e){ye[e]=new Le(e,1,!1,e.toLowerCase(),null,!0,!0)});function tu(e,t,n,r){var o=ye.hasOwnProperty(t)?ye[t]:null;(o!==null?o.type!==0:r||!(2<t.length)||t[0]!=="o"&&t[0]!=="O"||t[1]!=="n"&&t[1]!=="N")&&(am(t,n,o,r)&&(n=null),r||o===null?sm(t)&&(n===null?e.removeAttribute(t):e.setAttribute(t,""+n)):o.mustUseProperty?e[o.propertyName]=n===null?o.type===3?!1:"":n:(t=o.attributeName,r=o.attributeNamespace,n===null?e.removeAttribute(t):(o=o.type,n=o===3||o===4&&n===!0?"":""+n,r?e.setAttributeNS(r,t,n):e.setAttribute(t,n))))}var Ot=im.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,Ho=Symbol.for("react.element"),Fn=Symbol.for("react.portal"),An=Symbol.for("react.fragment"),nu=Symbol.for("react.strict_mode"),us=Symbol.for("react.profiler"),Zc=Symbol.for("react.provider"),Xc=Symbol.for("react.context"),ru=Symbol.for("react.forward_ref"),as=Symbol.for("react.suspense"),cs=Symbol.for("react.suspense_list"),ou=Symbol.for("react.memo"),Wt=Symbol.for("react.lazy"),qc=Symbol.for("react.offscreen"),Ka=Symbol.iterator;function Lr(e){return e===null||typeof e!="object"?null:(e=Ka&&e[Ka]||e["@@iterator"],typeof e=="function"?e:null)}var re=Object.assign,jl;function jr(e){if(jl===void 0)try{throw Error()}catch(n){var t=n.stack.trim().match(/\n( *(at )?)/);jl=t&&t[1]||""}return`
-`+jl+e}var Hl=!1;function Ul(e,t){if(!e||Hl)return"";Hl=!0;var n=Error.prepareStackTrace;Error.prepareStackTrace=void 0;try{if(t)if(t=function(){throw Error()},Object.defineProperty(t.prototype,"props",{set:function(){throw Error()}}),typeof Reflect=="object"&&Reflect.construct){try{Reflect.construct(t,[])}catch(p){var r=p}Reflect.construct(e,[],t)}else{try{t.call()}catch(p){r=p}e.call(t.prototype)}else{try{throw Error()}catch(p){r=p}e()}}catch(p){if(p&&r&&typeof p.stack=="string"){for(var o=p.stack.split(`
-`),i=r.stack.split(`
-`),l=o.length-1,s=i.length-1;1<=l&&0<=s&&o[l]!==i[s];)s--;for(;1<=l&&0<=s;l--,s--)if(o[l]!==i[s]){if(l!==1||s!==1)do if(l--,s--,0>s||o[l]!==i[s]){var a=`
-`+o[l].replace(" at new "," at ");return e.displayName&&a.includes("<anonymous>")&&(a=a.replace("<anonymous>",e.displayName)),a}while(1<=l&&0<=s);break}}}finally{Hl=!1,Error.prepareStackTrace=n}return(e=e?e.displayName||e.name:"")?jr(e):""}function cm(e){switch(e.tag){case 5:return jr(e.type);case 16:return jr("Lazy");case 13:return jr("Suspense");case 19:return jr("SuspenseList");case 0:case 2:case 15:return e=Ul(e.type,!1),e;case 11:return e=Ul(e.type.render,!1),e;case 1:return e=Ul(e.type,!0),e;default:return""}}function ds(e){if(e==null)return null;if(typeof e=="function")return e.displayName||e.name||null;if(typeof e=="string")return e;switch(e){case An:return"Fragment";case Fn:return"Portal";case us:return"Profiler";case nu:return"StrictMode";case as:return"Suspense";case cs:return"SuspenseList"}if(typeof e=="object")switch(e.$$typeof){case Xc:return(e.displayName||"Context")+".Consumer";case Zc:return(e._context.displayName||"Context")+".Provider";case ru:var t=e.render;return e=e.displayName,e||(e=t.displayName||t.name||"",e=e!==""?"ForwardRef("+e+")":"ForwardRef"),e;case ou:return t=e.displayName||null,t!==null?t:ds(e.type)||"Memo";case Wt:t=e._payload,e=e._init;try{return ds(e(t))}catch{}}return null}function dm(e){var t=e.type;switch(e.tag){case 24:return"Cache";case 9:return(t.displayName||"Context")+".Consumer";case 10:return(t._context.displayName||"Context")+".Provider";case 18:return"DehydratedFragment";case 11:return e=t.render,e=e.displayName||e.name||"",t.displayName||(e!==""?"ForwardRef("+e+")":"ForwardRef");case 7:return"Fragment";case 5:return t;case 4:return"Portal";case 3:return"Root";case 6:return"Text";case 16:return ds(t);case 8:return t===nu?"StrictMode":"Mode";case 22:return"Offscreen";case 12:return"Profiler";case 21:return"Scope";case 13:return"Suspense";case 19:return"SuspenseList";case 25:return"TracingMarker";case 1:case 0:case 17:case 2:case 14:case 15:if(typeof t=="function")return t.displayName||t.name||null;if(typeof t=="string")return t}return null}function nn(e){switch(typeof e){case"boolean":case"number":case"string":case"undefined":return e;case"object":return e;default:return""}}function ed(e){var t=e.type;return(e=e.nodeName)&&e.toLowerCase()==="input"&&(t==="checkbox"||t==="radio")}function fm(e){var t=ed(e)?"checked":"value",n=Object.getOwnPropertyDescriptor(e.constructor.prototype,t),r=""+e[t];if(!e.hasOwnProperty(t)&&typeof n!="undefined"&&typeof n.get=="function"&&typeof n.set=="function"){var o=n.get,i=n.set;return Object.defineProperty(e,t,{configurable:!0,get:function(){return o.call(this)},set:function(l){r=""+l,i.call(this,l)}}),Object.defineProperty(e,t,{enumerable:n.enumerable}),{getValue:function(){return r},setValue:function(l){r=""+l},stopTracking:function(){e._valueTracker=null,delete e[t]}}}}function Uo(e){e._valueTracker||(e._valueTracker=fm(e))}function td(e){if(!e)return!1;var t=e._valueTracker;if(!t)return!0;var n=t.getValue(),r="";return e&&(r=ed(e)?e.checked?"true":"false":e.value),e=r,e!==n?(t.setValue(e),!0):!1}function hi(e){if(e=e||(typeof document!="undefined"?document:void 0),typeof e=="undefined")return null;try{return e.activeElement||e.body}catch{return e.body}}function fs(e,t){var n=t.checked;return re({},t,{defaultChecked:void 0,defaultValue:void 0,value:void 0,checked:n!=null?n:e._wrapperState.initialChecked})}function Ya(e,t){var n=t.defaultValue==null?"":t.defaultValue,r=t.checked!=null?t.checked:t.defaultChecked;n=nn(t.value!=null?t.value:n),e._wrapperState={initialChecked:r,initialValue:n,controlled:t.type==="checkbox"||t.type==="radio"?t.checked!=null:t.value!=null}}function nd(e,t){t=t.checked,t!=null&&tu(e,"checked",t,!1)}function ps(e,t){nd(e,t);var n=nn(t.value),r=t.type;if(n!=null)r==="number"?(n===0&&e.value===""||e.value!=n)&&(e.value=""+n):e.value!==""+n&&(e.value=""+n);else if(r==="submit"||r==="reset"){e.removeAttribute("value");return}t.hasOwnProperty("value")?ms(e,t.type,n):t.hasOwnProperty("defaultValue")&&ms(e,t.type,nn(t.defaultValue)),t.checked==null&&t.defaultChecked!=null&&(e.defaultChecked=!!t.defaultChecked)}function Ga(e,t,n){if(t.hasOwnProperty("value")||t.hasOwnProperty("defaultValue")){var r=t.type;if(!(r!=="submit"&&r!=="reset"||t.value!==void 0&&t.value!==null))return;t=""+e._wrapperState.initialValue,n||t===e.value||(e.value=t),e.defaultValue=t}n=e.name,n!==""&&(e.name=""),e.defaultChecked=!!e._wrapperState.initialChecked,n!==""&&(e.name=n)}function ms(e,t,n){(t!=="number"||hi(e.ownerDocument)!==e)&&(n==null?e.defaultValue=""+e._wrapperState.initialValue:e.defaultValue!==""+n&&(e.defaultValue=""+n))}var Hr=Array.isArray;function bn(e,t,n,r){if(e=e.options,t){t={};for(var o=0;o<n.length;o++)t["$"+n[o]]=!0;for(n=0;n<e.length;n++)o=t.hasOwnProperty("$"+e[n].value),e[n].selected!==o&&(e[n].selected=o),o&&r&&(e[n].defaultSelected=!0)}else{for(n=""+nn(n),t=null,o=0;o<e.length;o++){if(e[o].value===n){e[o].selected=!0,r&&(e[o].defaultSelected=!0);return}t!==null||e[o].disabled||(t=e[o])}t!==null&&(t.selected=!0)}}function hs(e,t){if(t.dangerouslySetInnerHTML!=null)throw Error(E(91));return re({},t,{value:void 0,defaultValue:void 0,children:""+e._wrapperState.initialValue})}function ba(e,t){var n=t.value;if(n==null){if(n=t.children,t=t.defaultValue,n!=null){if(t!=null)throw Error(E(92));if(Hr(n)){if(1<n.length)throw Error(E(93));n=n[0]}t=n}t==null&&(t=""),n=t}e._wrapperState={initialValue:nn(n)}}function rd(e,t){var n=nn(t.value),r=nn(t.defaultValue);n!=null&&(n=""+n,n!==e.value&&(e.value=n),t.defaultValue==null&&e.defaultValue!==n&&(e.defaultValue=n)),r!=null&&(e.defaultValue=""+r)}function Ja(e){var t=e.textContent;t===e._wrapperState.initialValue&&t!==""&&t!==null&&(e.value=t)}function od(e){switch(e){case"svg":return"http://www.w3.org/2000/svg";case"math":return"http://www.w3.org/1998/Math/MathML";default:return"http://www.w3.org/1999/xhtml"}}function gs(e,t){return e==null||e==="http://www.w3.org/1999/xhtml"?od(t):e==="http://www.w3.org/2000/svg"&&t==="foreignObject"?"http://www.w3.org/1999/xhtml":e}var Wo,id=(function(e){return typeof MSApp!="undefined"&&MSApp.execUnsafeLocalFunction?function(t,n,r,o){MSApp.execUnsafeLocalFunction(function(){return e(t,n,r,o)})}:e})(function(e,t){if(e.namespaceURI!=="http://www.w3.org/2000/svg"||"innerHTML"in e)e.innerHTML=t;else{for(Wo=Wo||document.createElement("div"),Wo.innerHTML="<svg>"+t.valueOf().toString()+"</svg>",t=Wo.firstChild;e.firstChild;)e.removeChild(e.firstChild);for(;t.firstChild;)e.appendChild(t.firstChild)}});function qr(e,t){if(t){var n=e.firstChild;if(n&&n===e.lastChild&&n.nodeType===3){n.nodeValue=t;return}}e.textContent=t}var Br={animationIterationCount:!0,aspectRatio:!0,borderImageOutset:!0,borderImageSlice:!0,borderImageWidth:!0,boxFlex:!0,boxFlexGroup:!0,boxOrdinalGroup:!0,columnCount:!0,columns:!0,flex:!0,flexGrow:!0,flexPositive:!0,flexShrink:!0,flexNegative:!0,flexOrder:!0,gridArea:!0,gridRow:!0,gridRowEnd:!0,gridRowSpan:!0,gridRowStart:!0,gridColumn:!0,gridColumnEnd:!0,gridColumnSpan:!0,gridColumnStart:!0,fontWeight:!0,lineClamp:!0,lineHeight:!0,opacity:!0,order:!0,orphans:!0,tabSize:!0,widows:!0,zIndex:!0,zoom:!0,fillOpacity:!0,floodOpacity:!0,stopOpacity:!0,strokeDasharray:!0,strokeDashoffset:!0,strokeMiterlimit:!0,strokeOpacity:!0,strokeWidth:!0},pm=["Webkit","ms","Moz","O"];Object.keys(Br).forEach(function(e){pm.forEach(function(t){t=t+e.charAt(0).toUpperCase()+e.substring(1),Br[t]=Br[e]})});function ld(e,t,n){return t==null||typeof t=="boolean"||t===""?"":n||typeof t!="number"||t===0||Br.hasOwnProperty(e)&&Br[e]?(""+t).trim():t+"px"}function sd(e,t){e=e.style;for(var n in t)if(t.hasOwnProperty(n)){var r=n.indexOf("--")===0,o=ld(n,t[n],r);n==="float"&&(n="cssFloat"),r?e.setProperty(n,o):e[n]=o}}var mm=re({menuitem:!0},{area:!0,base:!0,br:!0,col:!0,embed:!0,hr:!0,img:!0,input:!0,keygen:!0,link:!0,meta:!0,param:!0,source:!0,track:!0,wbr:!0});function vs(e,t){if(t){if(mm[e]&&(t.children!=null||t.dangerouslySetInnerHTML!=null))throw Error(E(137,e));if(t.dangerouslySetInnerHTML!=null){if(t.children!=null)throw Error(E(60));if(typeof t.dangerouslySetInnerHTML!="object"||!("__html"in t.dangerouslySetInnerHTML))throw Error(E(61))}if(t.style!=null&&typeof t.style!="object")throw Error(E(62))}}function ys(e,t){if(e.indexOf("-")===-1)return typeof t.is=="string";switch(e){case"annotation-xml":case"color-profile":case"font-face":case"font-face-src":case"font-face-uri":case"font-face-format":case"font-face-name":case"missing-glyph":return!1;default:return!0}}var ws=null;function iu(e){return e=e.target||e.srcElement||window,e.correspondingUseElement&&(e=e.correspondingUseElement),e.nodeType===3?e.parentNode:e}var Ss=null,Jn=null,Zn=null;function Za(e){if(e=yo(e)){if(typeof Ss!="function")throw Error(E(280));var t=e.stateNode;t&&(t=Bi(t),Ss(e.stateNode,e.type,t))}}function ud(e){Jn?Zn?Zn.push(e):Zn=[e]:Jn=e}function ad(){if(Jn){var e=Jn,t=Zn;if(Zn=Jn=null,Za(e),t)for(e=0;e<t.length;e++)Za(t[e])}}function cd(e,t){return e(t)}function dd(){}var Wl=!1;function fd(e,t,n){if(Wl)return e(t,n);Wl=!0;try{return cd(e,t,n)}finally{Wl=!1,(Jn!==null||Zn!==null)&&(dd(),ad())}}function eo(e,t){var n=e.stateNode;if(n===null)return null;var r=Bi(n);if(r===null)return null;n=r[t];e:switch(t){case"onClick":case"onClickCapture":case"onDoubleClick":case"onDoubleClickCapture":case"onMouseDown":case"onMouseDownCapture":case"onMouseMove":case"onMouseMoveCapture":case"onMouseUp":case"onMouseUpCapture":case"onMouseEnter":(r=!r.disabled)||(e=e.type,r=!(e==="button"||e==="input"||e==="select"||e==="textarea")),e=!r;break e;default:e=!1}if(e)return null;if(n&&typeof n!="function")throw Error(E(231,t,typeof n));return n}var ks=!1;if(Mt)try{In={},Object.defineProperty(In,"passive",{get:function(){ks=!0}}),window.addEventListener("test",In,In),window.removeEventListener("test",In,In)}catch{ks=!1}var In;function hm(e,t,n,r,o,i,l,s,a){var p=Array.prototype.slice.call(arguments,3);try{t.apply(n,p)}catch(h){this.onError(h)}}var Vr=!1,gi=null,vi=!1,Es=null,gm={onError:function(e){Vr=!0,gi=e}};function vm(e,t,n,r,o,i,l,s,a){Vr=!1,gi=null,hm.apply(gm,arguments)}function ym(e,t,n,r,o,i,l,s,a){if(vm.apply(this,arguments),Vr){if(Vr){var p=gi;Vr=!1,gi=null}else throw Error(E(198));vi||(vi=!0,Es=p)}}function Tn(e){var t=e,n=e;if(e.alternate)for(;t.return;)t=t.return;else{e=t;do t=e,(t.flags&4098)!==0&&(n=t.return),e=t.return;while(e)}return t.tag===3?n:null}function pd(e){if(e.tag===13){var t=e.memoizedState;if(t===null&&(e=e.alternate,e!==null&&(t=e.memoizedState)),t!==null)return t.dehydrated}return null}function Xa(e){if(Tn(e)!==e)throw Error(E(188))}function wm(e){var t=e.alternate;if(!t){if(t=Tn(e),t===null)throw Error(E(188));return t!==e?null:e}for(var n=e,r=t;;){var o=n.return;if(o===null)break;var i=o.alternate;if(i===null){if(r=o.return,r!==null){n=r;continue}break}if(o.child===i.child){for(i=o.child;i;){if(i===n)return Xa(o),e;if(i===r)return Xa(o),t;i=i.sibling}throw Error(E(188))}if(n.return!==r.return)n=o,r=i;else{for(var l=!1,s=o.child;s;){if(s===n){l=!0,n=o,r=i;break}if(s===r){l=!0,r=o,n=i;break}s=s.sibling}if(!l){for(s=i.child;s;){if(s===n){l=!0,n=i,r=o;break}if(s===r){l=!0,r=i,n=o;break}s=s.sibling}if(!l)throw Error(E(189))}}if(n.alternate!==r)throw Error(E(190))}if(n.tag!==3)throw Error(E(188));return n.stateNode.current===n?e:t}function md(e){return e=wm(e),e!==null?hd(e):null}function hd(e){if(e.tag===5||e.tag===6)return e;for(e=e.child;e!==null;){var t=hd(e);if(t!==null)return t;e=e.sibling}return null}var gd=Qe.unstable_scheduleCallback,qa=Qe.unstable_cancelCallback,Sm=Qe.unstable_shouldYield,km=Qe.unstable_requestPaint,le=Qe.unstable_now,Em=Qe.unstable_getCurrentPriorityLevel,lu=Qe.unstable_ImmediatePriority,vd=Qe.unstable_UserBlockingPriority,yi=Qe.unstable_NormalPriority,xm=Qe.unstable_LowPriority,yd=Qe.unstable_IdlePriority,ji=null,St=null;function Cm(e){if(St&&typeof St.onCommitFiberRoot=="function")try{St.onCommitFiberRoot(ji,e,void 0,(e.current.flags&128)===128)}catch{}}var ft=Math.clz32?Math.clz32:Pm,Tm=Math.log,_m=Math.LN2;function Pm(e){return e>>>=0,e===0?32:31-(Tm(e)/_m|0)|0}var Bo=64,Vo=4194304;function Ur(e){switch(e&-e){case 1:return 1;case 2:return 2;case 4:return 4;case 8:return 8;case 16:return 16;case 32:return 32;case 64:case 128:case 256:case 512:case 1024:case 2048:case 4096:case 8192:case 16384:case 32768:case 65536:case 131072:case 262144:case 524288:case 1048576:case 2097152:return e&4194240;case 4194304:case 8388608:case 16777216:case 33554432:case 67108864:return e&130023424;case 134217728:return 134217728;case 268435456:return 268435456;case 536870912:return 536870912;case 1073741824:return 1073741824;default:return e}}function wi(e,t){var n=e.pendingLanes;if(n===0)return 0;var r=0,o=e.suspendedLanes,i=e.pingedLanes,l=n&268435455;if(l!==0){var s=l&~o;s!==0?r=Ur(s):(i&=l,i!==0&&(r=Ur(i)))}else l=n&~o,l!==0?r=Ur(l):i!==0&&(r=Ur(i));if(r===0)return 0;if(t!==0&&t!==r&&(t&o)===0&&(o=r&-r,i=t&-t,o>=i||o===16&&(i&4194240)!==0))return t;if((r&4)!==0&&(r|=n&16),t=e.entangledLanes,t!==0)for(e=e.entanglements,t&=r;0<t;)n=31-ft(t),o=1<<n,r|=e[n],t&=~o;return r}function Nm(e,t){switch(e){case 1:case 2:case 4:return t+250;case 8:case 16:case 32:case 64:case 128:case 256:case 512:case 1024:case 2048:case 4096:case 8192:case 16384:case 32768:case 65536:case 131072:case 262144:case 524288:case 1048576:case 2097152:return t+5e3;case 4194304:case 8388608:case 16777216:case 33554432:case 67108864:return-1;case 134217728:case 268435456:case 536870912:case 1073741824:return-1;default:return-1}}function Mm(e,t){for(var n=e.suspendedLanes,r=e.pingedLanes,o=e.expirationTimes,i=e.pendingLanes;0<i;){var l=31-ft(i),s=1<<l,a=o[l];a===-1?((s&n)===0||(s&r)!==0)&&(o[l]=Nm(s,t)):a<=t&&(e.expiredLanes|=s),i&=~s}}function xs(e){return e=e.pendingLanes&-1073741825,e!==0?e:e&1073741824?1073741824:0}function wd(){var e=Bo;return Bo<<=1,(Bo&4194240)===0&&(Bo=64),e}function Bl(e){for(var t=[],n=0;31>n;n++)t.push(e);return t}function go(e,t,n){e.pendingLanes|=t,t!==536870912&&(e.suspendedLanes=0,e.pingedLanes=0),e=e.eventTimes,t=31-ft(t),e[t]=n}function zm(e,t){var n=e.pendingLanes&~t;e.pendingLanes=t,e.suspendedLanes=0,e.pingedLanes=0,e.expiredLanes&=t,e.mutableReadLanes&=t,e.entangledLanes&=t,t=e.entanglements;var r=e.eventTimes;for(e=e.expirationTimes;0<n;){var o=31-ft(n),i=1<<o;t[o]=0,r[o]=-1,e[o]=-1,n&=~i}}function su(e,t){var n=e.entangledLanes|=t;for(e=e.entanglements;n;){var r=31-ft(n),o=1<<r;o&t|e[r]&t&&(e[r]|=t),n&=~o}}var W=0;function Sd(e){return e&=-e,1<e?4<e?(e&268435455)!==0?16:536870912:4:1}var kd,uu,Ed,xd,Cd,Cs=!1,Qo=[],Gt=null,bt=null,Jt=null,to=new Map,no=new Map,Vt=[],Lm="mousedown mouseup touchcancel touchend touchstart auxclick dblclick pointercancel pointerdown pointerup dragend dragstart drop compositionend compositionstart keydown keypress keyup input textInput copy cut paste click change contextmenu reset submit".split(" ");function ec(e,t){switch(e){case"focusin":case"focusout":Gt=null;break;case"dragenter":case"dragleave":bt=null;break;case"mouseover":case"mouseout":Jt=null;break;case"pointerover":case"pointerout":to.delete(t.pointerId);break;case"gotpointercapture":case"lostpointercapture":no.delete(t.pointerId)}}function Rr(e,t,n,r,o,i){return e===null||e.nativeEvent!==i?(e={blockedOn:t,domEventName:n,eventSystemFlags:r,nativeEvent:i,targetContainers:[o]},t!==null&&(t=yo(t),t!==null&&uu(t)),e):(e.eventSystemFlags|=r,t=e.targetContainers,o!==null&&t.indexOf(o)===-1&&t.push(o),e)}function Rm(e,t,n,r,o){switch(t){case"focusin":return Gt=Rr(Gt,e,t,n,r,o),!0;case"dragenter":return bt=Rr(bt,e,t,n,r,o),!0;case"mouseover":return Jt=Rr(Jt,e,t,n,r,o),!0;case"pointerover":var i=o.pointerId;return to.set(i,Rr(to.get(i)||null,e,t,n,r,o)),!0;case"gotpointercapture":return i=o.pointerId,no.set(i,Rr(no.get(i)||null,e,t,n,r,o)),!0}return!1}function Td(e){var t=mn(e.target);if(t!==null){var n=Tn(t);if(n!==null){if(t=n.tag,t===13){if(t=pd(n),t!==null){e.blockedOn=t,Cd(e.priority,function(){Ed(n)});return}}else if(t===3&&n.stateNode.current.memoizedState.isDehydrated){e.blockedOn=n.tag===3?n.stateNode.containerInfo:null;return}}}e.blockedOn=null}function ii(e){if(e.blockedOn!==null)return!1;for(var t=e.targetContainers;0<t.length;){var n=Ts(e.domEventName,e.eventSystemFlags,t[0],e.nativeEvent);if(n===null){n=e.nativeEvent;var r=new n.constructor(n.type,n);ws=r,n.target.dispatchEvent(r),ws=null}else return t=yo(n),t!==null&&uu(t),e.blockedOn=n,!1;t.shift()}return!0}function tc(e,t,n){ii(e)&&n.delete(t)}function Om(){Cs=!1,Gt!==null&&ii(Gt)&&(Gt=null),bt!==null&&ii(bt)&&(bt=null),Jt!==null&&ii(Jt)&&(Jt=null),to.forEach(tc),no.forEach(tc)}function Or(e,t){e.blockedOn===t&&(e.blockedOn=null,Cs||(Cs=!0,Qe.unstable_scheduleCallback(Qe.unstable_NormalPriority,Om)))}function ro(e){function t(o){return Or(o,e)}if(0<Qo.length){Or(Qo[0],e);for(var n=1;n<Qo.length;n++){var r=Qo[n];r.blockedOn===e&&(r.blockedOn=null)}}for(Gt!==null&&Or(Gt,e),bt!==null&&Or(bt,e),Jt!==null&&Or(Jt,e),to.forEach(t),no.forEach(t),n=0;n<Vt.length;n++)r=Vt[n],r.blockedOn===e&&(r.blockedOn=null);for(;0<Vt.length&&(n=Vt[0],n.blockedOn===null);)Td(n),n.blockedOn===null&&Vt.shift()}var Xn=Ot.ReactCurrentBatchConfig,Si=!0;function Dm(e,t,n,r){var o=W,i=Xn.transition;Xn.transition=null;try{W=1,au(e,t,n,r)}finally{W=o,Xn.transition=i}}function Im(e,t,n,r){var o=W,i=Xn.transition;Xn.transition=null;try{W=4,au(e,t,n,r)}finally{W=o,Xn.transition=i}}function au(e,t,n,r){if(Si){var o=Ts(e,t,n,r);if(o===null)Jl(e,t,r,ki,n),ec(e,r);else if(Rm(o,e,t,n,r))r.stopPropagation();else if(ec(e,r),t&4&&-1<Lm.indexOf(e)){for(;o!==null;){var i=yo(o);if(i!==null&&kd(i),i=Ts(e,t,n,r),i===null&&Jl(e,t,r,ki,n),i===o)break;o=i}o!==null&&r.stopPropagation()}else Jl(e,t,r,null,n)}}var ki=null;function Ts(e,t,n,r){if(ki=null,e=iu(r),e=mn(e),e!==null)if(t=Tn(e),t===null)e=null;else if(n=t.tag,n===13){if(e=pd(t),e!==null)return e;e=null}else if(n===3){if(t.stateNode.current.memoizedState.isDehydrated)return t.tag===3?t.stateNode.containerInfo:null;e=null}else t!==e&&(e=null);return ki=e,null}function _d(e){switch(e){case"cancel":case"click":case"close":case"contextmenu":case"copy":case"cut":case"auxclick":case"dblclick":case"dragend":case"dragstart":case"drop":case"focusin":case"focusout":case"input":case"invalid":case"keydown":case"keypress":case"keyup":case"mousedown":case"mouseup":case"paste":case"pause":case"play":case"pointercancel":case"pointerdown":case"pointerup":case"ratechange":case"reset":case"resize":case"seeked":case"submit":case"touchcancel":case"touchend":case"touchstart":case"volumechange":case"change":case"selectionchange":case"textInput":case"compositionstart":case"compositionend":case"compositionupdate":case"beforeblur":case"afterblur":case"beforeinput":case"blur":case"fullscreenchange":case"focus":case"hashchange":case"popstate":case"select":case"selectstart":return 1;case"drag":case"dragenter":case"dragexit":case"dragleave":case"dragover":case"mousemove":case"mouseout":case"mouseover":case"pointermove":case"pointerout":case"pointerover":case"scroll":case"toggle":case"touchmove":case"wheel":case"mouseenter":case"mouseleave":case"pointerenter":case"pointerleave":return 4;case"message":switch(Em()){case lu:return 1;case vd:return 4;case yi:case xm:return 16;case yd:return 536870912;default:return 16}default:return 16}}var Kt=null,cu=null,li=null;function Pd(){if(li)return li;var e,t=cu,n=t.length,r,o="value"in Kt?Kt.value:Kt.textContent,i=o.length;for(e=0;e<n&&t[e]===o[e];e++);var l=n-e;for(r=1;r<=l&&t[n-r]===o[i-r];r++);return li=o.slice(e,1<r?1-r:void 0)}function si(e){var t=e.keyCode;return"charCode"in e?(e=e.charCode,e===0&&t===13&&(e=13)):e=t,e===10&&(e=13),32<=e||e===13?e:0}function Ko(){return!0}function nc(){return!1}function Ke(e){function t(n,r,o,i,l){this._reactName=n,this._targetInst=o,this.type=r,this.nativeEvent=i,this.target=l,this.currentTarget=null;for(var s in e)e.hasOwnProperty(s)&&(n=e[s],this[s]=n?n(i):i[s]);return this.isDefaultPrevented=(i.defaultPrevented!=null?i.defaultPrevented:i.returnValue===!1)?Ko:nc,this.isPropagationStopped=nc,this}return re(t.prototype,{preventDefault:function(){this.defaultPrevented=!0;var n=this.nativeEvent;n&&(n.preventDefault?n.preventDefault():typeof n.returnValue!="unknown"&&(n.returnValue=!1),this.isDefaultPrevented=Ko)},stopPropagation:function(){var n=this.nativeEvent;n&&(n.stopPropagation?n.stopPropagation():typeof n.cancelBubble!="unknown"&&(n.cancelBubble=!0),this.isPropagationStopped=Ko)},persist:function(){},isPersistent:Ko}),t}var ur={eventPhase:0,bubbles:0,cancelable:0,timeStamp:function(e){return e.timeStamp||Date.now()},defaultPrevented:0,isTrusted:0},du=Ke(ur),vo=re({},ur,{view:0,detail:0}),$m=Ke(vo),Vl,Ql,Dr,Hi=re({},vo,{screenX:0,screenY:0,clientX:0,clientY:0,pageX:0,pageY:0,ctrlKey:0,shiftKey:0,altKey:0,metaKey:0,getModifierState:fu,button:0,buttons:0,relatedTarget:function(e){return e.relatedTarget===void 0?e.fromElement===e.srcElement?e.toElement:e.fromElement:e.relatedTarget},movementX:function(e){return"movementX"in e?e.movementX:(e!==Dr&&(Dr&&e.type==="mousemove"?(Vl=e.screenX-Dr.screenX,Ql=e.screenY-Dr.screenY):Ql=Vl=0,Dr=e),Vl)},movementY:function(e){return"movementY"in e?e.movementY:Ql}}),rc=Ke(Hi),Fm=re({},Hi,{dataTransfer:0}),Am=Ke(Fm),jm=re({},vo,{relatedTarget:0}),Kl=Ke(jm),Hm=re({},ur,{animationName:0,elapsedTime:0,pseudoElement:0}),Um=Ke(Hm),Wm=re({},ur,{clipboardData:function(e){return"clipboardData"in e?e.clipboardData:window.clipboardData}}),Bm=Ke(Wm),Vm=re({},ur,{data:0}),oc=Ke(Vm),Qm={Esc:"Escape",Spacebar:" ",Left:"ArrowLeft",Up:"ArrowUp",Right:"ArrowRight",Down:"ArrowDown",Del:"Delete",Win:"OS",Menu:"ContextMenu",Apps:"ContextMenu",Scroll:"ScrollLock",MozPrintableKey:"Unidentified"},Km={8:"Backspace",9:"Tab",12:"Clear",13:"Enter",16:"Shift",17:"Control",18:"Alt",19:"Pause",20:"CapsLock",27:"Escape",32:" ",33:"PageUp",34:"PageDown",35:"End",36:"Home",37:"ArrowLeft",38:"ArrowUp",39:"ArrowRight",40:"ArrowDown",45:"Insert",46:"Delete",112:"F1",113:"F2",114:"F3",115:"F4",116:"F5",117:"F6",118:"F7",119:"F8",120:"F9",121:"F10",122:"F11",123:"F12",144:"NumLock",145:"ScrollLock",224:"Meta"},Ym={Alt:"altKey",Control:"ctrlKey",Meta:"metaKey",Shift:"shiftKey"};function Gm(e){var t=this.nativeEvent;return t.getModifierState?t.getModifierState(e):(e=Ym[e])?!!t[e]:!1}function fu(){return Gm}var bm=re({},vo,{key:function(e){if(e.key){var t=Qm[e.key]||e.key;if(t!=="Unidentified")return t}return e.type==="keypress"?(e=si(e),e===13?"Enter":String.fromCharCode(e)):e.type==="keydown"||e.type==="keyup"?Km[e.keyCode]||"Unidentified":""},code:0,location:0,ctrlKey:0,shiftKey:0,altKey:0,metaKey:0,repeat:0,locale:0,getModifierState:fu,charCode:function(e){return e.type==="keypress"?si(e):0},keyCode:function(e){return e.type==="keydown"||e.type==="keyup"?e.keyCode:0},which:function(e){return e.type==="keypress"?si(e):e.type==="keydown"||e.type==="keyup"?e.keyCode:0}}),Jm=Ke(bm),Zm=re({},Hi,{pointerId:0,width:0,height:0,pressure:0,tangentialPressure:0,tiltX:0,tiltY:0,twist:0,pointerType:0,isPrimary:0}),ic=Ke(Zm),Xm=re({},vo,{touches:0,targetTouches:0,changedTouches:0,altKey:0,metaKey:0,ctrlKey:0,shiftKey:0,getModifierState:fu}),qm=Ke(Xm),eh=re({},ur,{propertyName:0,elapsedTime:0,pseudoElement:0}),th=Ke(eh),nh=re({},Hi,{deltaX:function(e){return"deltaX"in e?e.deltaX:"wheelDeltaX"in e?-e.wheelDeltaX:0},deltaY:function(e){return"deltaY"in e?e.deltaY:"wheelDeltaY"in e?-e.wheelDeltaY:"wheelDelta"in e?-e.wheelDelta:0},deltaZ:0,deltaMode:0}),rh=Ke(nh),oh=[9,13,27,32],pu=Mt&&"CompositionEvent"in window,Qr=null;Mt&&"documentMode"in document&&(Qr=document.documentMode);var ih=Mt&&"TextEvent"in window&&!Qr,Nd=Mt&&(!pu||Qr&&8<Qr&&11>=Qr),lc=" ",sc=!1;function Md(e,t){switch(e){case"keyup":return oh.indexOf(t.keyCode)!==-1;case"keydown":return t.keyCode!==229;case"keypress":case"mousedown":case"focusout":return!0;default:return!1}}function zd(e){return e=e.detail,typeof e=="object"&&"data"in e?e.data:null}var jn=!1;function lh(e,t){switch(e){case"compositionend":return zd(t);case"keypress":return t.which!==32?null:(sc=!0,lc);case"textInput":return e=t.data,e===lc&&sc?null:e;default:return null}}function sh(e,t){if(jn)return e==="compositionend"||!pu&&Md(e,t)?(e=Pd(),li=cu=Kt=null,jn=!1,e):null;switch(e){case"paste":return null;case"keypress":if(!(t.ctrlKey||t.altKey||t.metaKey)||t.ctrlKey&&t.altKey){if(t.char&&1<t.char.length)return t.char;if(t.which)return String.fromCharCode(t.which)}return null;case"compositionend":return Nd&&t.locale!=="ko"?null:t.data;default:return null}}var uh={color:!0,date:!0,datetime:!0,"datetime-local":!0,email:!0,month:!0,number:!0,password:!0,range:!0,search:!0,tel:!0,text:!0,time:!0,url:!0,week:!0};function uc(e){var t=e&&e.nodeName&&e.nodeName.toLowerCase();return t==="input"?!!uh[e.type]:t==="textarea"}function Ld(e,t,n,r){ud(r),t=Ei(t,"onChange"),0<t.length&&(n=new du("onChange","change",null,n,r),e.push({event:n,listeners:t}))}var Kr=null,oo=null;function ah(e){Wd(e,0)}function Ui(e){var t=Wn(e);if(td(t))return e}function ch(e,t){if(e==="change")return t}var Rd=!1;Mt&&(Mt?(Go="oninput"in document,Go||(Yl=document.createElement("div"),Yl.setAttribute("oninput","return;"),Go=typeof Yl.oninput=="function"),Yo=Go):Yo=!1,Rd=Yo&&(!document.documentMode||9<document.documentMode));var Yo,Go,Yl;function ac(){Kr&&(Kr.detachEvent("onpropertychange",Od),oo=Kr=null)}function Od(e){if(e.propertyName==="value"&&Ui(oo)){var t=[];Ld(t,oo,e,iu(e)),fd(ah,t)}}function dh(e,t,n){e==="focusin"?(ac(),Kr=t,oo=n,Kr.attachEvent("onpropertychange",Od)):e==="focusout"&&ac()}function fh(e){if(e==="selectionchange"||e==="keyup"||e==="keydown")return Ui(oo)}function ph(e,t){if(e==="click")return Ui(t)}function mh(e,t){if(e==="input"||e==="change")return Ui(t)}function hh(e,t){return e===t&&(e!==0||1/e===1/t)||e!==e&&t!==t}var mt=typeof Object.is=="function"?Object.is:hh;function io(e,t){if(mt(e,t))return!0;if(typeof e!="object"||e===null||typeof t!="object"||t===null)return!1;var n=Object.keys(e),r=Object.keys(t);if(n.length!==r.length)return!1;for(r=0;r<n.length;r++){var o=n[r];if(!ss.call(t,o)||!mt(e[o],t[o]))return!1}return!0}function cc(e){for(;e&&e.firstChild;)e=e.firstChild;return e}function dc(e,t){var n=cc(e);e=0;for(var r;n;){if(n.nodeType===3){if(r=e+n.textContent.length,e<=t&&r>=t)return{node:n,offset:t-e};e=r}e:{for(;n;){if(n.nextSibling){n=n.nextSibling;break e}n=n.parentNode}n=void 0}n=cc(n)}}function Dd(e,t){return e&&t?e===t?!0:e&&e.nodeType===3?!1:t&&t.nodeType===3?Dd(e,t.parentNode):"contains"in e?e.contains(t):e.compareDocumentPosition?!!(e.compareDocumentPosition(t)&16):!1:!1}function Id(){for(var e=window,t=hi();t instanceof e.HTMLIFrameElement;){try{var n=typeof t.contentWindow.location.href=="string"}catch{n=!1}if(n)e=t.contentWindow;else break;t=hi(e.document)}return t}function mu(e){var t=e&&e.nodeName&&e.nodeName.toLowerCase();return t&&(t==="input"&&(e.type==="text"||e.type==="search"||e.type==="tel"||e.type==="url"||e.type==="password")||t==="textarea"||e.contentEditable==="true")}function gh(e){var t=Id(),n=e.focusedElem,r=e.selectionRange;if(t!==n&&n&&n.ownerDocument&&Dd(n.ownerDocument.documentElement,n)){if(r!==null&&mu(n)){if(t=r.start,e=r.end,e===void 0&&(e=t),"selectionStart"in n)n.selectionStart=t,n.selectionEnd=Math.min(e,n.value.length);else if(e=(t=n.ownerDocument||document)&&t.defaultView||window,e.getSelection){e=e.getSelection();var o=n.textContent.length,i=Math.min(r.start,o);r=r.end===void 0?i:Math.min(r.end,o),!e.extend&&i>r&&(o=r,r=i,i=o),o=dc(n,i);var l=dc(n,r);o&&l&&(e.rangeCount!==1||e.anchorNode!==o.node||e.anchorOffset!==o.offset||e.focusNode!==l.node||e.focusOffset!==l.offset)&&(t=t.createRange(),t.setStart(o.node,o.offset),e.removeAllRanges(),i>r?(e.addRange(t),e.extend(l.node,l.offset)):(t.setEnd(l.node,l.offset),e.addRange(t)))}}for(t=[],e=n;e=e.parentNode;)e.nodeType===1&&t.push({element:e,left:e.scrollLeft,top:e.scrollTop});for(typeof n.focus=="function"&&n.focus(),n=0;n<t.length;n++)e=t[n],e.element.scrollLeft=e.left,e.element.scrollTop=e.top}}var vh=Mt&&"documentMode"in document&&11>=document.documentMode,Hn=null,_s=null,Yr=null,Ps=!1;function fc(e,t,n){var r=n.window===n?n.document:n.nodeType===9?n:n.ownerDocument;Ps||Hn==null||Hn!==hi(r)||(r=Hn,"selectionStart"in r&&mu(r)?r={start:r.selectionStart,end:r.selectionEnd}:(r=(r.ownerDocument&&r.ownerDocument.defaultView||window).getSelection(),r={anchorNode:r.anchorNode,anchorOffset:r.anchorOffset,focusNode:r.focusNode,focusOffset:r.focusOffset}),Yr&&io(Yr,r)||(Yr=r,r=Ei(_s,"onSelect"),0<r.length&&(t=new du("onSelect","select",null,t,n),e.push({event:t,listeners:r}),t.target=Hn)))}function bo(e,t){var n={};return n[e.toLowerCase()]=t.toLowerCase(),n["Webkit"+e]="webkit"+t,n["Moz"+e]="moz"+t,n}var Un={animationend:bo("Animation","AnimationEnd"),animationiteration:bo("Animation","AnimationIteration"),animationstart:bo("Animation","AnimationStart"),transitionend:bo("Transition","TransitionEnd")},Gl={},$d={};Mt&&($d=document.createElement("div").style,"AnimationEvent"in window||(delete Un.animationend.animation,delete Un.animationiteration.animation,delete Un.animationstart.animation),"TransitionEvent"in window||delete Un.transitionend.transition);function Wi(e){if(Gl[e])return Gl[e];if(!Un[e])return e;var t=Un[e],n;for(n in t)if(t.hasOwnProperty(n)&&n in $d)return Gl[e]=t[n];return e}var Fd=Wi("animationend"),Ad=Wi("animationiteration"),jd=Wi("animationstart"),Hd=Wi("transitionend"),Ud=new Map,pc="abort auxClick cancel canPlay canPlayThrough click close contextMenu copy cut drag dragEnd dragEnter dragExit dragLeave dragOver dragStart drop durationChange emptied encrypted ended error gotPointerCapture input invalid keyDown keyPress keyUp load loadedData loadedMetadata loadStart lostPointerCapture mouseDown mouseMove mouseOut mouseOver mouseUp paste pause play playing pointerCancel pointerDown pointerMove pointerOut pointerOver pointerUp progress rateChange reset resize seeked seeking stalled submit suspend timeUpdate touchCancel touchEnd touchStart volumeChange scroll toggle touchMove waiting wheel".split(" ");function on(e,t){Ud.set(e,t),Cn(t,[e])}for(Jo=0;Jo<pc.length;Jo++)Zo=pc[Jo],mc=Zo.toLowerCase(),hc=Zo[0].toUpperCase()+Zo.slice(1),on(mc,"on"+hc);var Zo,mc,hc,Jo;on(Fd,"onAnimationEnd");on(Ad,"onAnimationIteration");on(jd,"onAnimationStart");on("dblclick","onDoubleClick");on("focusin","onFocus");on("focusout","onBlur");on(Hd,"onTransitionEnd");tr("onMouseEnter",["mouseout","mouseover"]);tr("onMouseLeave",["mouseout","mouseover"]);tr("onPointerEnter",["pointerout","pointerover"]);tr("onPointerLeave",["pointerout","pointerover"]);Cn("onChange","change click focusin focusout input keydown keyup selectionchange".split(" "));Cn("onSelect","focusout contextmenu dragend focusin keydown keyup mousedown mouseup selectionchange".split(" "));Cn("onBeforeInput",["compositionend","keypress","textInput","paste"]);Cn("onCompositionEnd","compositionend focusout keydown keypress keyup mousedown".split(" "));Cn("onCompositionStart","compositionstart focusout keydown keypress keyup mousedown".split(" "));Cn("onCompositionUpdate","compositionupdate focusout keydown keypress keyup mousedown".split(" "));var Wr="abort canplay canplaythrough durationchange emptied encrypted ended error loadeddata loadedmetadata loadstart pause play playing progress ratechange resize seeked seeking stalled suspend timeupdate volumechange waiting".split(" "),yh=new Set("cancel close invalid load scroll toggle".split(" ").concat(Wr));function gc(e,t,n){var r=e.type||"unknown-event";e.currentTarget=n,ym(r,t,void 0,e),e.currentTarget=null}function Wd(e,t){t=(t&4)!==0;for(var n=0;n<e.length;n++){var r=e[n],o=r.event;r=r.listeners;e:{var i=void 0;if(t)for(var l=r.length-1;0<=l;l--){var s=r[l],a=s.instance,p=s.currentTarget;if(s=s.listener,a!==i&&o.isPropagationStopped())break e;gc(o,s,p),i=a}else for(l=0;l<r.length;l++){if(s=r[l],a=s.instance,p=s.currentTarget,s=s.listener,a!==i&&o.isPropagationStopped())break e;gc(o,s,p),i=a}}}if(vi)throw e=Es,vi=!1,Es=null,e}function Z(e,t){var n=t[Rs];n===void 0&&(n=t[Rs]=new Set);var r=e+"__bubble";n.has(r)||(Bd(t,e,2,!1),n.add(r))}function bl(e,t,n){var r=0;t&&(r|=4),Bd(n,e,r,t)}var Xo="_reactListening"+Math.random().toString(36).slice(2);function lo(e){if(!e[Xo]){e[Xo]=!0,Jc.forEach(function(n){n!=="selectionchange"&&(yh.has(n)||bl(n,!1,e),bl(n,!0,e))});var t=e.nodeType===9?e:e.ownerDocument;t===null||t[Xo]||(t[Xo]=!0,bl("selectionchange",!1,t))}}function Bd(e,t,n,r){switch(_d(t)){case 1:var o=Dm;break;case 4:o=Im;break;default:o=au}n=o.bind(null,t,n,e),o=void 0,!ks||t!=="touchstart"&&t!=="touchmove"&&t!=="wheel"||(o=!0),r?o!==void 0?e.addEventListener(t,n,{capture:!0,passive:o}):e.addEventListener(t,n,!0):o!==void 0?e.addEventListener(t,n,{passive:o}):e.addEventListener(t,n,!1)}function Jl(e,t,n,r,o){var i=r;if((t&1)===0&&(t&2)===0&&r!==null)e:for(;;){if(r===null)return;var l=r.tag;if(l===3||l===4){var s=r.stateNode.containerInfo;if(s===o||s.nodeType===8&&s.parentNode===o)break;if(l===4)for(l=r.return;l!==null;){var a=l.tag;if((a===3||a===4)&&(a=l.stateNode.containerInfo,a===o||a.nodeType===8&&a.parentNode===o))return;l=l.return}for(;s!==null;){if(l=mn(s),l===null)return;if(a=l.tag,a===5||a===6){r=i=l;continue e}s=s.parentNode}}r=r.return}fd(function(){var p=i,h=iu(n),y=[];e:{var g=Ud.get(e);if(g!==void 0){var C=du,x=e;switch(e){case"keypress":if(si(n)===0)break e;case"keydown":case"keyup":C=Jm;break;case"focusin":x="focus",C=Kl;break;case"focusout":x="blur",C=Kl;break;case"beforeblur":case"afterblur":C=Kl;break;case"click":if(n.button===2)break e;case"auxclick":case"dblclick":case"mousedown":case"mousemove":case"mouseup":case"mouseout":case"mouseover":case"contextmenu":C=rc;break;case"drag":case"dragend":case"dragenter":case"dragexit":case"dragleave":case"dragover":case"dragstart":case"drop":C=Am;break;case"touchcancel":case"touchend":case"touchmove":case"touchstart":C=qm;break;case Fd:case Ad:case jd:C=Um;break;case Hd:C=th;break;case"scroll":C=$m;break;case"wheel":C=rh;break;case"copy":case"cut":case"paste":C=Bm;break;case"gotpointercapture":case"lostpointercapture":case"pointercancel":case"pointerdown":case"pointermove":case"pointerout":case"pointerover":case"pointerup":C=ic}var _=(t&4)!==0,R=!_&&e==="scroll",m=_?g!==null?g+"Capture":null:g;_=[];for(var f=p,d;f!==null;){d=f;var v=d.stateNode;if(d.tag===5&&v!==null&&(d=v,m!==null&&(v=eo(f,m),v!=null&&_.push(so(f,v,d)))),R)break;f=f.return}0<_.length&&(g=new C(g,x,null,n,h),y.push({event:g,listeners:_}))}}if((t&7)===0){e:{if(g=e==="mouseover"||e==="pointerover",C=e==="mouseout"||e==="pointerout",g&&n!==ws&&(x=n.relatedTarget||n.fromElement)&&(mn(x)||x[zt]))break e;if((C||g)&&(g=h.window===h?h:(g=h.ownerDocument)?g.defaultView||g.parentWindow:window,C?(x=n.relatedTarget||n.toElement,C=p,x=x?mn(x):null,x!==null&&(R=Tn(x),x!==R||x.tag!==5&&x.tag!==6)&&(x=null)):(C=null,x=p),C!==x)){if(_=rc,v="onMouseLeave",m="onMouseEnter",f="mouse",(e==="pointerout"||e==="pointerover")&&(_=ic,v="onPointerLeave",m="onPointerEnter",f="pointer"),R=C==null?g:Wn(C),d=x==null?g:Wn(x),g=new _(v,f+"leave",C,n,h),g.target=R,g.relatedTarget=d,v=null,mn(h)===p&&(_=new _(m,f+"enter",x,n,h),_.target=d,_.relatedTarget=R,v=_),R=v,C&&x)t:{for(_=C,m=x,f=0,d=_;d;d=$n(d))f++;for(d=0,v=m;v;v=$n(v))d++;for(;0<f-d;)_=$n(_),f--;for(;0<d-f;)m=$n(m),d--;for(;f--;){if(_===m||m!==null&&_===m.alternate)break t;_=$n(_),m=$n(m)}_=null}else _=null;C!==null&&vc(y,g,C,_,!1),x!==null&&R!==null&&vc(y,R,x,_,!0)}}e:{if(g=p?Wn(p):window,C=g.nodeName&&g.nodeName.toLowerCase(),C==="select"||C==="input"&&g.type==="file")var S=ch;else if(uc(g))if(Rd)S=mh;else{S=fh;var T=dh}else(C=g.nodeName)&&C.toLowerCase()==="input"&&(g.type==="checkbox"||g.type==="radio")&&(S=ph);if(S&&(S=S(e,p))){Ld(y,S,n,h);break e}T&&T(e,g,p),e==="focusout"&&(T=g._wrapperState)&&T.controlled&&g.type==="number"&&ms(g,"number",g.value)}switch(T=p?Wn(p):window,e){case"focusin":(uc(T)||T.contentEditable==="true")&&(Hn=T,_s=p,Yr=null);break;case"focusout":Yr=_s=Hn=null;break;case"mousedown":Ps=!0;break;case"contextmenu":case"mouseup":case"dragend":Ps=!1,fc(y,n,h);break;case"selectionchange":if(vh)break;case"keydown":case"keyup":fc(y,n,h)}var N;if(pu)e:{switch(e){case"compositionstart":var M="onCompositionStart";break e;case"compositionend":M="onCompositionEnd";break e;case"compositionupdate":M="onCompositionUpdate";break e}M=void 0}else jn?Md(e,n)&&(M="onCompositionEnd"):e==="keydown"&&n.keyCode===229&&(M="onCompositionStart");M&&(Nd&&n.locale!=="ko"&&(jn||M!=="onCompositionStart"?M==="onCompositionEnd"&&jn&&(N=Pd()):(Kt=h,cu="value"in Kt?Kt.value:Kt.textContent,jn=!0)),T=Ei(p,M),0<T.length&&(M=new oc(M,e,null,n,h),y.push({event:M,listeners:T}),N?M.data=N:(N=zd(n),N!==null&&(M.data=N)))),(N=ih?lh(e,n):sh(e,n))&&(p=Ei(p,"onBeforeInput"),0<p.length&&(h=new oc("onBeforeInput","beforeinput",null,n,h),y.push({event:h,listeners:p}),h.data=N))}Wd(y,t)})}function so(e,t,n){return{instance:e,listener:t,currentTarget:n}}function Ei(e,t){for(var n=t+"Capture",r=[];e!==null;){var o=e,i=o.stateNode;o.tag===5&&i!==null&&(o=i,i=eo(e,n),i!=null&&r.unshift(so(e,i,o)),i=eo(e,t),i!=null&&r.push(so(e,i,o))),e=e.return}return r}function $n(e){if(e===null)return null;do e=e.return;while(e&&e.tag!==5);return e||null}function vc(e,t,n,r,o){for(var i=t._reactName,l=[];n!==null&&n!==r;){var s=n,a=s.alternate,p=s.stateNode;if(a!==null&&a===r)break;s.tag===5&&p!==null&&(s=p,o?(a=eo(n,i),a!=null&&l.unshift(so(n,a,s))):o||(a=eo(n,i),a!=null&&l.push(so(n,a,s)))),n=n.return}l.length!==0&&e.push({event:t,listeners:l})}var wh=/\r\n?/g,Sh=/\u0000|\uFFFD/g;function yc(e){return(typeof e=="string"?e:""+e).replace(wh,`
-`).replace(Sh,"")}function qo(e,t,n){if(t=yc(t),yc(e)!==t&&n)throw Error(E(425))}function xi(){}var Ns=null,Ms=null;function zs(e,t){return e==="textarea"||e==="noscript"||typeof t.children=="string"||typeof t.children=="number"||typeof t.dangerouslySetInnerHTML=="object"&&t.dangerouslySetInnerHTML!==null&&t.dangerouslySetInnerHTML.__html!=null}var Ls=typeof setTimeout=="function"?setTimeout:void 0,kh=typeof clearTimeout=="function"?clearTimeout:void 0,wc=typeof Promise=="function"?Promise:void 0,Eh=typeof queueMicrotask=="function"?queueMicrotask:typeof wc!="undefined"?function(e){return wc.resolve(null).then(e).catch(xh)}:Ls;function xh(e){setTimeout(function(){throw e})}function Zl(e,t){var n=t,r=0;do{var o=n.nextSibling;if(e.removeChild(n),o&&o.nodeType===8)if(n=o.data,n==="/$"){if(r===0){e.removeChild(o),ro(t);return}r--}else n!=="$"&&n!=="$?"&&n!=="$!"||r++;n=o}while(n);ro(t)}function Zt(e){for(;e!=null;e=e.nextSibling){var t=e.nodeType;if(t===1||t===3)break;if(t===8){if(t=e.data,t==="$"||t==="$!"||t==="$?")break;if(t==="/$")return null}}return e}function Sc(e){e=e.previousSibling;for(var t=0;e;){if(e.nodeType===8){var n=e.data;if(n==="$"||n==="$!"||n==="$?"){if(t===0)return e;t--}else n==="/$"&&t++}e=e.previousSibling}return null}var ar=Math.random().toString(36).slice(2),wt="__reactFiber$"+ar,uo="__reactProps$"+ar,zt="__reactContainer$"+ar,Rs="__reactEvents$"+ar,Ch="__reactListeners$"+ar,Th="__reactHandles$"+ar;function mn(e){var t=e[wt];if(t)return t;for(var n=e.parentNode;n;){if(t=n[zt]||n[wt]){if(n=t.alternate,t.child!==null||n!==null&&n.child!==null)for(e=Sc(e);e!==null;){if(n=e[wt])return n;e=Sc(e)}return t}e=n,n=e.parentNode}return null}function yo(e){return e=e[wt]||e[zt],!e||e.tag!==5&&e.tag!==6&&e.tag!==13&&e.tag!==3?null:e}function Wn(e){if(e.tag===5||e.tag===6)return e.stateNode;throw Error(E(33))}function Bi(e){return e[uo]||null}var Os=[],Bn=-1;function ln(e){return{current:e}}function X(e){0>Bn||(e.current=Os[Bn],Os[Bn]=null,Bn--)}function b(e,t){Bn++,Os[Bn]=e.current,e.current=t}var rn={},_e=ln(rn),Ie=ln(!1),wn=rn;function nr(e,t){var n=e.type.contextTypes;if(!n)return rn;var r=e.stateNode;if(r&&r.__reactInternalMemoizedUnmaskedChildContext===t)return r.__reactInternalMemoizedMaskedChildContext;var o={},i;for(i in n)o[i]=t[i];return r&&(e=e.stateNode,e.__reactInternalMemoizedUnmaskedChildContext=t,e.__reactInternalMemoizedMaskedChildContext=o),o}function $e(e){return e=e.childContextTypes,e!=null}function Ci(){X(Ie),X(_e)}function kc(e,t,n){if(_e.current!==rn)throw Error(E(168));b(_e,t),b(Ie,n)}function Vd(e,t,n){var r=e.stateNode;if(t=t.childContextTypes,typeof r.getChildContext!="function")return n;r=r.getChildContext();for(var o in r)if(!(o in t))throw Error(E(108,dm(e)||"Unknown",o));return re({},n,r)}function Ti(e){return e=(e=e.stateNode)&&e.__reactInternalMemoizedMergedChildContext||rn,wn=_e.current,b(_e,e),b(Ie,Ie.current),!0}function Ec(e,t,n){var r=e.stateNode;if(!r)throw Error(E(169));n?(e=Vd(e,t,wn),r.__reactInternalMemoizedMergedChildContext=e,X(Ie),X(_e),b(_e,e)):X(Ie),b(Ie,n)}var Tt=null,Vi=!1,Xl=!1;function Qd(e){Tt===null?Tt=[e]:Tt.push(e)}function _h(e){Vi=!0,Qd(e)}function sn(){if(!Xl&&Tt!==null){Xl=!0;var e=0,t=W;try{var n=Tt;for(W=1;e<n.length;e++){var r=n[e];do r=r(!0);while(r!==null)}Tt=null,Vi=!1}catch(o){throw Tt!==null&&(Tt=Tt.slice(e+1)),gd(lu,sn),o}finally{W=t,Xl=!1}}return null}var Vn=[],Qn=0,_i=null,Pi=0,Xe=[],qe=0,Sn=null,_t=1,Pt="";function fn(e,t){Vn[Qn++]=Pi,Vn[Qn++]=_i,_i=e,Pi=t}function Kd(e,t,n){Xe[qe++]=_t,Xe[qe++]=Pt,Xe[qe++]=Sn,Sn=e;var r=_t;e=Pt;var o=32-ft(r)-1;r&=~(1<<o),n+=1;var i=32-ft(t)+o;if(30<i){var l=o-o%5;i=(r&(1<<l)-1).toString(32),r>>=l,o-=l,_t=1<<32-ft(t)+o|n<<o|r,Pt=i+e}else _t=1<<i|n<<o|r,Pt=e}function hu(e){e.return!==null&&(fn(e,1),Kd(e,1,0))}function gu(e){for(;e===_i;)_i=Vn[--Qn],Vn[Qn]=null,Pi=Vn[--Qn],Vn[Qn]=null;for(;e===Sn;)Sn=Xe[--qe],Xe[qe]=null,Pt=Xe[--qe],Xe[qe]=null,_t=Xe[--qe],Xe[qe]=null}var Ve=null,Be=null,ee=!1,dt=null;function Yd(e,t){var n=et(5,null,null,0);n.elementType="DELETED",n.stateNode=t,n.return=e,t=e.deletions,t===null?(e.deletions=[n],e.flags|=16):t.push(n)}function xc(e,t){switch(e.tag){case 5:var n=e.type;return t=t.nodeType!==1||n.toLowerCase()!==t.nodeName.toLowerCase()?null:t,t!==null?(e.stateNode=t,Ve=e,Be=Zt(t.firstChild),!0):!1;case 6:return t=e.pendingProps===""||t.nodeType!==3?null:t,t!==null?(e.stateNode=t,Ve=e,Be=null,!0):!1;case 13:return t=t.nodeType!==8?null:t,t!==null?(n=Sn!==null?{id:_t,overflow:Pt}:null,e.memoizedState={dehydrated:t,treeContext:n,retryLane:1073741824},n=et(18,null,null,0),n.stateNode=t,n.return=e,e.child=n,Ve=e,Be=null,!0):!1;default:return!1}}function Ds(e){return(e.mode&1)!==0&&(e.flags&128)===0}function Is(e){if(ee){var t=Be;if(t){var n=t;if(!xc(e,t)){if(Ds(e))throw Error(E(418));t=Zt(n.nextSibling);var r=Ve;t&&xc(e,t)?Yd(r,n):(e.flags=e.flags&-4097|2,ee=!1,Ve=e)}}else{if(Ds(e))throw Error(E(418));e.flags=e.flags&-4097|2,ee=!1,Ve=e}}}function Cc(e){for(e=e.return;e!==null&&e.tag!==5&&e.tag!==3&&e.tag!==13;)e=e.return;Ve=e}function ei(e){if(e!==Ve)return!1;if(!ee)return Cc(e),ee=!0,!1;var t;if((t=e.tag!==3)&&!(t=e.tag!==5)&&(t=e.type,t=t!=="head"&&t!=="body"&&!zs(e.type,e.memoizedProps)),t&&(t=Be)){if(Ds(e))throw Gd(),Error(E(418));for(;t;)Yd(e,t),t=Zt(t.nextSibling)}if(Cc(e),e.tag===13){if(e=e.memoizedState,e=e!==null?e.dehydrated:null,!e)throw Error(E(317));e:{for(e=e.nextSibling,t=0;e;){if(e.nodeType===8){var n=e.data;if(n==="/$"){if(t===0){Be=Zt(e.nextSibling);break e}t--}else n!=="$"&&n!=="$!"&&n!=="$?"||t++}e=e.nextSibling}Be=null}}else Be=Ve?Zt(e.stateNode.nextSibling):null;return!0}function Gd(){for(var e=Be;e;)e=Zt(e.nextSibling)}function rr(){Be=Ve=null,ee=!1}function vu(e){dt===null?dt=[e]:dt.push(e)}var Ph=Ot.ReactCurrentBatchConfig;function Ir(e,t,n){if(e=n.ref,e!==null&&typeof e!="function"&&typeof e!="object"){if(n._owner){if(n=n._owner,n){if(n.tag!==1)throw Error(E(309));var r=n.stateNode}if(!r)throw Error(E(147,e));var o=r,i=""+e;return t!==null&&t.ref!==null&&typeof t.ref=="function"&&t.ref._stringRef===i?t.ref:(t=function(l){var s=o.refs;l===null?delete s[i]:s[i]=l},t._stringRef=i,t)}if(typeof e!="string")throw Error(E(284));if(!n._owner)throw Error(E(290,e))}return e}function ti(e,t){throw e=Object.prototype.toString.call(t),Error(E(31,e==="[object Object]"?"object with keys {"+Object.keys(t).join(", ")+"}":e))}function Tc(e){var t=e._init;return t(e._payload)}function bd(e){function t(m,f){if(e){var d=m.deletions;d===null?(m.deletions=[f],m.flags|=16):d.push(f)}}function n(m,f){if(!e)return null;for(;f!==null;)t(m,f),f=f.sibling;return null}function r(m,f){for(m=new Map;f!==null;)f.key!==null?m.set(f.key,f):m.set(f.index,f),f=f.sibling;return m}function o(m,f){return m=tn(m,f),m.index=0,m.sibling=null,m}function i(m,f,d){return m.index=d,e?(d=m.alternate,d!==null?(d=d.index,d<f?(m.flags|=2,f):d):(m.flags|=2,f)):(m.flags|=1048576,f)}function l(m){return e&&m.alternate===null&&(m.flags|=2),m}function s(m,f,d,v){return f===null||f.tag!==6?(f=is(d,m.mode,v),f.return=m,f):(f=o(f,d),f.return=m,f)}function a(m,f,d,v){var S=d.type;return S===An?h(m,f,d.props.children,v,d.key):f!==null&&(f.elementType===S||typeof S=="object"&&S!==null&&S.$$typeof===Wt&&Tc(S)===f.type)?(v=o(f,d.props),v.ref=Ir(m,f,d),v.return=m,v):(v=mi(d.type,d.key,d.props,null,m.mode,v),v.ref=Ir(m,f,d),v.return=m,v)}function p(m,f,d,v){return f===null||f.tag!==4||f.stateNode.containerInfo!==d.containerInfo||f.stateNode.implementation!==d.implementation?(f=ls(d,m.mode,v),f.return=m,f):(f=o(f,d.children||[]),f.return=m,f)}function h(m,f,d,v,S){return f===null||f.tag!==7?(f=yn(d,m.mode,v,S),f.return=m,f):(f=o(f,d),f.return=m,f)}function y(m,f,d){if(typeof f=="string"&&f!==""||typeof f=="number")return f=is(""+f,m.mode,d),f.return=m,f;if(typeof f=="object"&&f!==null){switch(f.$$typeof){case Ho:return d=mi(f.type,f.key,f.props,null,m.mode,d),d.ref=Ir(m,null,f),d.return=m,d;case Fn:return f=ls(f,m.mode,d),f.return=m,f;case Wt:var v=f._init;return y(m,v(f._payload),d)}if(Hr(f)||Lr(f))return f=yn(f,m.mode,d,null),f.return=m,f;ti(m,f)}return null}function g(m,f,d,v){var S=f!==null?f.key:null;if(typeof d=="string"&&d!==""||typeof d=="number")return S!==null?null:s(m,f,""+d,v);if(typeof d=="object"&&d!==null){switch(d.$$typeof){case Ho:return d.key===S?a(m,f,d,v):null;case Fn:return d.key===S?p(m,f,d,v):null;case Wt:return S=d._init,g(m,f,S(d._payload),v)}if(Hr(d)||Lr(d))return S!==null?null:h(m,f,d,v,null);ti(m,d)}return null}function C(m,f,d,v,S){if(typeof v=="string"&&v!==""||typeof v=="number")return m=m.get(d)||null,s(f,m,""+v,S);if(typeof v=="object"&&v!==null){switch(v.$$typeof){case Ho:return m=m.get(v.key===null?d:v.key)||null,a(f,m,v,S);case Fn:return m=m.get(v.key===null?d:v.key)||null,p(f,m,v,S);case Wt:var T=v._init;return C(m,f,d,T(v._payload),S)}if(Hr(v)||Lr(v))return m=m.get(d)||null,h(f,m,v,S,null);ti(f,v)}return null}function x(m,f,d,v){for(var S=null,T=null,N=f,M=f=0,V=null;N!==null&&M<d.length;M++){N.index>M?(V=N,N=null):V=N.sibling;var F=g(m,N,d[M],v);if(F===null){N===null&&(N=V);break}e&&N&&F.alternate===null&&t(m,N),f=i(F,f,M),T===null?S=F:T.sibling=F,T=F,N=V}if(M===d.length)return n(m,N),ee&&fn(m,M),S;if(N===null){for(;M<d.length;M++)N=y(m,d[M],v),N!==null&&(f=i(N,f,M),T===null?S=N:T.sibling=N,T=N);return ee&&fn(m,M),S}for(N=r(m,N);M<d.length;M++)V=C(N,m,M,d[M],v),V!==null&&(e&&V.alternate!==null&&N.delete(V.key===null?M:V.key),f=i(V,f,M),T===null?S=V:T.sibling=V,T=V);return e&&N.forEach(function(Pe){return t(m,Pe)}),ee&&fn(m,M),S}function _(m,f,d,v){var S=Lr(d);if(typeof S!="function")throw Error(E(150));if(d=S.call(d),d==null)throw Error(E(151));for(var T=S=null,N=f,M=f=0,V=null,F=d.next();N!==null&&!F.done;M++,F=d.next()){N.index>M?(V=N,N=null):V=N.sibling;var Pe=g(m,N,F.value,v);if(Pe===null){N===null&&(N=V);break}e&&N&&Pe.alternate===null&&t(m,N),f=i(Pe,f,M),T===null?S=Pe:T.sibling=Pe,T=Pe,N=V}if(F.done)return n(m,N),ee&&fn(m,M),S;if(N===null){for(;!F.done;M++,F=d.next())F=y(m,F.value,v),F!==null&&(f=i(F,f,M),T===null?S=F:T.sibling=F,T=F);return ee&&fn(m,M),S}for(N=r(m,N);!F.done;M++,F=d.next())F=C(N,m,M,F.value,v),F!==null&&(e&&F.alternate!==null&&N.delete(F.key===null?M:F.key),f=i(F,f,M),T===null?S=F:T.sibling=F,T=F);return e&&N.forEach(function(we){return t(m,we)}),ee&&fn(m,M),S}function R(m,f,d,v){if(typeof d=="object"&&d!==null&&d.type===An&&d.key===null&&(d=d.props.children),typeof d=="object"&&d!==null){switch(d.$$typeof){case Ho:e:{for(var S=d.key,T=f;T!==null;){if(T.key===S){if(S=d.type,S===An){if(T.tag===7){n(m,T.sibling),f=o(T,d.props.children),f.return=m,m=f;break e}}else if(T.elementType===S||typeof S=="object"&&S!==null&&S.$$typeof===Wt&&Tc(S)===T.type){n(m,T.sibling),f=o(T,d.props),f.ref=Ir(m,T,d),f.return=m,m=f;break e}n(m,T);break}else t(m,T);T=T.sibling}d.type===An?(f=yn(d.props.children,m.mode,v,d.key),f.return=m,m=f):(v=mi(d.type,d.key,d.props,null,m.mode,v),v.ref=Ir(m,f,d),v.return=m,m=v)}return l(m);case Fn:e:{for(T=d.key;f!==null;){if(f.key===T)if(f.tag===4&&f.stateNode.containerInfo===d.containerInfo&&f.stateNode.implementation===d.implementation){n(m,f.sibling),f=o(f,d.children||[]),f.return=m,m=f;break e}else{n(m,f);break}else t(m,f);f=f.sibling}f=ls(d,m.mode,v),f.return=m,m=f}return l(m);case Wt:return T=d._init,R(m,f,T(d._payload),v)}if(Hr(d))return x(m,f,d,v);if(Lr(d))return _(m,f,d,v);ti(m,d)}return typeof d=="string"&&d!==""||typeof d=="number"?(d=""+d,f!==null&&f.tag===6?(n(m,f.sibling),f=o(f,d),f.return=m,m=f):(n(m,f),f=is(d,m.mode,v),f.return=m,m=f),l(m)):n(m,f)}return R}var or=bd(!0),Jd=bd(!1),Ni=ln(null),Mi=null,Kn=null,yu=null;function wu(){yu=Kn=Mi=null}function Su(e){var t=Ni.current;X(Ni),e._currentValue=t}function $s(e,t,n){for(;e!==null;){var r=e.alternate;if((e.childLanes&t)!==t?(e.childLanes|=t,r!==null&&(r.childLanes|=t)):r!==null&&(r.childLanes&t)!==t&&(r.childLanes|=t),e===n)break;e=e.return}}function qn(e,t){Mi=e,yu=Kn=null,e=e.dependencies,e!==null&&e.firstContext!==null&&((e.lanes&t)!==0&&(De=!0),e.firstContext=null)}function nt(e){var t=e._currentValue;if(yu!==e)if(e={context:e,memoizedValue:t,next:null},Kn===null){if(Mi===null)throw Error(E(308));Kn=e,Mi.dependencies={lanes:0,firstContext:e}}else Kn=Kn.next=e;return t}var hn=null;function ku(e){hn===null?hn=[e]:hn.push(e)}function Zd(e,t,n,r){var o=t.interleaved;return o===null?(n.next=n,ku(t)):(n.next=o.next,o.next=n),t.interleaved=n,Lt(e,r)}function Lt(e,t){e.lanes|=t;var n=e.alternate;for(n!==null&&(n.lanes|=t),n=e,e=e.return;e!==null;)e.childLanes|=t,n=e.alternate,n!==null&&(n.childLanes|=t),n=e,e=e.return;return n.tag===3?n.stateNode:null}var Bt=!1;function Eu(e){e.updateQueue={baseState:e.memoizedState,firstBaseUpdate:null,lastBaseUpdate:null,shared:{pending:null,interleaved:null,lanes:0},effects:null}}function Xd(e,t){e=e.updateQueue,t.updateQueue===e&&(t.updateQueue={baseState:e.baseState,firstBaseUpdate:e.firstBaseUpdate,lastBaseUpdate:e.lastBaseUpdate,shared:e.shared,effects:e.effects})}function Nt(e,t){return{eventTime:e,lane:t,tag:0,payload:null,callback:null,next:null}}function Xt(e,t,n){var r=e.updateQueue;if(r===null)return null;if(r=r.shared,(U&2)!==0){var o=r.pending;return o===null?t.next=t:(t.next=o.next,o.next=t),r.pending=t,Lt(e,n)}return o=r.interleaved,o===null?(t.next=t,ku(r)):(t.next=o.next,o.next=t),r.interleaved=t,Lt(e,n)}function ui(e,t,n){if(t=t.updateQueue,t!==null&&(t=t.shared,(n&4194240)!==0)){var r=t.lanes;r&=e.pendingLanes,n|=r,t.lanes=n,su(e,n)}}function _c(e,t){var n=e.updateQueue,r=e.alternate;if(r!==null&&(r=r.updateQueue,n===r)){var o=null,i=null;if(n=n.firstBaseUpdate,n!==null){do{var l={eventTime:n.eventTime,lane:n.lane,tag:n.tag,payload:n.payload,callback:n.callback,next:null};i===null?o=i=l:i=i.next=l,n=n.next}while(n!==null);i===null?o=i=t:i=i.next=t}else o=i=t;n={baseState:r.baseState,firstBaseUpdate:o,lastBaseUpdate:i,shared:r.shared,effects:r.effects},e.updateQueue=n;return}e=n.lastBaseUpdate,e===null?n.firstBaseUpdate=t:e.next=t,n.lastBaseUpdate=t}function zi(e,t,n,r){var o=e.updateQueue;Bt=!1;var i=o.firstBaseUpdate,l=o.lastBaseUpdate,s=o.shared.pending;if(s!==null){o.shared.pending=null;var a=s,p=a.next;a.next=null,l===null?i=p:l.next=p,l=a;var h=e.alternate;h!==null&&(h=h.updateQueue,s=h.lastBaseUpdate,s!==l&&(s===null?h.firstBaseUpdate=p:s.next=p,h.lastBaseUpdate=a))}if(i!==null){var y=o.baseState;l=0,h=p=a=null,s=i;do{var g=s.lane,C=s.eventTime;if((r&g)===g){h!==null&&(h=h.next={eventTime:C,lane:0,tag:s.tag,payload:s.payload,callback:s.callback,next:null});e:{var x=e,_=s;switch(g=t,C=n,_.tag){case 1:if(x=_.payload,typeof x=="function"){y=x.call(C,y,g);break e}y=x;break e;case 3:x.flags=x.flags&-65537|128;case 0:if(x=_.payload,g=typeof x=="function"?x.call(C,y,g):x,g==null)break e;y=re({},y,g);break e;case 2:Bt=!0}}s.callback!==null&&s.lane!==0&&(e.flags|=64,g=o.effects,g===null?o.effects=[s]:g.push(s))}else C={eventTime:C,lane:g,tag:s.tag,payload:s.payload,callback:s.callback,next:null},h===null?(p=h=C,a=y):h=h.next=C,l|=g;if(s=s.next,s===null){if(s=o.shared.pending,s===null)break;g=s,s=g.next,g.next=null,o.lastBaseUpdate=g,o.shared.pending=null}}while(!0);if(h===null&&(a=y),o.baseState=a,o.firstBaseUpdate=p,o.lastBaseUpdate=h,t=o.shared.interleaved,t!==null){o=t;do l|=o.lane,o=o.next;while(o!==t)}else i===null&&(o.shared.lanes=0);En|=l,e.lanes=l,e.memoizedState=y}}function Pc(e,t,n){if(e=t.effects,t.effects=null,e!==null)for(t=0;t<e.length;t++){var r=e[t],o=r.callback;if(o!==null){if(r.callback=null,r=n,typeof o!="function")throw Error(E(191,o));o.call(r)}}}var wo={},kt=ln(wo),ao=ln(wo),co=ln(wo);function gn(e){if(e===wo)throw Error(E(174));return e}function xu(e,t){switch(b(co,t),b(ao,e),b(kt,wo),e=t.nodeType,e){case 9:case 11:t=(t=t.documentElement)?t.namespaceURI:gs(null,"");break;default:e=e===8?t.parentNode:t,t=e.namespaceURI||null,e=e.tagName,t=gs(t,e)}X(kt),b(kt,t)}function ir(){X(kt),X(ao),X(co)}function qd(e){gn(co.current);var t=gn(kt.current),n=gs(t,e.type);t!==n&&(b(ao,e),b(kt,n))}function Cu(e){ao.current===e&&(X(kt),X(ao))}var te=ln(0);function Li(e){for(var t=e;t!==null;){if(t.tag===13){var n=t.memoizedState;if(n!==null&&(n=n.dehydrated,n===null||n.data==="$?"||n.data==="$!"))return t}else if(t.tag===19&&t.memoizedProps.revealOrder!==void 0){if((t.flags&128)!==0)return t}else if(t.child!==null){t.child.return=t,t=t.child;continue}if(t===e)break;for(;t.sibling===null;){if(t.return===null||t.return===e)return null;t=t.return}t.sibling.return=t.return,t=t.sibling}return null}var ql=[];function Tu(){for(var e=0;e<ql.length;e++)ql[e]._workInProgressVersionPrimary=null;ql.length=0}var ai=Ot.ReactCurrentDispatcher,es=Ot.ReactCurrentBatchConfig,kn=0,ne=null,ae=null,me=null,Ri=!1,Gr=!1,fo=0,Nh=0;function xe(){throw Error(E(321))}function _u(e,t){if(t===null)return!1;for(var n=0;n<t.length&&n<e.length;n++)if(!mt(e[n],t[n]))return!1;return!0}function Pu(e,t,n,r,o,i){if(kn=i,ne=t,t.memoizedState=null,t.updateQueue=null,t.lanes=0,ai.current=e===null||e.memoizedState===null?Rh:Oh,e=n(r,o),Gr){i=0;do{if(Gr=!1,fo=0,25<=i)throw Error(E(301));i+=1,me=ae=null,t.updateQueue=null,ai.current=Dh,e=n(r,o)}while(Gr)}if(ai.current=Oi,t=ae!==null&&ae.next!==null,kn=0,me=ae=ne=null,Ri=!1,t)throw Error(E(300));return e}function Nu(){var e=fo!==0;return fo=0,e}function yt(){var e={memoizedState:null,baseState:null,baseQueue:null,queue:null,next:null};return me===null?ne.memoizedState=me=e:me=me.next=e,me}function rt(){if(ae===null){var e=ne.alternate;e=e!==null?e.memoizedState:null}else e=ae.next;var t=me===null?ne.memoizedState:me.next;if(t!==null)me=t,ae=e;else{if(e===null)throw Error(E(310));ae=e,e={memoizedState:ae.memoizedState,baseState:ae.baseState,baseQueue:ae.baseQueue,queue:ae.queue,next:null},me===null?ne.memoizedState=me=e:me=me.next=e}return me}function po(e,t){return typeof t=="function"?t(e):t}function ts(e){var t=rt(),n=t.queue;if(n===null)throw Error(E(311));n.lastRenderedReducer=e;var r=ae,o=r.baseQueue,i=n.pending;if(i!==null){if(o!==null){var l=o.next;o.next=i.next,i.next=l}r.baseQueue=o=i,n.pending=null}if(o!==null){i=o.next,r=r.baseState;var s=l=null,a=null,p=i;do{var h=p.lane;if((kn&h)===h)a!==null&&(a=a.next={lane:0,action:p.action,hasEagerState:p.hasEagerState,eagerState:p.eagerState,next:null}),r=p.hasEagerState?p.eagerState:e(r,p.action);else{var y={lane:h,action:p.action,hasEagerState:p.hasEagerState,eagerState:p.eagerState,next:null};a===null?(s=a=y,l=r):a=a.next=y,ne.lanes|=h,En|=h}p=p.next}while(p!==null&&p!==i);a===null?l=r:a.next=s,mt(r,t.memoizedState)||(De=!0),t.memoizedState=r,t.baseState=l,t.baseQueue=a,n.lastRenderedState=r}if(e=n.interleaved,e!==null){o=e;do i=o.lane,ne.lanes|=i,En|=i,o=o.next;while(o!==e)}else o===null&&(n.lanes=0);return[t.memoizedState,n.dispatch]}function ns(e){var t=rt(),n=t.queue;if(n===null)throw Error(E(311));n.lastRenderedReducer=e;var r=n.dispatch,o=n.pending,i=t.memoizedState;if(o!==null){n.pending=null;var l=o=o.next;do i=e(i,l.action),l=l.next;while(l!==o);mt(i,t.memoizedState)||(De=!0),t.memoizedState=i,t.baseQueue===null&&(t.baseState=i),n.lastRenderedState=i}return[i,r]}function ef(){}function tf(e,t){var n=ne,r=rt(),o=t(),i=!mt(r.memoizedState,o);if(i&&(r.memoizedState=o,De=!0),r=r.queue,Mu(of.bind(null,n,r,e),[e]),r.getSnapshot!==t||i||me!==null&&me.memoizedState.tag&1){if(n.flags|=2048,mo(9,rf.bind(null,n,r,o,t),void 0,null),he===null)throw Error(E(349));(kn&30)!==0||nf(n,t,o)}return o}function nf(e,t,n){e.flags|=16384,e={getSnapshot:t,value:n},t=ne.updateQueue,t===null?(t={lastEffect:null,stores:null},ne.updateQueue=t,t.stores=[e]):(n=t.stores,n===null?t.stores=[e]:n.push(e))}function rf(e,t,n,r){t.value=n,t.getSnapshot=r,lf(t)&&sf(e)}function of(e,t,n){return n(function(){lf(t)&&sf(e)})}function lf(e){var t=e.getSnapshot;e=e.value;try{var n=t();return!mt(e,n)}catch{return!0}}function sf(e){var t=Lt(e,1);t!==null&&pt(t,e,1,-1)}function Nc(e){var t=yt();return typeof e=="function"&&(e=e()),t.memoizedState=t.baseState=e,e={pending:null,interleaved:null,lanes:0,dispatch:null,lastRenderedReducer:po,lastRenderedState:e},t.queue=e,e=e.dispatch=Lh.bind(null,ne,e),[t.memoizedState,e]}function mo(e,t,n,r){return e={tag:e,create:t,destroy:n,deps:r,next:null},t=ne.updateQueue,t===null?(t={lastEffect:null,stores:null},ne.updateQueue=t,t.lastEffect=e.next=e):(n=t.lastEffect,n===null?t.lastEffect=e.next=e:(r=n.next,n.next=e,e.next=r,t.lastEffect=e)),e}function uf(){return rt().memoizedState}function ci(e,t,n,r){var o=yt();ne.flags|=e,o.memoizedState=mo(1|t,n,void 0,r===void 0?null:r)}function Qi(e,t,n,r){var o=rt();r=r===void 0?null:r;var i=void 0;if(ae!==null){var l=ae.memoizedState;if(i=l.destroy,r!==null&&_u(r,l.deps)){o.memoizedState=mo(t,n,i,r);return}}ne.flags|=e,o.memoizedState=mo(1|t,n,i,r)}function Mc(e,t){return ci(8390656,8,e,t)}function Mu(e,t){return Qi(2048,8,e,t)}function af(e,t){return Qi(4,2,e,t)}function cf(e,t){return Qi(4,4,e,t)}function df(e,t){if(typeof t=="function")return e=e(),t(e),function(){t(null)};if(t!=null)return e=e(),t.current=e,function(){t.current=null}}function ff(e,t,n){return n=n!=null?n.concat([e]):null,Qi(4,4,df.bind(null,t,e),n)}function zu(){}function pf(e,t){var n=rt();t=t===void 0?null:t;var r=n.memoizedState;return r!==null&&t!==null&&_u(t,r[1])?r[0]:(n.memoizedState=[e,t],e)}function mf(e,t){var n=rt();t=t===void 0?null:t;var r=n.memoizedState;return r!==null&&t!==null&&_u(t,r[1])?r[0]:(e=e(),n.memoizedState=[e,t],e)}function hf(e,t,n){return(kn&21)===0?(e.baseState&&(e.baseState=!1,De=!0),e.memoizedState=n):(mt(n,t)||(n=wd(),ne.lanes|=n,En|=n,e.baseState=!0),t)}function Mh(e,t){var n=W;W=n!==0&&4>n?n:4,e(!0);var r=es.transition;es.transition={};try{e(!1),t()}finally{W=n,es.transition=r}}function gf(){return rt().memoizedState}function zh(e,t,n){var r=en(e);if(n={lane:r,action:n,hasEagerState:!1,eagerState:null,next:null},vf(e))yf(t,n);else if(n=Zd(e,t,n,r),n!==null){var o=ze();pt(n,e,r,o),wf(n,t,r)}}function Lh(e,t,n){var r=en(e),o={lane:r,action:n,hasEagerState:!1,eagerState:null,next:null};if(vf(e))yf(t,o);else{var i=e.alternate;if(e.lanes===0&&(i===null||i.lanes===0)&&(i=t.lastRenderedReducer,i!==null))try{var l=t.lastRenderedState,s=i(l,n);if(o.hasEagerState=!0,o.eagerState=s,mt(s,l)){var a=t.interleaved;a===null?(o.next=o,ku(t)):(o.next=a.next,a.next=o),t.interleaved=o;return}}catch{}n=Zd(e,t,o,r),n!==null&&(o=ze(),pt(n,e,r,o),wf(n,t,r))}}function vf(e){var t=e.alternate;return e===ne||t!==null&&t===ne}function yf(e,t){Gr=Ri=!0;var n=e.pending;n===null?t.next=t:(t.next=n.next,n.next=t),e.pending=t}function wf(e,t,n){if((n&4194240)!==0){var r=t.lanes;r&=e.pendingLanes,n|=r,t.lanes=n,su(e,n)}}var Oi={readContext:nt,useCallback:xe,useContext:xe,useEffect:xe,useImperativeHandle:xe,useInsertionEffect:xe,useLayoutEffect:xe,useMemo:xe,useReducer:xe,useRef:xe,useState:xe,useDebugValue:xe,useDeferredValue:xe,useTransition:xe,useMutableSource:xe,useSyncExternalStore:xe,useId:xe,unstable_isNewReconciler:!1},Rh={readContext:nt,useCallback:function(e,t){return yt().memoizedState=[e,t===void 0?null:t],e},useContext:nt,useEffect:Mc,useImperativeHandle:function(e,t,n){return n=n!=null?n.concat([e]):null,ci(4194308,4,df.bind(null,t,e),n)},useLayoutEffect:function(e,t){return ci(4194308,4,e,t)},useInsertionEffect:function(e,t){return ci(4,2,e,t)},useMemo:function(e,t){var n=yt();return t=t===void 0?null:t,e=e(),n.memoizedState=[e,t],e},useReducer:function(e,t,n){var r=yt();return t=n!==void 0?n(t):t,r.memoizedState=r.baseState=t,e={pending:null,interleaved:null,lanes:0,dispatch:null,lastRenderedReducer:e,lastRenderedState:t},r.queue=e,e=e.dispatch=zh.bind(null,ne,e),[r.memoizedState,e]},useRef:function(e){var t=yt();return e={current:e},t.memoizedState=e},useState:Nc,useDebugValue:zu,useDeferredValue:function(e){return yt().memoizedState=e},useTransition:function(){var e=Nc(!1),t=e[0];return e=Mh.bind(null,e[1]),yt().memoizedState=e,[t,e]},useMutableSource:function(){},useSyncExternalStore:function(e,t,n){var r=ne,o=yt();if(ee){if(n===void 0)throw Error(E(407));n=n()}else{if(n=t(),he===null)throw Error(E(349));(kn&30)!==0||nf(r,t,n)}o.memoizedState=n;var i={value:n,getSnapshot:t};return o.queue=i,Mc(of.bind(null,r,i,e),[e]),r.flags|=2048,mo(9,rf.bind(null,r,i,n,t),void 0,null),n},useId:function(){var e=yt(),t=he.identifierPrefix;if(ee){var n=Pt,r=_t;n=(r&~(1<<32-ft(r)-1)).toString(32)+n,t=":"+t+"R"+n,n=fo++,0<n&&(t+="H"+n.toString(32)),t+=":"}else n=Nh++,t=":"+t+"r"+n.toString(32)+":";return e.memoizedState=t},unstable_isNewReconciler:!1},Oh={readContext:nt,useCallback:pf,useContext:nt,useEffect:Mu,useImperativeHandle:ff,useInsertionEffect:af,useLayoutEffect:cf,useMemo:mf,useReducer:ts,useRef:uf,useState:function(){return ts(po)},useDebugValue:zu,useDeferredValue:function(e){var t=rt();return hf(t,ae.memoizedState,e)},useTransition:function(){var e=ts(po)[0],t=rt().memoizedState;return[e,t]},useMutableSource:ef,useSyncExternalStore:tf,useId:gf,unstable_isNewReconciler:!1},Dh={readContext:nt,useCallback:pf,useContext:nt,useEffect:Mu,useImperativeHandle:ff,useInsertionEffect:af,useLayoutEffect:cf,useMemo:mf,useReducer:ns,useRef:uf,useState:function(){return ns(po)},useDebugValue:zu,useDeferredValue:function(e){var t=rt();return ae===null?t.memoizedState=e:hf(t,ae.memoizedState,e)},useTransition:function(){var e=ns(po)[0],t=rt().memoizedState;return[e,t]},useMutableSource:ef,useSyncExternalStore:tf,useId:gf,unstable_isNewReconciler:!1};function at(e,t){if(e&&e.defaultProps){t=re({},t),e=e.defaultProps;for(var n in e)t[n]===void 0&&(t[n]=e[n]);return t}return t}function Fs(e,t,n,r){t=e.memoizedState,n=n(r,t),n=n==null?t:re({},t,n),e.memoizedState=n,e.lanes===0&&(e.updateQueue.baseState=n)}var Ki={isMounted:function(e){return(e=e._reactInternals)?Tn(e)===e:!1},enqueueSetState:function(e,t,n){e=e._reactInternals;var r=ze(),o=en(e),i=Nt(r,o);i.payload=t,n!=null&&(i.callback=n),t=Xt(e,i,o),t!==null&&(pt(t,e,o,r),ui(t,e,o))},enqueueReplaceState:function(e,t,n){e=e._reactInternals;var r=ze(),o=en(e),i=Nt(r,o);i.tag=1,i.payload=t,n!=null&&(i.callback=n),t=Xt(e,i,o),t!==null&&(pt(t,e,o,r),ui(t,e,o))},enqueueForceUpdate:function(e,t){e=e._reactInternals;var n=ze(),r=en(e),o=Nt(n,r);o.tag=2,t!=null&&(o.callback=t),t=Xt(e,o,r),t!==null&&(pt(t,e,r,n),ui(t,e,r))}};function zc(e,t,n,r,o,i,l){return e=e.stateNode,typeof e.shouldComponentUpdate=="function"?e.shouldComponentUpdate(r,i,l):t.prototype&&t.prototype.isPureReactComponent?!io(n,r)||!io(o,i):!0}function Sf(e,t,n){var r=!1,o=rn,i=t.contextType;return typeof i=="object"&&i!==null?i=nt(i):(o=$e(t)?wn:_e.current,r=t.contextTypes,i=(r=r!=null)?nr(e,o):rn),t=new t(n,i),e.memoizedState=t.state!==null&&t.state!==void 0?t.state:null,t.updater=Ki,e.stateNode=t,t._reactInternals=e,r&&(e=e.stateNode,e.__reactInternalMemoizedUnmaskedChildContext=o,e.__reactInternalMemoizedMaskedChildContext=i),t}function Lc(e,t,n,r){e=t.state,typeof t.componentWillReceiveProps=="function"&&t.componentWillReceiveProps(n,r),typeof t.UNSAFE_componentWillReceiveProps=="function"&&t.UNSAFE_componentWillReceiveProps(n,r),t.state!==e&&Ki.enqueueReplaceState(t,t.state,null)}function As(e,t,n,r){var o=e.stateNode;o.props=n,o.state=e.memoizedState,o.refs={},Eu(e);var i=t.contextType;typeof i=="object"&&i!==null?o.context=nt(i):(i=$e(t)?wn:_e.current,o.context=nr(e,i)),o.state=e.memoizedState,i=t.getDerivedStateFromProps,typeof i=="function"&&(Fs(e,t,i,n),o.state=e.memoizedState),typeof t.getDerivedStateFromProps=="function"||typeof o.getSnapshotBeforeUpdate=="function"||typeof o.UNSAFE_componentWillMount!="function"&&typeof o.componentWillMount!="function"||(t=o.state,typeof o.componentWillMount=="function"&&o.componentWillMount(),typeof o.UNSAFE_componentWillMount=="function"&&o.UNSAFE_componentWillMount(),t!==o.state&&Ki.enqueueReplaceState(o,o.state,null),zi(e,n,o,r),o.state=e.memoizedState),typeof o.componentDidMount=="function"&&(e.flags|=4194308)}function lr(e,t){try{var n="",r=t;do n+=cm(r),r=r.return;while(r);var o=n}catch(i){o=`
-Error generating stack: `+i.message+`
-`+i.stack}return{value:e,source:t,stack:o,digest:null}}function rs(e,t,n){return{value:e,source:null,stack:n!=null?n:null,digest:t!=null?t:null}}function js(e,t){try{console.error(t.value)}catch(n){setTimeout(function(){throw n})}}var Ih=typeof WeakMap=="function"?WeakMap:Map;function kf(e,t,n){n=Nt(-1,n),n.tag=3,n.payload={element:null};var r=t.value;return n.callback=function(){Ii||(Ii=!0,bs=r),js(e,t)},n}function Ef(e,t,n){n=Nt(-1,n),n.tag=3;var r=e.type.getDerivedStateFromError;if(typeof r=="function"){var o=t.value;n.payload=function(){return r(o)},n.callback=function(){js(e,t)}}var i=e.stateNode;return i!==null&&typeof i.componentDidCatch=="function"&&(n.callback=function(){js(e,t),typeof r!="function"&&(qt===null?qt=new Set([this]):qt.add(this));var l=t.stack;this.componentDidCatch(t.value,{componentStack:l!==null?l:""})}),n}function Rc(e,t,n){var r=e.pingCache;if(r===null){r=e.pingCache=new Ih;var o=new Set;r.set(t,o)}else o=r.get(t),o===void 0&&(o=new Set,r.set(t,o));o.has(n)||(o.add(n),e=bh.bind(null,e,t,n),t.then(e,e))}function Oc(e){do{var t;if((t=e.tag===13)&&(t=e.memoizedState,t=t!==null?t.dehydrated!==null:!0),t)return e;e=e.return}while(e!==null);return null}function Dc(e,t,n,r,o){return(e.mode&1)===0?(e===t?e.flags|=65536:(e.flags|=128,n.flags|=131072,n.flags&=-52805,n.tag===1&&(n.alternate===null?n.tag=17:(t=Nt(-1,1),t.tag=2,Xt(n,t,1))),n.lanes|=1),e):(e.flags|=65536,e.lanes=o,e)}var $h=Ot.ReactCurrentOwner,De=!1;function Me(e,t,n,r){t.child=e===null?Jd(t,null,n,r):or(t,e.child,n,r)}function Ic(e,t,n,r,o){n=n.render;var i=t.ref;return qn(t,o),r=Pu(e,t,n,r,i,o),n=Nu(),e!==null&&!De?(t.updateQueue=e.updateQueue,t.flags&=-2053,e.lanes&=~o,Rt(e,t,o)):(ee&&n&&hu(t),t.flags|=1,Me(e,t,r,o),t.child)}function $c(e,t,n,r,o){if(e===null){var i=n.type;return typeof i=="function"&&!Au(i)&&i.defaultProps===void 0&&n.compare===null&&n.defaultProps===void 0?(t.tag=15,t.type=i,xf(e,t,i,r,o)):(e=mi(n.type,null,r,t,t.mode,o),e.ref=t.ref,e.return=t,t.child=e)}if(i=e.child,(e.lanes&o)===0){var l=i.memoizedProps;if(n=n.compare,n=n!==null?n:io,n(l,r)&&e.ref===t.ref)return Rt(e,t,o)}return t.flags|=1,e=tn(i,r),e.ref=t.ref,e.return=t,t.child=e}function xf(e,t,n,r,o){if(e!==null){var i=e.memoizedProps;if(io(i,r)&&e.ref===t.ref)if(De=!1,t.pendingProps=r=i,(e.lanes&o)!==0)(e.flags&131072)!==0&&(De=!0);else return t.lanes=e.lanes,Rt(e,t,o)}return Hs(e,t,n,r,o)}function Cf(e,t,n){var r=t.pendingProps,o=r.children,i=e!==null?e.memoizedState:null;if(r.mode==="hidden")if((t.mode&1)===0)t.memoizedState={baseLanes:0,cachePool:null,transitions:null},b(Gn,We),We|=n;else{if((n&1073741824)===0)return e=i!==null?i.baseLanes|n:n,t.lanes=t.childLanes=1073741824,t.memoizedState={baseLanes:e,cachePool:null,transitions:null},t.updateQueue=null,b(Gn,We),We|=e,null;t.memoizedState={baseLanes:0,cachePool:null,transitions:null},r=i!==null?i.baseLanes:n,b(Gn,We),We|=r}else i!==null?(r=i.baseLanes|n,t.memoizedState=null):r=n,b(Gn,We),We|=r;return Me(e,t,o,n),t.child}function Tf(e,t){var n=t.ref;(e===null&&n!==null||e!==null&&e.ref!==n)&&(t.flags|=512,t.flags|=2097152)}function Hs(e,t,n,r,o){var i=$e(n)?wn:_e.current;return i=nr(t,i),qn(t,o),n=Pu(e,t,n,r,i,o),r=Nu(),e!==null&&!De?(t.updateQueue=e.updateQueue,t.flags&=-2053,e.lanes&=~o,Rt(e,t,o)):(ee&&r&&hu(t),t.flags|=1,Me(e,t,n,o),t.child)}function Fc(e,t,n,r,o){if($e(n)){var i=!0;Ti(t)}else i=!1;if(qn(t,o),t.stateNode===null)di(e,t),Sf(t,n,r),As(t,n,r,o),r=!0;else if(e===null){var l=t.stateNode,s=t.memoizedProps;l.props=s;var a=l.context,p=n.contextType;typeof p=="object"&&p!==null?p=nt(p):(p=$e(n)?wn:_e.current,p=nr(t,p));var h=n.getDerivedStateFromProps,y=typeof h=="function"||typeof l.getSnapshotBeforeUpdate=="function";y||typeof l.UNSAFE_componentWillReceiveProps!="function"&&typeof l.componentWillReceiveProps!="function"||(s!==r||a!==p)&&Lc(t,l,r,p),Bt=!1;var g=t.memoizedState;l.state=g,zi(t,r,l,o),a=t.memoizedState,s!==r||g!==a||Ie.current||Bt?(typeof h=="function"&&(Fs(t,n,h,r),a=t.memoizedState),(s=Bt||zc(t,n,s,r,g,a,p))?(y||typeof l.UNSAFE_componentWillMount!="function"&&typeof l.componentWillMount!="function"||(typeof l.componentWillMount=="function"&&l.componentWillMount(),typeof l.UNSAFE_componentWillMount=="function"&&l.UNSAFE_componentWillMount()),typeof l.componentDidMount=="function"&&(t.flags|=4194308)):(typeof l.componentDidMount=="function"&&(t.flags|=4194308),t.memoizedProps=r,t.memoizedState=a),l.props=r,l.state=a,l.context=p,r=s):(typeof l.componentDidMount=="function"&&(t.flags|=4194308),r=!1)}else{l=t.stateNode,Xd(e,t),s=t.memoizedProps,p=t.type===t.elementType?s:at(t.type,s),l.props=p,y=t.pendingProps,g=l.context,a=n.contextType,typeof a=="object"&&a!==null?a=nt(a):(a=$e(n)?wn:_e.current,a=nr(t,a));var C=n.getDerivedStateFromProps;(h=typeof C=="function"||typeof l.getSnapshotBeforeUpdate=="function")||typeof l.UNSAFE_componentWillReceiveProps!="function"&&typeof l.componentWillReceiveProps!="function"||(s!==y||g!==a)&&Lc(t,l,r,a),Bt=!1,g=t.memoizedState,l.state=g,zi(t,r,l,o);var x=t.memoizedState;s!==y||g!==x||Ie.current||Bt?(typeof C=="function"&&(Fs(t,n,C,r),x=t.memoizedState),(p=Bt||zc(t,n,p,r,g,x,a)||!1)?(h||typeof l.UNSAFE_componentWillUpdate!="function"&&typeof l.componentWillUpdate!="function"||(typeof l.componentWillUpdate=="function"&&l.componentWillUpdate(r,x,a),typeof l.UNSAFE_componentWillUpdate=="function"&&l.UNSAFE_componentWillUpdate(r,x,a)),typeof l.componentDidUpdate=="function"&&(t.flags|=4),typeof l.getSnapshotBeforeUpdate=="function"&&(t.flags|=1024)):(typeof l.componentDidUpdate!="function"||s===e.memoizedProps&&g===e.memoizedState||(t.flags|=4),typeof l.getSnapshotBeforeUpdate!="function"||s===e.memoizedProps&&g===e.memoizedState||(t.flags|=1024),t.memoizedProps=r,t.memoizedState=x),l.props=r,l.state=x,l.context=a,r=p):(typeof l.componentDidUpdate!="function"||s===e.memoizedProps&&g===e.memoizedState||(t.flags|=4),typeof l.getSnapshotBeforeUpdate!="function"||s===e.memoizedProps&&g===e.memoizedState||(t.flags|=1024),r=!1)}return Us(e,t,n,r,i,o)}function Us(e,t,n,r,o,i){Tf(e,t);var l=(t.flags&128)!==0;if(!r&&!l)return o&&Ec(t,n,!1),Rt(e,t,i);r=t.stateNode,$h.current=t;var s=l&&typeof n.getDerivedStateFromError!="function"?null:r.render();return t.flags|=1,e!==null&&l?(t.child=or(t,e.child,null,i),t.child=or(t,null,s,i)):Me(e,t,s,i),t.memoizedState=r.state,o&&Ec(t,n,!0),t.child}function _f(e){var t=e.stateNode;t.pendingContext?kc(e,t.pendingContext,t.pendingContext!==t.context):t.context&&kc(e,t.context,!1),xu(e,t.containerInfo)}function Ac(e,t,n,r,o){return rr(),vu(o),t.flags|=256,Me(e,t,n,r),t.child}var Ws={dehydrated:null,treeContext:null,retryLane:0};function Bs(e){return{baseLanes:e,cachePool:null,transitions:null}}function Pf(e,t,n){var r=t.pendingProps,o=te.current,i=!1,l=(t.flags&128)!==0,s;if((s=l)||(s=e!==null&&e.memoizedState===null?!1:(o&2)!==0),s?(i=!0,t.flags&=-129):(e===null||e.memoizedState!==null)&&(o|=1),b(te,o&1),e===null)return Is(t),e=t.memoizedState,e!==null&&(e=e.dehydrated,e!==null)?((t.mode&1)===0?t.lanes=1:e.data==="$!"?t.lanes=8:t.lanes=1073741824,null):(l=r.children,e=r.fallback,i?(r=t.mode,i=t.child,l={mode:"hidden",children:l},(r&1)===0&&i!==null?(i.childLanes=0,i.pendingProps=l):i=bi(l,r,0,null),e=yn(e,r,n,null),i.return=t,e.return=t,i.sibling=e,t.child=i,t.child.memoizedState=Bs(n),t.memoizedState=Ws,e):Lu(t,l));if(o=e.memoizedState,o!==null&&(s=o.dehydrated,s!==null))return Fh(e,t,l,r,s,o,n);if(i){i=r.fallback,l=t.mode,o=e.child,s=o.sibling;var a={mode:"hidden",children:r.children};return(l&1)===0&&t.child!==o?(r=t.child,r.childLanes=0,r.pendingProps=a,t.deletions=null):(r=tn(o,a),r.subtreeFlags=o.subtreeFlags&14680064),s!==null?i=tn(s,i):(i=yn(i,l,n,null),i.flags|=2),i.return=t,r.return=t,r.sibling=i,t.child=r,r=i,i=t.child,l=e.child.memoizedState,l=l===null?Bs(n):{baseLanes:l.baseLanes|n,cachePool:null,transitions:l.transitions},i.memoizedState=l,i.childLanes=e.childLanes&~n,t.memoizedState=Ws,r}return i=e.child,e=i.sibling,r=tn(i,{mode:"visible",children:r.children}),(t.mode&1)===0&&(r.lanes=n),r.return=t,r.sibling=null,e!==null&&(n=t.deletions,n===null?(t.deletions=[e],t.flags|=16):n.push(e)),t.child=r,t.memoizedState=null,r}function Lu(e,t){return t=bi({mode:"visible",children:t},e.mode,0,null),t.return=e,e.child=t}function ni(e,t,n,r){return r!==null&&vu(r),or(t,e.child,null,n),e=Lu(t,t.pendingProps.children),e.flags|=2,t.memoizedState=null,e}function Fh(e,t,n,r,o,i,l){if(n)return t.flags&256?(t.flags&=-257,r=rs(Error(E(422))),ni(e,t,l,r)):t.memoizedState!==null?(t.child=e.child,t.flags|=128,null):(i=r.fallback,o=t.mode,r=bi({mode:"visible",children:r.children},o,0,null),i=yn(i,o,l,null),i.flags|=2,r.return=t,i.return=t,r.sibling=i,t.child=r,(t.mode&1)!==0&&or(t,e.child,null,l),t.child.memoizedState=Bs(l),t.memoizedState=Ws,i);if((t.mode&1)===0)return ni(e,t,l,null);if(o.data==="$!"){if(r=o.nextSibling&&o.nextSibling.dataset,r)var s=r.dgst;return r=s,i=Error(E(419)),r=rs(i,r,void 0),ni(e,t,l,r)}if(s=(l&e.childLanes)!==0,De||s){if(r=he,r!==null){switch(l&-l){case 4:o=2;break;case 16:o=8;break;case 64:case 128:case 256:case 512:case 1024:case 2048:case 4096:case 8192:case 16384:case 32768:case 65536:case 131072:case 262144:case 524288:case 1048576:case 2097152:case 4194304:case 8388608:case 16777216:case 33554432:case 67108864:o=32;break;case 536870912:o=268435456;break;default:o=0}o=(o&(r.suspendedLanes|l))!==0?0:o,o!==0&&o!==i.retryLane&&(i.retryLane=o,Lt(e,o),pt(r,e,o,-1))}return Fu(),r=rs(Error(E(421))),ni(e,t,l,r)}return o.data==="$?"?(t.flags|=128,t.child=e.child,t=Jh.bind(null,e),o._reactRetry=t,null):(e=i.treeContext,Be=Zt(o.nextSibling),Ve=t,ee=!0,dt=null,e!==null&&(Xe[qe++]=_t,Xe[qe++]=Pt,Xe[qe++]=Sn,_t=e.id,Pt=e.overflow,Sn=t),t=Lu(t,r.children),t.flags|=4096,t)}function jc(e,t,n){e.lanes|=t;var r=e.alternate;r!==null&&(r.lanes|=t),$s(e.return,t,n)}function os(e,t,n,r,o){var i=e.memoizedState;i===null?e.memoizedState={isBackwards:t,rendering:null,renderingStartTime:0,last:r,tail:n,tailMode:o}:(i.isBackwards=t,i.rendering=null,i.renderingStartTime=0,i.last=r,i.tail=n,i.tailMode=o)}function Nf(e,t,n){var r=t.pendingProps,o=r.revealOrder,i=r.tail;if(Me(e,t,r.children,n),r=te.current,(r&2)!==0)r=r&1|2,t.flags|=128;else{if(e!==null&&(e.flags&128)!==0)e:for(e=t.child;e!==null;){if(e.tag===13)e.memoizedState!==null&&jc(e,n,t);else if(e.tag===19)jc(e,n,t);else if(e.child!==null){e.child.return=e,e=e.child;continue}if(e===t)break e;for(;e.sibling===null;){if(e.return===null||e.return===t)break e;e=e.return}e.sibling.return=e.return,e=e.sibling}r&=1}if(b(te,r),(t.mode&1)===0)t.memoizedState=null;else switch(o){case"forwards":for(n=t.child,o=null;n!==null;)e=n.alternate,e!==null&&Li(e)===null&&(o=n),n=n.sibling;n=o,n===null?(o=t.child,t.child=null):(o=n.sibling,n.sibling=null),os(t,!1,o,n,i);break;case"backwards":for(n=null,o=t.child,t.child=null;o!==null;){if(e=o.alternate,e!==null&&Li(e)===null){t.child=o;break}e=o.sibling,o.sibling=n,n=o,o=e}os(t,!0,n,null,i);break;case"together":os(t,!1,null,null,void 0);break;default:t.memoizedState=null}return t.child}function di(e,t){(t.mode&1)===0&&e!==null&&(e.alternate=null,t.alternate=null,t.flags|=2)}function Rt(e,t,n){if(e!==null&&(t.dependencies=e.dependencies),En|=t.lanes,(n&t.childLanes)===0)return null;if(e!==null&&t.child!==e.child)throw Error(E(153));if(t.child!==null){for(e=t.child,n=tn(e,e.pendingProps),t.child=n,n.return=t;e.sibling!==null;)e=e.sibling,n=n.sibling=tn(e,e.pendingProps),n.return=t;n.sibling=null}return t.child}function Ah(e,t,n){switch(t.tag){case 3:_f(t),rr();break;case 5:qd(t);break;case 1:$e(t.type)&&Ti(t);break;case 4:xu(t,t.stateNode.containerInfo);break;case 10:var r=t.type._context,o=t.memoizedProps.value;b(Ni,r._currentValue),r._currentValue=o;break;case 13:if(r=t.memoizedState,r!==null)return r.dehydrated!==null?(b(te,te.current&1),t.flags|=128,null):(n&t.child.childLanes)!==0?Pf(e,t,n):(b(te,te.current&1),e=Rt(e,t,n),e!==null?e.sibling:null);b(te,te.current&1);break;case 19:if(r=(n&t.childLanes)!==0,(e.flags&128)!==0){if(r)return Nf(e,t,n);t.flags|=128}if(o=t.memoizedState,o!==null&&(o.rendering=null,o.tail=null,o.lastEffect=null),b(te,te.current),r)break;return null;case 22:case 23:return t.lanes=0,Cf(e,t,n)}return Rt(e,t,n)}var Mf,Vs,zf,Lf;Mf=function(e,t){for(var n=t.child;n!==null;){if(n.tag===5||n.tag===6)e.appendChild(n.stateNode);else if(n.tag!==4&&n.child!==null){n.child.return=n,n=n.child;continue}if(n===t)break;for(;n.sibling===null;){if(n.return===null||n.return===t)return;n=n.return}n.sibling.return=n.return,n=n.sibling}};Vs=function(){};zf=function(e,t,n,r){var o=e.memoizedProps;if(o!==r){e=t.stateNode,gn(kt.current);var i=null;switch(n){case"input":o=fs(e,o),r=fs(e,r),i=[];break;case"select":o=re({},o,{value:void 0}),r=re({},r,{value:void 0}),i=[];break;case"textarea":o=hs(e,o),r=hs(e,r),i=[];break;default:typeof o.onClick!="function"&&typeof r.onClick=="function"&&(e.onclick=xi)}vs(n,r);var l;n=null;for(p in o)if(!r.hasOwnProperty(p)&&o.hasOwnProperty(p)&&o[p]!=null)if(p==="style"){var s=o[p];for(l in s)s.hasOwnProperty(l)&&(n||(n={}),n[l]="")}else p!=="dangerouslySetInnerHTML"&&p!=="children"&&p!=="suppressContentEditableWarning"&&p!=="suppressHydrationWarning"&&p!=="autoFocus"&&(Xr.hasOwnProperty(p)?i||(i=[]):(i=i||[]).push(p,null));for(p in r){var a=r[p];if(s=o!=null?o[p]:void 0,r.hasOwnProperty(p)&&a!==s&&(a!=null||s!=null))if(p==="style")if(s){for(l in s)!s.hasOwnProperty(l)||a&&a.hasOwnProperty(l)||(n||(n={}),n[l]="");for(l in a)a.hasOwnProperty(l)&&s[l]!==a[l]&&(n||(n={}),n[l]=a[l])}else n||(i||(i=[]),i.push(p,n)),n=a;else p==="dangerouslySetInnerHTML"?(a=a?a.__html:void 0,s=s?s.__html:void 0,a!=null&&s!==a&&(i=i||[]).push(p,a)):p==="children"?typeof a!="string"&&typeof a!="number"||(i=i||[]).push(p,""+a):p!=="suppressContentEditableWarning"&&p!=="suppressHydrationWarning"&&(Xr.hasOwnProperty(p)?(a!=null&&p==="onScroll"&&Z("scroll",e),i||s===a||(i=[])):(i=i||[]).push(p,a))}n&&(i=i||[]).push("style",n);var p=i;(t.updateQueue=p)&&(t.flags|=4)}};Lf=function(e,t,n,r){n!==r&&(t.flags|=4)};function $r(e,t){if(!ee)switch(e.tailMode){case"hidden":t=e.tail;for(var n=null;t!==null;)t.alternate!==null&&(n=t),t=t.sibling;n===null?e.tail=null:n.sibling=null;break;case"collapsed":n=e.tail;for(var r=null;n!==null;)n.alternate!==null&&(r=n),n=n.sibling;r===null?t||e.tail===null?e.tail=null:e.tail.sibling=null:r.sibling=null}}function Ce(e){var t=e.alternate!==null&&e.alternate.child===e.child,n=0,r=0;if(t)for(var o=e.child;o!==null;)n|=o.lanes|o.childLanes,r|=o.subtreeFlags&14680064,r|=o.flags&14680064,o.return=e,o=o.sibling;else for(o=e.child;o!==null;)n|=o.lanes|o.childLanes,r|=o.subtreeFlags,r|=o.flags,o.return=e,o=o.sibling;return e.subtreeFlags|=r,e.childLanes=n,t}function jh(e,t,n){var r=t.pendingProps;switch(gu(t),t.tag){case 2:case 16:case 15:case 0:case 11:case 7:case 8:case 12:case 9:case 14:return Ce(t),null;case 1:return $e(t.type)&&Ci(),Ce(t),null;case 3:return r=t.stateNode,ir(),X(Ie),X(_e),Tu(),r.pendingContext&&(r.context=r.pendingContext,r.pendingContext=null),(e===null||e.child===null)&&(ei(t)?t.flags|=4:e===null||e.memoizedState.isDehydrated&&(t.flags&256)===0||(t.flags|=1024,dt!==null&&(Xs(dt),dt=null))),Vs(e,t),Ce(t),null;case 5:Cu(t);var o=gn(co.current);if(n=t.type,e!==null&&t.stateNode!=null)zf(e,t,n,r,o),e.ref!==t.ref&&(t.flags|=512,t.flags|=2097152);else{if(!r){if(t.stateNode===null)throw Error(E(166));return Ce(t),null}if(e=gn(kt.current),ei(t)){r=t.stateNode,n=t.type;var i=t.memoizedProps;switch(r[wt]=t,r[uo]=i,e=(t.mode&1)!==0,n){case"dialog":Z("cancel",r),Z("close",r);break;case"iframe":case"object":case"embed":Z("load",r);break;case"video":case"audio":for(o=0;o<Wr.length;o++)Z(Wr[o],r);break;case"source":Z("error",r);break;case"img":case"image":case"link":Z("error",r),Z("load",r);break;case"details":Z("toggle",r);break;case"input":Ya(r,i),Z("invalid",r);break;case"select":r._wrapperState={wasMultiple:!!i.multiple},Z("invalid",r);break;case"textarea":ba(r,i),Z("invalid",r)}vs(n,i),o=null;for(var l in i)if(i.hasOwnProperty(l)){var s=i[l];l==="children"?typeof s=="string"?r.textContent!==s&&(i.suppressHydrationWarning!==!0&&qo(r.textContent,s,e),o=["children",s]):typeof s=="number"&&r.textContent!==""+s&&(i.suppressHydrationWarning!==!0&&qo(r.textContent,s,e),o=["children",""+s]):Xr.hasOwnProperty(l)&&s!=null&&l==="onScroll"&&Z("scroll",r)}switch(n){case"input":Uo(r),Ga(r,i,!0);break;case"textarea":Uo(r),Ja(r);break;case"select":case"option":break;default:typeof i.onClick=="function"&&(r.onclick=xi)}r=o,t.updateQueue=r,r!==null&&(t.flags|=4)}else{l=o.nodeType===9?o:o.ownerDocument,e==="http://www.w3.org/1999/xhtml"&&(e=od(n)),e==="http://www.w3.org/1999/xhtml"?n==="script"?(e=l.createElement("div"),e.innerHTML="<script><\/script>",e=e.removeChild(e.firstChild)):typeof r.is=="string"?e=l.createElement(n,{is:r.is}):(e=l.createElement(n),n==="select"&&(l=e,r.multiple?l.multiple=!0:r.size&&(l.size=r.size))):e=l.createElementNS(e,n),e[wt]=t,e[uo]=r,Mf(e,t,!1,!1),t.stateNode=e;e:{switch(l=ys(n,r),n){case"dialog":Z("cancel",e),Z("close",e),o=r;break;case"iframe":case"object":case"embed":Z("load",e),o=r;break;case"video":case"audio":for(o=0;o<Wr.length;o++)Z(Wr[o],e);o=r;break;case"source":Z("error",e),o=r;break;case"img":case"image":case"link":Z("error",e),Z("load",e),o=r;break;case"details":Z("toggle",e),o=r;break;case"input":Ya(e,r),o=fs(e,r),Z("invalid",e);break;case"option":o=r;break;case"select":e._wrapperState={wasMultiple:!!r.multiple},o=re({},r,{value:void 0}),Z("invalid",e);break;case"textarea":ba(e,r),o=hs(e,r),Z("invalid",e);break;default:o=r}vs(n,o),s=o;for(i in s)if(s.hasOwnProperty(i)){var a=s[i];i==="style"?sd(e,a):i==="dangerouslySetInnerHTML"?(a=a?a.__html:void 0,a!=null&&id(e,a)):i==="children"?typeof a=="string"?(n!=="textarea"||a!=="")&&qr(e,a):typeof a=="number"&&qr(e,""+a):i!=="suppressContentEditableWarning"&&i!=="suppressHydrationWarning"&&i!=="autoFocus"&&(Xr.hasOwnProperty(i)?a!=null&&i==="onScroll"&&Z("scroll",e):a!=null&&tu(e,i,a,l))}switch(n){case"input":Uo(e),Ga(e,r,!1);break;case"textarea":Uo(e),Ja(e);break;case"option":r.value!=null&&e.setAttribute("value",""+nn(r.value));break;case"select":e.multiple=!!r.multiple,i=r.value,i!=null?bn(e,!!r.multiple,i,!1):r.defaultValue!=null&&bn(e,!!r.multiple,r.defaultValue,!0);break;default:typeof o.onClick=="function"&&(e.onclick=xi)}switch(n){case"button":case"input":case"select":case"textarea":r=!!r.autoFocus;break e;case"img":r=!0;break e;default:r=!1}}r&&(t.flags|=4)}t.ref!==null&&(t.flags|=512,t.flags|=2097152)}return Ce(t),null;case 6:if(e&&t.stateNode!=null)Lf(e,t,e.memoizedProps,r);else{if(typeof r!="string"&&t.stateNode===null)throw Error(E(166));if(n=gn(co.current),gn(kt.current),ei(t)){if(r=t.stateNode,n=t.memoizedProps,r[wt]=t,(i=r.nodeValue!==n)&&(e=Ve,e!==null))switch(e.tag){case 3:qo(r.nodeValue,n,(e.mode&1)!==0);break;case 5:e.memoizedProps.suppressHydrationWarning!==!0&&qo(r.nodeValue,n,(e.mode&1)!==0)}i&&(t.flags|=4)}else r=(n.nodeType===9?n:n.ownerDocument).createTextNode(r),r[wt]=t,t.stateNode=r}return Ce(t),null;case 13:if(X(te),r=t.memoizedState,e===null||e.memoizedState!==null&&e.memoizedState.dehydrated!==null){if(ee&&Be!==null&&(t.mode&1)!==0&&(t.flags&128)===0)Gd(),rr(),t.flags|=98560,i=!1;else if(i=ei(t),r!==null&&r.dehydrated!==null){if(e===null){if(!i)throw Error(E(318));if(i=t.memoizedState,i=i!==null?i.dehydrated:null,!i)throw Error(E(317));i[wt]=t}else rr(),(t.flags&128)===0&&(t.memoizedState=null),t.flags|=4;Ce(t),i=!1}else dt!==null&&(Xs(dt),dt=null),i=!0;if(!i)return t.flags&65536?t:null}return(t.flags&128)!==0?(t.lanes=n,t):(r=r!==null,r!==(e!==null&&e.memoizedState!==null)&&r&&(t.child.flags|=8192,(t.mode&1)!==0&&(e===null||(te.current&1)!==0?ce===0&&(ce=3):Fu())),t.updateQueue!==null&&(t.flags|=4),Ce(t),null);case 4:return ir(),Vs(e,t),e===null&&lo(t.stateNode.containerInfo),Ce(t),null;case 10:return Su(t.type._context),Ce(t),null;case 17:return $e(t.type)&&Ci(),Ce(t),null;case 19:if(X(te),i=t.memoizedState,i===null)return Ce(t),null;if(r=(t.flags&128)!==0,l=i.rendering,l===null)if(r)$r(i,!1);else{if(ce!==0||e!==null&&(e.flags&128)!==0)for(e=t.child;e!==null;){if(l=Li(e),l!==null){for(t.flags|=128,$r(i,!1),r=l.updateQueue,r!==null&&(t.updateQueue=r,t.flags|=4),t.subtreeFlags=0,r=n,n=t.child;n!==null;)i=n,e=r,i.flags&=14680066,l=i.alternate,l===null?(i.childLanes=0,i.lanes=e,i.child=null,i.subtreeFlags=0,i.memoizedProps=null,i.memoizedState=null,i.updateQueue=null,i.dependencies=null,i.stateNode=null):(i.childLanes=l.childLanes,i.lanes=l.lanes,i.child=l.child,i.subtreeFlags=0,i.deletions=null,i.memoizedProps=l.memoizedProps,i.memoizedState=l.memoizedState,i.updateQueue=l.updateQueue,i.type=l.type,e=l.dependencies,i.dependencies=e===null?null:{lanes:e.lanes,firstContext:e.firstContext}),n=n.sibling;return b(te,te.current&1|2),t.child}e=e.sibling}i.tail!==null&&le()>sr&&(t.flags|=128,r=!0,$r(i,!1),t.lanes=4194304)}else{if(!r)if(e=Li(l),e!==null){if(t.flags|=128,r=!0,n=e.updateQueue,n!==null&&(t.updateQueue=n,t.flags|=4),$r(i,!0),i.tail===null&&i.tailMode==="hidden"&&!l.alternate&&!ee)return Ce(t),null}else 2*le()-i.renderingStartTime>sr&&n!==1073741824&&(t.flags|=128,r=!0,$r(i,!1),t.lanes=4194304);i.isBackwards?(l.sibling=t.child,t.child=l):(n=i.last,n!==null?n.sibling=l:t.child=l,i.last=l)}return i.tail!==null?(t=i.tail,i.rendering=t,i.tail=t.sibling,i.renderingStartTime=le(),t.sibling=null,n=te.current,b(te,r?n&1|2:n&1),t):(Ce(t),null);case 22:case 23:return $u(),r=t.memoizedState!==null,e!==null&&e.memoizedState!==null!==r&&(t.flags|=8192),r&&(t.mode&1)!==0?(We&1073741824)!==0&&(Ce(t),t.subtreeFlags&6&&(t.flags|=8192)):Ce(t),null;case 24:return null;case 25:return null}throw Error(E(156,t.tag))}function Hh(e,t){switch(gu(t),t.tag){case 1:return $e(t.type)&&Ci(),e=t.flags,e&65536?(t.flags=e&-65537|128,t):null;case 3:return ir(),X(Ie),X(_e),Tu(),e=t.flags,(e&65536)!==0&&(e&128)===0?(t.flags=e&-65537|128,t):null;case 5:return Cu(t),null;case 13:if(X(te),e=t.memoizedState,e!==null&&e.dehydrated!==null){if(t.alternate===null)throw Error(E(340));rr()}return e=t.flags,e&65536?(t.flags=e&-65537|128,t):null;case 19:return X(te),null;case 4:return ir(),null;case 10:return Su(t.type._context),null;case 22:case 23:return $u(),null;case 24:return null;default:return null}}var ri=!1,Te=!1,Uh=typeof WeakSet=="function"?WeakSet:Set,P=null;function Yn(e,t){var n=e.ref;if(n!==null)if(typeof n=="function")try{n(null)}catch(r){oe(e,t,r)}else n.current=null}function Qs(e,t,n){try{n()}catch(r){oe(e,t,r)}}var Hc=!1;function Wh(e,t){if(Ns=Si,e=Id(),mu(e)){if("selectionStart"in e)var n={start:e.selectionStart,end:e.selectionEnd};else e:{n=(n=e.ownerDocument)&&n.defaultView||window;var r=n.getSelection&&n.getSelection();if(r&&r.rangeCount!==0){n=r.anchorNode;var o=r.anchorOffset,i=r.focusNode;r=r.focusOffset;try{n.nodeType,i.nodeType}catch{n=null;break e}var l=0,s=-1,a=-1,p=0,h=0,y=e,g=null;t:for(;;){for(var C;y!==n||o!==0&&y.nodeType!==3||(s=l+o),y!==i||r!==0&&y.nodeType!==3||(a=l+r),y.nodeType===3&&(l+=y.nodeValue.length),(C=y.firstChild)!==null;)g=y,y=C;for(;;){if(y===e)break t;if(g===n&&++p===o&&(s=l),g===i&&++h===r&&(a=l),(C=y.nextSibling)!==null)break;y=g,g=y.parentNode}y=C}n=s===-1||a===-1?null:{start:s,end:a}}else n=null}n=n||{start:0,end:0}}else n=null;for(Ms={focusedElem:e,selectionRange:n},Si=!1,P=t;P!==null;)if(t=P,e=t.child,(t.subtreeFlags&1028)!==0&&e!==null)e.return=t,P=e;else for(;P!==null;){t=P;try{var x=t.alternate;if((t.flags&1024)!==0)switch(t.tag){case 0:case 11:case 15:break;case 1:if(x!==null){var _=x.memoizedProps,R=x.memoizedState,m=t.stateNode,f=m.getSnapshotBeforeUpdate(t.elementType===t.type?_:at(t.type,_),R);m.__reactInternalSnapshotBeforeUpdate=f}break;case 3:var d=t.stateNode.containerInfo;d.nodeType===1?d.textContent="":d.nodeType===9&&d.documentElement&&d.removeChild(d.documentElement);break;case 5:case 6:case 4:case 17:break;default:throw Error(E(163))}}catch(v){oe(t,t.return,v)}if(e=t.sibling,e!==null){e.return=t.return,P=e;break}P=t.return}return x=Hc,Hc=!1,x}function br(e,t,n){var r=t.updateQueue;if(r=r!==null?r.lastEffect:null,r!==null){var o=r=r.next;do{if((o.tag&e)===e){var i=o.destroy;o.destroy=void 0,i!==void 0&&Qs(t,n,i)}o=o.next}while(o!==r)}}function Yi(e,t){if(t=t.updateQueue,t=t!==null?t.lastEffect:null,t!==null){var n=t=t.next;do{if((n.tag&e)===e){var r=n.create;n.destroy=r()}n=n.next}while(n!==t)}}function Ks(e){var t=e.ref;if(t!==null){var n=e.stateNode;e.tag,e=n,typeof t=="function"?t(e):t.current=e}}function Rf(e){var t=e.alternate;t!==null&&(e.alternate=null,Rf(t)),e.child=null,e.deletions=null,e.sibling=null,e.tag===5&&(t=e.stateNode,t!==null&&(delete t[wt],delete t[uo],delete t[Rs],delete t[Ch],delete t[Th])),e.stateNode=null,e.return=null,e.dependencies=null,e.memoizedProps=null,e.memoizedState=null,e.pendingProps=null,e.stateNode=null,e.updateQueue=null}function Of(e){return e.tag===5||e.tag===3||e.tag===4}function Uc(e){e:for(;;){for(;e.sibling===null;){if(e.return===null||Of(e.return))return null;e=e.return}for(e.sibling.return=e.return,e=e.sibling;e.tag!==5&&e.tag!==6&&e.tag!==18;){if(e.flags&2||e.child===null||e.tag===4)continue e;e.child.return=e,e=e.child}if(!(e.flags&2))return e.stateNode}}function Ys(e,t,n){var r=e.tag;if(r===5||r===6)e=e.stateNode,t?n.nodeType===8?n.parentNode.insertBefore(e,t):n.insertBefore(e,t):(n.nodeType===8?(t=n.parentNode,t.insertBefore(e,n)):(t=n,t.appendChild(e)),n=n._reactRootContainer,n!=null||t.onclick!==null||(t.onclick=xi));else if(r!==4&&(e=e.child,e!==null))for(Ys(e,t,n),e=e.sibling;e!==null;)Ys(e,t,n),e=e.sibling}function Gs(e,t,n){var r=e.tag;if(r===5||r===6)e=e.stateNode,t?n.insertBefore(e,t):n.appendChild(e);else if(r!==4&&(e=e.child,e!==null))for(Gs(e,t,n),e=e.sibling;e!==null;)Gs(e,t,n),e=e.sibling}var ge=null,ct=!1;function Ut(e,t,n){for(n=n.child;n!==null;)Df(e,t,n),n=n.sibling}function Df(e,t,n){if(St&&typeof St.onCommitFiberUnmount=="function")try{St.onCommitFiberUnmount(ji,n)}catch{}switch(n.tag){case 5:Te||Yn(n,t);case 6:var r=ge,o=ct;ge=null,Ut(e,t,n),ge=r,ct=o,ge!==null&&(ct?(e=ge,n=n.stateNode,e.nodeType===8?e.parentNode.removeChild(n):e.removeChild(n)):ge.removeChild(n.stateNode));break;case 18:ge!==null&&(ct?(e=ge,n=n.stateNode,e.nodeType===8?Zl(e.parentNode,n):e.nodeType===1&&Zl(e,n),ro(e)):Zl(ge,n.stateNode));break;case 4:r=ge,o=ct,ge=n.stateNode.containerInfo,ct=!0,Ut(e,t,n),ge=r,ct=o;break;case 0:case 11:case 14:case 15:if(!Te&&(r=n.updateQueue,r!==null&&(r=r.lastEffect,r!==null))){o=r=r.next;do{var i=o,l=i.destroy;i=i.tag,l!==void 0&&((i&2)!==0||(i&4)!==0)&&Qs(n,t,l),o=o.next}while(o!==r)}Ut(e,t,n);break;case 1:if(!Te&&(Yn(n,t),r=n.stateNode,typeof r.componentWillUnmount=="function"))try{r.props=n.memoizedProps,r.state=n.memoizedState,r.componentWillUnmount()}catch(s){oe(n,t,s)}Ut(e,t,n);break;case 21:Ut(e,t,n);break;case 22:n.mode&1?(Te=(r=Te)||n.memoizedState!==null,Ut(e,t,n),Te=r):Ut(e,t,n);break;default:Ut(e,t,n)}}function Wc(e){var t=e.updateQueue;if(t!==null){e.updateQueue=null;var n=e.stateNode;n===null&&(n=e.stateNode=new Uh),t.forEach(function(r){var o=Zh.bind(null,e,r);n.has(r)||(n.add(r),r.then(o,o))})}}function ut(e,t){var n=t.deletions;if(n!==null)for(var r=0;r<n.length;r++){var o=n[r];try{var i=e,l=t,s=l;e:for(;s!==null;){switch(s.tag){case 5:ge=s.stateNode,ct=!1;break e;case 3:ge=s.stateNode.containerInfo,ct=!0;break e;case 4:ge=s.stateNode.containerInfo,ct=!0;break e}s=s.return}if(ge===null)throw Error(E(160));Df(i,l,o),ge=null,ct=!1;var a=o.alternate;a!==null&&(a.return=null),o.return=null}catch(p){oe(o,t,p)}}if(t.subtreeFlags&12854)for(t=t.child;t!==null;)If(t,e),t=t.sibling}function If(e,t){var n=e.alternate,r=e.flags;switch(e.tag){case 0:case 11:case 14:case 15:if(ut(t,e),vt(e),r&4){try{br(3,e,e.return),Yi(3,e)}catch(_){oe(e,e.return,_)}try{br(5,e,e.return)}catch(_){oe(e,e.return,_)}}break;case 1:ut(t,e),vt(e),r&512&&n!==null&&Yn(n,n.return);break;case 5:if(ut(t,e),vt(e),r&512&&n!==null&&Yn(n,n.return),e.flags&32){var o=e.stateNode;try{qr(o,"")}catch(_){oe(e,e.return,_)}}if(r&4&&(o=e.stateNode,o!=null)){var i=e.memoizedProps,l=n!==null?n.memoizedProps:i,s=e.type,a=e.updateQueue;if(e.updateQueue=null,a!==null)try{s==="input"&&i.type==="radio"&&i.name!=null&&nd(o,i),ys(s,l);var p=ys(s,i);for(l=0;l<a.length;l+=2){var h=a[l],y=a[l+1];h==="style"?sd(o,y):h==="dangerouslySetInnerHTML"?id(o,y):h==="children"?qr(o,y):tu(o,h,y,p)}switch(s){case"input":ps(o,i);break;case"textarea":rd(o,i);break;case"select":var g=o._wrapperState.wasMultiple;o._wrapperState.wasMultiple=!!i.multiple;var C=i.value;C!=null?bn(o,!!i.multiple,C,!1):g!==!!i.multiple&&(i.defaultValue!=null?bn(o,!!i.multiple,i.defaultValue,!0):bn(o,!!i.multiple,i.multiple?[]:"",!1))}o[uo]=i}catch(_){oe(e,e.return,_)}}break;case 6:if(ut(t,e),vt(e),r&4){if(e.stateNode===null)throw Error(E(162));o=e.stateNode,i=e.memoizedProps;try{o.nodeValue=i}catch(_){oe(e,e.return,_)}}break;case 3:if(ut(t,e),vt(e),r&4&&n!==null&&n.memoizedState.isDehydrated)try{ro(t.containerInfo)}catch(_){oe(e,e.return,_)}break;case 4:ut(t,e),vt(e);break;case 13:ut(t,e),vt(e),o=e.child,o.flags&8192&&(i=o.memoizedState!==null,o.stateNode.isHidden=i,!i||o.alternate!==null&&o.alternate.memoizedState!==null||(Du=le())),r&4&&Wc(e);break;case 22:if(h=n!==null&&n.memoizedState!==null,e.mode&1?(Te=(p=Te)||h,ut(t,e),Te=p):ut(t,e),vt(e),r&8192){if(p=e.memoizedState!==null,(e.stateNode.isHidden=p)&&!h&&(e.mode&1)!==0)for(P=e,h=e.child;h!==null;){for(y=P=h;P!==null;){switch(g=P,C=g.child,g.tag){case 0:case 11:case 14:case 15:br(4,g,g.return);break;case 1:Yn(g,g.return);var x=g.stateNode;if(typeof x.componentWillUnmount=="function"){r=g,n=g.return;try{t=r,x.props=t.memoizedProps,x.state=t.memoizedState,x.componentWillUnmount()}catch(_){oe(r,n,_)}}break;case 5:Yn(g,g.return);break;case 22:if(g.memoizedState!==null){Vc(y);continue}}C!==null?(C.return=g,P=C):Vc(y)}h=h.sibling}e:for(h=null,y=e;;){if(y.tag===5){if(h===null){h=y;try{o=y.stateNode,p?(i=o.style,typeof i.setProperty=="function"?i.setProperty("display","none","important"):i.display="none"):(s=y.stateNode,a=y.memoizedProps.style,l=a!=null&&a.hasOwnProperty("display")?a.display:null,s.style.display=ld("display",l))}catch(_){oe(e,e.return,_)}}}else if(y.tag===6){if(h===null)try{y.stateNode.nodeValue=p?"":y.memoizedProps}catch(_){oe(e,e.return,_)}}else if((y.tag!==22&&y.tag!==23||y.memoizedState===null||y===e)&&y.child!==null){y.child.return=y,y=y.child;continue}if(y===e)break e;for(;y.sibling===null;){if(y.return===null||y.return===e)break e;h===y&&(h=null),y=y.return}h===y&&(h=null),y.sibling.return=y.return,y=y.sibling}}break;case 19:ut(t,e),vt(e),r&4&&Wc(e);break;case 21:break;default:ut(t,e),vt(e)}}function vt(e){var t=e.flags;if(t&2){try{e:{for(var n=e.return;n!==null;){if(Of(n)){var r=n;break e}n=n.return}throw Error(E(160))}switch(r.tag){case 5:var o=r.stateNode;r.flags&32&&(qr(o,""),r.flags&=-33);var i=Uc(e);Gs(e,i,o);break;case 3:case 4:var l=r.stateNode.containerInfo,s=Uc(e);Ys(e,s,l);break;default:throw Error(E(161))}}catch(a){oe(e,e.return,a)}e.flags&=-3}t&4096&&(e.flags&=-4097)}function Bh(e,t,n){P=e,$f(e,t,n)}function $f(e,t,n){for(var r=(e.mode&1)!==0;P!==null;){var o=P,i=o.child;if(o.tag===22&&r){var l=o.memoizedState!==null||ri;if(!l){var s=o.alternate,a=s!==null&&s.memoizedState!==null||Te;s=ri;var p=Te;if(ri=l,(Te=a)&&!p)for(P=o;P!==null;)l=P,a=l.child,l.tag===22&&l.memoizedState!==null?Qc(o):a!==null?(a.return=l,P=a):Qc(o);for(;i!==null;)P=i,$f(i,t,n),i=i.sibling;P=o,ri=s,Te=p}Bc(e,t,n)}else(o.subtreeFlags&8772)!==0&&i!==null?(i.return=o,P=i):Bc(e,t,n)}}function Bc(e){for(;P!==null;){var t=P;if((t.flags&8772)!==0){var n=t.alternate;try{if((t.flags&8772)!==0)switch(t.tag){case 0:case 11:case 15:Te||Yi(5,t);break;case 1:var r=t.stateNode;if(t.flags&4&&!Te)if(n===null)r.componentDidMount();else{var o=t.elementType===t.type?n.memoizedProps:at(t.type,n.memoizedProps);r.componentDidUpdate(o,n.memoizedState,r.__reactInternalSnapshotBeforeUpdate)}var i=t.updateQueue;i!==null&&Pc(t,i,r);break;case 3:var l=t.updateQueue;if(l!==null){if(n=null,t.child!==null)switch(t.child.tag){case 5:n=t.child.stateNode;break;case 1:n=t.child.stateNode}Pc(t,l,n)}break;case 5:var s=t.stateNode;if(n===null&&t.flags&4){n=s;var a=t.memoizedProps;switch(t.type){case"button":case"input":case"select":case"textarea":a.autoFocus&&n.focus();break;case"img":a.src&&(n.src=a.src)}}break;case 6:break;case 4:break;case 12:break;case 13:if(t.memoizedState===null){var p=t.alternate;if(p!==null){var h=p.memoizedState;if(h!==null){var y=h.dehydrated;y!==null&&ro(y)}}}break;case 19:case 17:case 21:case 22:case 23:case 25:break;default:throw Error(E(163))}Te||t.flags&512&&Ks(t)}catch(g){oe(t,t.return,g)}}if(t===e){P=null;break}if(n=t.sibling,n!==null){n.return=t.return,P=n;break}P=t.return}}function Vc(e){for(;P!==null;){var t=P;if(t===e){P=null;break}var n=t.sibling;if(n!==null){n.return=t.return,P=n;break}P=t.return}}function Qc(e){for(;P!==null;){var t=P;try{switch(t.tag){case 0:case 11:case 15:var n=t.return;try{Yi(4,t)}catch(a){oe(t,n,a)}break;case 1:var r=t.stateNode;if(typeof r.componentDidMount=="function"){var o=t.return;try{r.componentDidMount()}catch(a){oe(t,o,a)}}var i=t.return;try{Ks(t)}catch(a){oe(t,i,a)}break;case 5:var l=t.return;try{Ks(t)}catch(a){oe(t,l,a)}}}catch(a){oe(t,t.return,a)}if(t===e){P=null;break}var s=t.sibling;if(s!==null){s.return=t.return,P=s;break}P=t.return}}var Vh=Math.ceil,Di=Ot.ReactCurrentDispatcher,Ru=Ot.ReactCurrentOwner,tt=Ot.ReactCurrentBatchConfig,U=0,he=null,ue=null,ve=0,We=0,Gn=ln(0),ce=0,ho=null,En=0,Gi=0,Ou=0,Jr=null,Oe=null,Du=0,sr=1/0,Ct=null,Ii=!1,bs=null,qt=null,oi=!1,Yt=null,$i=0,Zr=0,Js=null,fi=-1,pi=0;function ze(){return(U&6)!==0?le():fi!==-1?fi:fi=le()}function en(e){return(e.mode&1)===0?1:(U&2)!==0&&ve!==0?ve&-ve:Ph.transition!==null?(pi===0&&(pi=wd()),pi):(e=W,e!==0||(e=window.event,e=e===void 0?16:_d(e.type)),e)}function pt(e,t,n,r){if(50<Zr)throw Zr=0,Js=null,Error(E(185));go(e,n,r),((U&2)===0||e!==he)&&(e===he&&((U&2)===0&&(Gi|=n),ce===4&&Qt(e,ve)),Fe(e,r),n===1&&U===0&&(t.mode&1)===0&&(sr=le()+500,Vi&&sn()))}function Fe(e,t){var n=e.callbackNode;Mm(e,t);var r=wi(e,e===he?ve:0);if(r===0)n!==null&&qa(n),e.callbackNode=null,e.callbackPriority=0;else if(t=r&-r,e.callbackPriority!==t){if(n!=null&&qa(n),t===1)e.tag===0?_h(Kc.bind(null,e)):Qd(Kc.bind(null,e)),Eh(function(){(U&6)===0&&sn()}),n=null;else{switch(Sd(r)){case 1:n=lu;break;case 4:n=vd;break;case 16:n=yi;break;case 536870912:n=yd;break;default:n=yi}n=Vf(n,Ff.bind(null,e))}e.callbackPriority=t,e.callbackNode=n}}function Ff(e,t){if(fi=-1,pi=0,(U&6)!==0)throw Error(E(327));var n=e.callbackNode;if(er()&&e.callbackNode!==n)return null;var r=wi(e,e===he?ve:0);if(r===0)return null;if((r&30)!==0||(r&e.expiredLanes)!==0||t)t=Fi(e,r);else{t=r;var o=U;U|=2;var i=jf();(he!==e||ve!==t)&&(Ct=null,sr=le()+500,vn(e,t));do try{Yh();break}catch(s){Af(e,s)}while(!0);wu(),Di.current=i,U=o,ue!==null?t=0:(he=null,ve=0,t=ce)}if(t!==0){if(t===2&&(o=xs(e),o!==0&&(r=o,t=Zs(e,o))),t===1)throw n=ho,vn(e,0),Qt(e,r),Fe(e,le()),n;if(t===6)Qt(e,r);else{if(o=e.current.alternate,(r&30)===0&&!Qh(o)&&(t=Fi(e,r),t===2&&(i=xs(e),i!==0&&(r=i,t=Zs(e,i))),t===1))throw n=ho,vn(e,0),Qt(e,r),Fe(e,le()),n;switch(e.finishedWork=o,e.finishedLanes=r,t){case 0:case 1:throw Error(E(345));case 2:pn(e,Oe,Ct);break;case 3:if(Qt(e,r),(r&130023424)===r&&(t=Du+500-le(),10<t)){if(wi(e,0)!==0)break;if(o=e.suspendedLanes,(o&r)!==r){ze(),e.pingedLanes|=e.suspendedLanes&o;break}e.timeoutHandle=Ls(pn.bind(null,e,Oe,Ct),t);break}pn(e,Oe,Ct);break;case 4:if(Qt(e,r),(r&4194240)===r)break;for(t=e.eventTimes,o=-1;0<r;){var l=31-ft(r);i=1<<l,l=t[l],l>o&&(o=l),r&=~i}if(r=o,r=le()-r,r=(120>r?120:480>r?480:1080>r?1080:1920>r?1920:3e3>r?3e3:4320>r?4320:1960*Vh(r/1960))-r,10<r){e.timeoutHandle=Ls(pn.bind(null,e,Oe,Ct),r);break}pn(e,Oe,Ct);break;case 5:pn(e,Oe,Ct);break;default:throw Error(E(329))}}}return Fe(e,le()),e.callbackNode===n?Ff.bind(null,e):null}function Zs(e,t){var n=Jr;return e.current.memoizedState.isDehydrated&&(vn(e,t).flags|=256),e=Fi(e,t),e!==2&&(t=Oe,Oe=n,t!==null&&Xs(t)),e}function Xs(e){Oe===null?Oe=e:Oe.push.apply(Oe,e)}function Qh(e){for(var t=e;;){if(t.flags&16384){var n=t.updateQueue;if(n!==null&&(n=n.stores,n!==null))for(var r=0;r<n.length;r++){var o=n[r],i=o.getSnapshot;o=o.value;try{if(!mt(i(),o))return!1}catch{return!1}}}if(n=t.child,t.subtreeFlags&16384&&n!==null)n.return=t,t=n;else{if(t===e)break;for(;t.sibling===null;){if(t.return===null||t.return===e)return!0;t=t.return}t.sibling.return=t.return,t=t.sibling}}return!0}function Qt(e,t){for(t&=~Ou,t&=~Gi,e.suspendedLanes|=t,e.pingedLanes&=~t,e=e.expirationTimes;0<t;){var n=31-ft(t),r=1<<n;e[n]=-1,t&=~r}}function Kc(e){if((U&6)!==0)throw Error(E(327));er();var t=wi(e,0);if((t&1)===0)return Fe(e,le()),null;var n=Fi(e,t);if(e.tag!==0&&n===2){var r=xs(e);r!==0&&(t=r,n=Zs(e,r))}if(n===1)throw n=ho,vn(e,0),Qt(e,t),Fe(e,le()),n;if(n===6)throw Error(E(345));return e.finishedWork=e.current.alternate,e.finishedLanes=t,pn(e,Oe,Ct),Fe(e,le()),null}function Iu(e,t){var n=U;U|=1;try{return e(t)}finally{U=n,U===0&&(sr=le()+500,Vi&&sn())}}function xn(e){Yt!==null&&Yt.tag===0&&(U&6)===0&&er();var t=U;U|=1;var n=tt.transition,r=W;try{if(tt.transition=null,W=1,e)return e()}finally{W=r,tt.transition=n,U=t,(U&6)===0&&sn()}}function $u(){We=Gn.current,X(Gn)}function vn(e,t){e.finishedWork=null,e.finishedLanes=0;var n=e.timeoutHandle;if(n!==-1&&(e.timeoutHandle=-1,kh(n)),ue!==null)for(n=ue.return;n!==null;){var r=n;switch(gu(r),r.tag){case 1:r=r.type.childContextTypes,r!=null&&Ci();break;case 3:ir(),X(Ie),X(_e),Tu();break;case 5:Cu(r);break;case 4:ir();break;case 13:X(te);break;case 19:X(te);break;case 10:Su(r.type._context);break;case 22:case 23:$u()}n=n.return}if(he=e,ue=e=tn(e.current,null),ve=We=t,ce=0,ho=null,Ou=Gi=En=0,Oe=Jr=null,hn!==null){for(t=0;t<hn.length;t++)if(n=hn[t],r=n.interleaved,r!==null){n.interleaved=null;var o=r.next,i=n.pending;if(i!==null){var l=i.next;i.next=o,r.next=l}n.pending=r}hn=null}return e}function Af(e,t){do{var n=ue;try{if(wu(),ai.current=Oi,Ri){for(var r=ne.memoizedState;r!==null;){var o=r.queue;o!==null&&(o.pending=null),r=r.next}Ri=!1}if(kn=0,me=ae=ne=null,Gr=!1,fo=0,Ru.current=null,n===null||n.return===null){ce=1,ho=t,ue=null;break}e:{var i=e,l=n.return,s=n,a=t;if(t=ve,s.flags|=32768,a!==null&&typeof a=="object"&&typeof a.then=="function"){var p=a,h=s,y=h.tag;if((h.mode&1)===0&&(y===0||y===11||y===15)){var g=h.alternate;g?(h.updateQueue=g.updateQueue,h.memoizedState=g.memoizedState,h.lanes=g.lanes):(h.updateQueue=null,h.memoizedState=null)}var C=Oc(l);if(C!==null){C.flags&=-257,Dc(C,l,s,i,t),C.mode&1&&Rc(i,p,t),t=C,a=p;var x=t.updateQueue;if(x===null){var _=new Set;_.add(a),t.updateQueue=_}else x.add(a);break e}else{if((t&1)===0){Rc(i,p,t),Fu();break e}a=Error(E(426))}}else if(ee&&s.mode&1){var R=Oc(l);if(R!==null){(R.flags&65536)===0&&(R.flags|=256),Dc(R,l,s,i,t),vu(lr(a,s));break e}}i=a=lr(a,s),ce!==4&&(ce=2),Jr===null?Jr=[i]:Jr.push(i),i=l;do{switch(i.tag){case 3:i.flags|=65536,t&=-t,i.lanes|=t;var m=kf(i,a,t);_c(i,m);break e;case 1:s=a;var f=i.type,d=i.stateNode;if((i.flags&128)===0&&(typeof f.getDerivedStateFromError=="function"||d!==null&&typeof d.componentDidCatch=="function"&&(qt===null||!qt.has(d)))){i.flags|=65536,t&=-t,i.lanes|=t;var v=Ef(i,s,t);_c(i,v);break e}}i=i.return}while(i!==null)}Uf(n)}catch(S){t=S,ue===n&&n!==null&&(ue=n=n.return);continue}break}while(!0)}function jf(){var e=Di.current;return Di.current=Oi,e===null?Oi:e}function Fu(){(ce===0||ce===3||ce===2)&&(ce=4),he===null||(En&268435455)===0&&(Gi&268435455)===0||Qt(he,ve)}function Fi(e,t){var n=U;U|=2;var r=jf();(he!==e||ve!==t)&&(Ct=null,vn(e,t));do try{Kh();break}catch(o){Af(e,o)}while(!0);if(wu(),U=n,Di.current=r,ue!==null)throw Error(E(261));return he=null,ve=0,ce}function Kh(){for(;ue!==null;)Hf(ue)}function Yh(){for(;ue!==null&&!Sm();)Hf(ue)}function Hf(e){var t=Bf(e.alternate,e,We);e.memoizedProps=e.pendingProps,t===null?Uf(e):ue=t,Ru.current=null}function Uf(e){var t=e;do{var n=t.alternate;if(e=t.return,(t.flags&32768)===0){if(n=jh(n,t,We),n!==null){ue=n;return}}else{if(n=Hh(n,t),n!==null){n.flags&=32767,ue=n;return}if(e!==null)e.flags|=32768,e.subtreeFlags=0,e.deletions=null;else{ce=6,ue=null;return}}if(t=t.sibling,t!==null){ue=t;return}ue=t=e}while(t!==null);ce===0&&(ce=5)}function pn(e,t,n){var r=W,o=tt.transition;try{tt.transition=null,W=1,Gh(e,t,n,r)}finally{tt.transition=o,W=r}return null}function Gh(e,t,n,r){do er();while(Yt!==null);if((U&6)!==0)throw Error(E(327));n=e.finishedWork;var o=e.finishedLanes;if(n===null)return null;if(e.finishedWork=null,e.finishedLanes=0,n===e.current)throw Error(E(177));e.callbackNode=null,e.callbackPriority=0;var i=n.lanes|n.childLanes;if(zm(e,i),e===he&&(ue=he=null,ve=0),(n.subtreeFlags&2064)===0&&(n.flags&2064)===0||oi||(oi=!0,Vf(yi,function(){return er(),null})),i=(n.flags&15990)!==0,(n.subtreeFlags&15990)!==0||i){i=tt.transition,tt.transition=null;var l=W;W=1;var s=U;U|=4,Ru.current=null,Wh(e,n),If(n,e),gh(Ms),Si=!!Ns,Ms=Ns=null,e.current=n,Bh(n,e,o),km(),U=s,W=l,tt.transition=i}else e.current=n;if(oi&&(oi=!1,Yt=e,$i=o),i=e.pendingLanes,i===0&&(qt=null),Cm(n.stateNode,r),Fe(e,le()),t!==null)for(r=e.onRecoverableError,n=0;n<t.length;n++)o=t[n],r(o.value,{componentStack:o.stack,digest:o.digest});if(Ii)throw Ii=!1,e=bs,bs=null,e;return($i&1)!==0&&e.tag!==0&&er(),i=e.pendingLanes,(i&1)!==0?e===Js?Zr++:(Zr=0,Js=e):Zr=0,sn(),null}function er(){if(Yt!==null){var e=Sd($i),t=tt.transition,n=W;try{if(tt.transition=null,W=16>e?16:e,Yt===null)var r=!1;else{if(e=Yt,Yt=null,$i=0,(U&6)!==0)throw Error(E(331));var o=U;for(U|=4,P=e.current;P!==null;){var i=P,l=i.child;if((P.flags&16)!==0){var s=i.deletions;if(s!==null){for(var a=0;a<s.length;a++){var p=s[a];for(P=p;P!==null;){var h=P;switch(h.tag){case 0:case 11:case 15:br(8,h,i)}var y=h.child;if(y!==null)y.return=h,P=y;else for(;P!==null;){h=P;var g=h.sibling,C=h.return;if(Rf(h),h===p){P=null;break}if(g!==null){g.return=C,P=g;break}P=C}}}var x=i.alternate;if(x!==null){var _=x.child;if(_!==null){x.child=null;do{var R=_.sibling;_.sibling=null,_=R}while(_!==null)}}P=i}}if((i.subtreeFlags&2064)!==0&&l!==null)l.return=i,P=l;else e:for(;P!==null;){if(i=P,(i.flags&2048)!==0)switch(i.tag){case 0:case 11:case 15:br(9,i,i.return)}var m=i.sibling;if(m!==null){m.return=i.return,P=m;break e}P=i.return}}var f=e.current;for(P=f;P!==null;){l=P;var d=l.child;if((l.subtreeFlags&2064)!==0&&d!==null)d.return=l,P=d;else e:for(l=f;P!==null;){if(s=P,(s.flags&2048)!==0)try{switch(s.tag){case 0:case 11:case 15:Yi(9,s)}}catch(S){oe(s,s.return,S)}if(s===l){P=null;break e}var v=s.sibling;if(v!==null){v.return=s.return,P=v;break e}P=s.return}}if(U=o,sn(),St&&typeof St.onPostCommitFiberRoot=="function")try{St.onPostCommitFiberRoot(ji,e)}catch{}r=!0}return r}finally{W=n,tt.transition=t}}return!1}function Yc(e,t,n){t=lr(n,t),t=kf(e,t,1),e=Xt(e,t,1),t=ze(),e!==null&&(go(e,1,t),Fe(e,t))}function oe(e,t,n){if(e.tag===3)Yc(e,e,n);else for(;t!==null;){if(t.tag===3){Yc(t,e,n);break}else if(t.tag===1){var r=t.stateNode;if(typeof t.type.getDerivedStateFromError=="function"||typeof r.componentDidCatch=="function"&&(qt===null||!qt.has(r))){e=lr(n,e),e=Ef(t,e,1),t=Xt(t,e,1),e=ze(),t!==null&&(go(t,1,e),Fe(t,e));break}}t=t.return}}function bh(e,t,n){var r=e.pingCache;r!==null&&r.delete(t),t=ze(),e.pingedLanes|=e.suspendedLanes&n,he===e&&(ve&n)===n&&(ce===4||ce===3&&(ve&130023424)===ve&&500>le()-Du?vn(e,0):Ou|=n),Fe(e,t)}function Wf(e,t){t===0&&((e.mode&1)===0?t=1:(t=Vo,Vo<<=1,(Vo&130023424)===0&&(Vo=4194304)));var n=ze();e=Lt(e,t),e!==null&&(go(e,t,n),Fe(e,n))}function Jh(e){var t=e.memoizedState,n=0;t!==null&&(n=t.retryLane),Wf(e,n)}function Zh(e,t){var n=0;switch(e.tag){case 13:var r=e.stateNode,o=e.memoizedState;o!==null&&(n=o.retryLane);break;case 19:r=e.stateNode;break;default:throw Error(E(314))}r!==null&&r.delete(t),Wf(e,n)}var Bf;Bf=function(e,t,n){if(e!==null)if(e.memoizedProps!==t.pendingProps||Ie.current)De=!0;else{if((e.lanes&n)===0&&(t.flags&128)===0)return De=!1,Ah(e,t,n);De=(e.flags&131072)!==0}else De=!1,ee&&(t.flags&1048576)!==0&&Kd(t,Pi,t.index);switch(t.lanes=0,t.tag){case 2:var r=t.type;di(e,t),e=t.pendingProps;var o=nr(t,_e.current);qn(t,n),o=Pu(null,t,r,e,o,n);var i=Nu();return t.flags|=1,typeof o=="object"&&o!==null&&typeof o.render=="function"&&o.$$typeof===void 0?(t.tag=1,t.memoizedState=null,t.updateQueue=null,$e(r)?(i=!0,Ti(t)):i=!1,t.memoizedState=o.state!==null&&o.state!==void 0?o.state:null,Eu(t),o.updater=Ki,t.stateNode=o,o._reactInternals=t,As(t,r,e,n),t=Us(null,t,r,!0,i,n)):(t.tag=0,ee&&i&&hu(t),Me(null,t,o,n),t=t.child),t;case 16:r=t.elementType;e:{switch(di(e,t),e=t.pendingProps,o=r._init,r=o(r._payload),t.type=r,o=t.tag=qh(r),e=at(r,e),o){case 0:t=Hs(null,t,r,e,n);break e;case 1:t=Fc(null,t,r,e,n);break e;case 11:t=Ic(null,t,r,e,n);break e;case 14:t=$c(null,t,r,at(r.type,e),n);break e}throw Error(E(306,r,""))}return t;case 0:return r=t.type,o=t.pendingProps,o=t.elementType===r?o:at(r,o),Hs(e,t,r,o,n);case 1:return r=t.type,o=t.pendingProps,o=t.elementType===r?o:at(r,o),Fc(e,t,r,o,n);case 3:e:{if(_f(t),e===null)throw Error(E(387));r=t.pendingProps,i=t.memoizedState,o=i.element,Xd(e,t),zi(t,r,null,n);var l=t.memoizedState;if(r=l.element,i.isDehydrated)if(i={element:r,isDehydrated:!1,cache:l.cache,pendingSuspenseBoundaries:l.pendingSuspenseBoundaries,transitions:l.transitions},t.updateQueue.baseState=i,t.memoizedState=i,t.flags&256){o=lr(Error(E(423)),t),t=Ac(e,t,r,n,o);break e}else if(r!==o){o=lr(Error(E(424)),t),t=Ac(e,t,r,n,o);break e}else for(Be=Zt(t.stateNode.containerInfo.firstChild),Ve=t,ee=!0,dt=null,n=Jd(t,null,r,n),t.child=n;n;)n.flags=n.flags&-3|4096,n=n.sibling;else{if(rr(),r===o){t=Rt(e,t,n);break e}Me(e,t,r,n)}t=t.child}return t;case 5:return qd(t),e===null&&Is(t),r=t.type,o=t.pendingProps,i=e!==null?e.memoizedProps:null,l=o.children,zs(r,o)?l=null:i!==null&&zs(r,i)&&(t.flags|=32),Tf(e,t),Me(e,t,l,n),t.child;case 6:return e===null&&Is(t),null;case 13:return Pf(e,t,n);case 4:return xu(t,t.stateNode.containerInfo),r=t.pendingProps,e===null?t.child=or(t,null,r,n):Me(e,t,r,n),t.child;case 11:return r=t.type,o=t.pendingProps,o=t.elementType===r?o:at(r,o),Ic(e,t,r,o,n);case 7:return Me(e,t,t.pendingProps,n),t.child;case 8:return Me(e,t,t.pendingProps.children,n),t.child;case 12:return Me(e,t,t.pendingProps.children,n),t.child;case 10:e:{if(r=t.type._context,o=t.pendingProps,i=t.memoizedProps,l=o.value,b(Ni,r._currentValue),r._currentValue=l,i!==null)if(mt(i.value,l)){if(i.children===o.children&&!Ie.current){t=Rt(e,t,n);break e}}else for(i=t.child,i!==null&&(i.return=t);i!==null;){var s=i.dependencies;if(s!==null){l=i.child;for(var a=s.firstContext;a!==null;){if(a.context===r){if(i.tag===1){a=Nt(-1,n&-n),a.tag=2;var p=i.updateQueue;if(p!==null){p=p.shared;var h=p.pending;h===null?a.next=a:(a.next=h.next,h.next=a),p.pending=a}}i.lanes|=n,a=i.alternate,a!==null&&(a.lanes|=n),$s(i.return,n,t),s.lanes|=n;break}a=a.next}}else if(i.tag===10)l=i.type===t.type?null:i.child;else if(i.tag===18){if(l=i.return,l===null)throw Error(E(341));l.lanes|=n,s=l.alternate,s!==null&&(s.lanes|=n),$s(l,n,t),l=i.sibling}else l=i.child;if(l!==null)l.return=i;else for(l=i;l!==null;){if(l===t){l=null;break}if(i=l.sibling,i!==null){i.return=l.return,l=i;break}l=l.return}i=l}Me(e,t,o.children,n),t=t.child}return t;case 9:return o=t.type,r=t.pendingProps.children,qn(t,n),o=nt(o),r=r(o),t.flags|=1,Me(e,t,r,n),t.child;case 14:return r=t.type,o=at(r,t.pendingProps),o=at(r.type,o),$c(e,t,r,o,n);case 15:return xf(e,t,t.type,t.pendingProps,n);case 17:return r=t.type,o=t.pendingProps,o=t.elementType===r?o:at(r,o),di(e,t),t.tag=1,$e(r)?(e=!0,Ti(t)):e=!1,qn(t,n),Sf(t,r,o),As(t,r,o,n),Us(null,t,r,!0,e,n);case 19:return Nf(e,t,n);case 22:return Cf(e,t,n)}throw Error(E(156,t.tag))};function Vf(e,t){return gd(e,t)}function Xh(e,t,n,r){this.tag=e,this.key=n,this.sibling=this.child=this.return=this.stateNode=this.type=this.elementType=null,this.index=0,this.ref=null,this.pendingProps=t,this.dependencies=this.memoizedState=this.updateQueue=this.memoizedProps=null,this.mode=r,this.subtreeFlags=this.flags=0,this.deletions=null,this.childLanes=this.lanes=0,this.alternate=null}function et(e,t,n,r){return new Xh(e,t,n,r)}function Au(e){return e=e.prototype,!(!e||!e.isReactComponent)}function qh(e){if(typeof e=="function")return Au(e)?1:0;if(e!=null){if(e=e.$$typeof,e===ru)return 11;if(e===ou)return 14}return 2}function tn(e,t){var n=e.alternate;return n===null?(n=et(e.tag,t,e.key,e.mode),n.elementType=e.elementType,n.type=e.type,n.stateNode=e.stateNode,n.alternate=e,e.alternate=n):(n.pendingProps=t,n.type=e.type,n.flags=0,n.subtreeFlags=0,n.deletions=null),n.flags=e.flags&14680064,n.childLanes=e.childLanes,n.lanes=e.lanes,n.child=e.child,n.memoizedProps=e.memoizedProps,n.memoizedState=e.memoizedState,n.updateQueue=e.updateQueue,t=e.dependencies,n.dependencies=t===null?null:{lanes:t.lanes,firstContext:t.firstContext},n.sibling=e.sibling,n.index=e.index,n.ref=e.ref,n}function mi(e,t,n,r,o,i){var l=2;if(r=e,typeof e=="function")Au(e)&&(l=1);else if(typeof e=="string")l=5;else e:switch(e){case An:return yn(n.children,o,i,t);case nu:l=8,o|=8;break;case us:return e=et(12,n,t,o|2),e.elementType=us,e.lanes=i,e;case as:return e=et(13,n,t,o),e.elementType=as,e.lanes=i,e;case cs:return e=et(19,n,t,o),e.elementType=cs,e.lanes=i,e;case qc:return bi(n,o,i,t);default:if(typeof e=="object"&&e!==null)switch(e.$$typeof){case Zc:l=10;break e;case Xc:l=9;break e;case ru:l=11;break e;case ou:l=14;break e;case Wt:l=16,r=null;break e}throw Error(E(130,e==null?e:typeof e,""))}return t=et(l,n,t,o),t.elementType=e,t.type=r,t.lanes=i,t}function yn(e,t,n,r){return e=et(7,e,r,t),e.lanes=n,e}function bi(e,t,n,r){return e=et(22,e,r,t),e.elementType=qc,e.lanes=n,e.stateNode={isHidden:!1},e}function is(e,t,n){return e=et(6,e,null,t),e.lanes=n,e}function ls(e,t,n){return t=et(4,e.children!==null?e.children:[],e.key,t),t.lanes=n,t.stateNode={containerInfo:e.containerInfo,pendingChildren:null,implementation:e.implementation},t}function eg(e,t,n,r,o){this.tag=t,this.containerInfo=e,this.finishedWork=this.pingCache=this.current=this.pendingChildren=null,this.timeoutHandle=-1,this.callbackNode=this.pendingContext=this.context=null,this.callbackPriority=0,this.eventTimes=Bl(0),this.expirationTimes=Bl(-1),this.entangledLanes=this.finishedLanes=this.mutableReadLanes=this.expiredLanes=this.pingedLanes=this.suspendedLanes=this.pendingLanes=0,this.entanglements=Bl(0),this.identifierPrefix=r,this.onRecoverableError=o,this.mutableSourceEagerHydrationData=null}function ju(e,t,n,r,o,i,l,s,a){return e=new eg(e,t,n,s,a),t===1?(t=1,i===!0&&(t|=8)):t=0,i=et(3,null,null,t),e.current=i,i.stateNode=e,i.memoizedState={element:r,isDehydrated:n,cache:null,transitions:null,pendingSuspenseBoundaries:null},Eu(i),e}function tg(e,t,n){var r=3<arguments.length&&arguments[3]!==void 0?arguments[3]:null;return{$$typeof:Fn,key:r==null?null:""+r,children:e,containerInfo:t,implementation:n}}function Qf(e){if(!e)return rn;e=e._reactInternals;e:{if(Tn(e)!==e||e.tag!==1)throw Error(E(170));var t=e;do{switch(t.tag){case 3:t=t.stateNode.context;break e;case 1:if($e(t.type)){t=t.stateNode.__reactInternalMemoizedMergedChildContext;break e}}t=t.return}while(t!==null);throw Error(E(171))}if(e.tag===1){var n=e.type;if($e(n))return Vd(e,n,t)}return t}function Kf(e,t,n,r,o,i,l,s,a){return e=ju(n,r,!0,e,o,i,l,s,a),e.context=Qf(null),n=e.current,r=ze(),o=en(n),i=Nt(r,o),i.callback=t!=null?t:null,Xt(n,i,o),e.current.lanes=o,go(e,o,r),Fe(e,r),e}function Ji(e,t,n,r){var o=t.current,i=ze(),l=en(o);return n=Qf(n),t.context===null?t.context=n:t.pendingContext=n,t=Nt(i,l),t.payload={element:e},r=r===void 0?null:r,r!==null&&(t.callback=r),e=Xt(o,t,l),e!==null&&(pt(e,o,l,i),ui(e,o,l)),l}function Ai(e){return e=e.current,e.child?(e.child.tag===5,e.child.stateNode):null}function Gc(e,t){if(e=e.memoizedState,e!==null&&e.dehydrated!==null){var n=e.retryLane;e.retryLane=n!==0&&n<t?n:t}}function Hu(e,t){Gc(e,t),(e=e.alternate)&&Gc(e,t)}function ng(){return null}var Yf=typeof reportError=="function"?reportError:function(e){console.error(e)};function Uu(e){this._internalRoot=e}Zi.prototype.render=Uu.prototype.render=function(e){var t=this._internalRoot;if(t===null)throw Error(E(409));Ji(e,t,null,null)};Zi.prototype.unmount=Uu.prototype.unmount=function(){var e=this._internalRoot;if(e!==null){this._internalRoot=null;var t=e.containerInfo;xn(function(){Ji(null,e,null,null)}),t[zt]=null}};function Zi(e){this._internalRoot=e}Zi.prototype.unstable_scheduleHydration=function(e){if(e){var t=xd();e={blockedOn:null,target:e,priority:t};for(var n=0;n<Vt.length&&t!==0&&t<Vt[n].priority;n++);Vt.splice(n,0,e),n===0&&Td(e)}};function Wu(e){return!(!e||e.nodeType!==1&&e.nodeType!==9&&e.nodeType!==11)}function Xi(e){return!(!e||e.nodeType!==1&&e.nodeType!==9&&e.nodeType!==11&&(e.nodeType!==8||e.nodeValue!==" react-mount-point-unstable "))}function bc(){}function rg(e,t,n,r,o){if(o){if(typeof r=="function"){var i=r;r=function(){var p=Ai(l);i.call(p)}}var l=Kf(t,r,e,0,null,!1,!1,"",bc);return e._reactRootContainer=l,e[zt]=l.current,lo(e.nodeType===8?e.parentNode:e),xn(),l}for(;o=e.lastChild;)e.removeChild(o);if(typeof r=="function"){var s=r;r=function(){var p=Ai(a);s.call(p)}}var a=ju(e,0,!1,null,null,!1,!1,"",bc);return e._reactRootContainer=a,e[zt]=a.current,lo(e.nodeType===8?e.parentNode:e),xn(function(){Ji(t,a,n,r)}),a}function qi(e,t,n,r,o){var i=n._reactRootContainer;if(i){var l=i;if(typeof o=="function"){var s=o;o=function(){var a=Ai(l);s.call(a)}}Ji(t,l,e,o)}else l=rg(n,t,e,o,r);return Ai(l)}kd=function(e){switch(e.tag){case 3:var t=e.stateNode;if(t.current.memoizedState.isDehydrated){var n=Ur(t.pendingLanes);n!==0&&(su(t,n|1),Fe(t,le()),(U&6)===0&&(sr=le()+500,sn()))}break;case 13:xn(function(){var r=Lt(e,1);if(r!==null){var o=ze();pt(r,e,1,o)}}),Hu(e,1)}};uu=function(e){if(e.tag===13){var t=Lt(e,134217728);if(t!==null){var n=ze();pt(t,e,134217728,n)}Hu(e,134217728)}};Ed=function(e){if(e.tag===13){var t=en(e),n=Lt(e,t);if(n!==null){var r=ze();pt(n,e,t,r)}Hu(e,t)}};xd=function(){return W};Cd=function(e,t){var n=W;try{return W=e,t()}finally{W=n}};Ss=function(e,t,n){switch(t){case"input":if(ps(e,n),t=n.name,n.type==="radio"&&t!=null){for(n=e;n.parentNode;)n=n.parentNode;for(n=n.querySelectorAll("input[name="+JSON.stringify(""+t)+'][type="radio"]'),t=0;t<n.length;t++){var r=n[t];if(r!==e&&r.form===e.form){var o=Bi(r);if(!o)throw Error(E(90));td(r),ps(r,o)}}}break;case"textarea":rd(e,n);break;case"select":t=n.value,t!=null&&bn(e,!!n.multiple,t,!1)}};cd=Iu;dd=xn;var og={usingClientEntryPoint:!1,Events:[yo,Wn,Bi,ud,ad,Iu]},Fr={findFiberByHostInstance:mn,bundleType:0,version:"18.3.1",rendererPackageName:"react-dom"},ig={bundleType:Fr.bundleType,version:Fr.version,rendererPackageName:Fr.rendererPackageName,rendererConfig:Fr.rendererConfig,overrideHookState:null,overrideHookStateDeletePath:null,overrideHookStateRenamePath:null,overrideProps:null,overridePropsDeletePath:null,overridePropsRenamePath:null,setErrorHandler:null,setSuspenseHandler:null,scheduleUpdate:null,currentDispatcherRef:Ot.ReactCurrentDispatcher,findHostInstanceByFiber:function(e){return e=md(e),e===null?null:e.stateNode},findFiberByHostInstance:Fr.findFiberByHostInstance||ng,findHostInstancesForRefresh:null,scheduleRefresh:null,scheduleRoot:null,setRefreshHandler:null,getCurrentFiber:null,reconcilerVersion:"18.3.1-next-f1338f8080-20240426"};if(typeof __REACT_DEVTOOLS_GLOBAL_HOOK__!="undefined"&&(Ar=__REACT_DEVTOOLS_GLOBAL_HOOK__,!Ar.isDisabled&&Ar.supportsFiber))try{ji=Ar.inject(ig),St=Ar}catch{}var Ar;Ye.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED=og;Ye.createPortal=function(e,t){var n=2<arguments.length&&arguments[2]!==void 0?arguments[2]:null;if(!Wu(t))throw Error(E(200));return tg(e,t,null,n)};Ye.createRoot=function(e,t){if(!Wu(e))throw Error(E(299));var n=!1,r="",o=Yf;return t!=null&&(t.unstable_strictMode===!0&&(n=!0),t.identifierPrefix!==void 0&&(r=t.identifierPrefix),t.onRecoverableError!==void 0&&(o=t.onRecoverableError)),t=ju(e,1,!1,null,null,n,!1,r,o),e[zt]=t.current,lo(e.nodeType===8?e.parentNode:e),new Uu(t)};Ye.findDOMNode=function(e){if(e==null)return null;if(e.nodeType===1)return e;var t=e._reactInternals;if(t===void 0)throw typeof e.render=="function"?Error(E(188)):(e=Object.keys(e).join(","),Error(E(268,e)));return e=md(t),e=e===null?null:e.stateNode,e};Ye.flushSync=function(e){return xn(e)};Ye.hydrate=function(e,t,n){if(!Xi(t))throw Error(E(200));return qi(null,e,t,!0,n)};Ye.hydrateRoot=function(e,t,n){if(!Wu(e))throw Error(E(405));var r=n!=null&&n.hydratedSources||null,o=!1,i="",l=Yf;if(n!=null&&(n.unstable_strictMode===!0&&(o=!0),n.identifierPrefix!==void 0&&(i=n.identifierPrefix),n.onRecoverableError!==void 0&&(l=n.onRecoverableError)),t=Kf(t,null,e,1,n!=null?n:null,o,!1,i,l),e[zt]=t.current,lo(e),r)for(e=0;e<r.length;e++)n=r[e],o=n._getVersion,o=o(n._source),t.mutableSourceEagerHydrationData==null?t.mutableSourceEagerHydrationData=[n,o]:t.mutableSourceEagerHydrationData.push(n,o);return new Zi(t)};Ye.render=function(e,t,n){if(!Xi(t))throw Error(E(200));return qi(null,e,t,!1,n)};Ye.unmountComponentAtNode=function(e){if(!Xi(e))throw Error(E(40));return e._reactRootContainer?(xn(function(){qi(null,null,e,!1,function(){e._reactRootContainer=null,e[zt]=null})}),!0):!1};Ye.unstable_batchedUpdates=Iu;Ye.unstable_renderSubtreeIntoContainer=function(e,t,n,r){if(!Xi(n))throw Error(E(200));if(e==null||e._reactInternals===void 0)throw Error(E(38));return qi(e,t,n,!1,r)};Ye.version="18.3.1-next-f1338f8080-20240426"});var Zf=ht((Ug,Jf)=>{"use strict";function bf(){if(!(typeof __REACT_DEVTOOLS_GLOBAL_HOOK__=="undefined"||typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE!="function"))try{__REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE(bf)}catch(e){console.error(e)}}bf(),Jf.exports=Gf()});var qf=ht(Bu=>{"use strict";var Xf=Zf();Bu.createRoot=Xf.createRoot,Bu.hydrateRoot=Xf.hydrateRoot;var Wg});function So(){return lg}var I,lg,Vu=Lo(()=>{I=cn(Pr()),lg={bg:{base:"#f7f9fc",elevated:"#ffffff"},text:{primary:"#0b2340",secondary:"#4a5a70",tertiary:"#7a889c",warning:"#b26a00",accent:"#1f6feb",danger:"#c0392b",onPrimary:"#ffffff"},border:{default:"#d3dbe6",focus:"#1f6feb",subtle:"#e6ebf2",strong:"#0b2340"},fill:{accentSubtle:"#e3eefc",primary:"#0b2340"},font:{family:"-apple-system, system-ui, 'Segoe UI', sans-serif",mono:"ui-monospace, Menlo, monospace"},dataviz:{categorical:["#1f6feb","#ffb703","#2a9d8f"]}}});function Ku(e){let t=e.toLowerCase().replace(/[^a-z0-9]+/g,"-");return{name:e,prefix:e.replace(/[^A-Za-z0-9]/g,"").slice(0,3).toUpperCase()||"OB",key:`triplog-other-${t}`,offset:0,meterLabel:"Hour meter (as read)",seed:{meter:0,date:"",from:""},dests:[],fromPicks:[],pts:{},lat:48.3,lon:-122.6,km:!1,pnw:!0,captain:"Josh"}}function tp(e,t){H=e,cr=t}function np(e){return e.split(/\s+/).filter(Boolean).map(t=>t[0]).join("").toUpperCase().slice(0,3)||"X"}var Qu,ep,H,cr,Yu=Lo(()=>{Qu={name:"Halve Maan II",prefix:"HM2",key:"hm2-triplog-v1",offset:1231,meterLabel:"Hour meter (QUARTZ)",seed:{meter:1531,date:"2026-10-17",from:"Mariner Cove"},dests:["Mariner Cove","La Conner","Oak Harbor","Coupeville","Langley","Anacortes","Seattle"],fromPicks:["Mariner Cove","La Conner","Oak Harbor"],pts:{"Mariner Cove":[48.291,-122.521],"La Conner":[48.3833,-122.4831],"Oak Harbor":[48.28647,-122.63683],Coupeville:[48.22281,-122.68821],Langley:[48.0384,-122.40308],Anacortes:[48.51305,-122.60579],Seattle:[47.61056,-122.34889]},lat:48.3,lon:-122.6,km:!1,pnw:!0,captain:"Josh"},ep={name:"Zeeotter",prefix:"ZO",key:"triplog-zeeotter",offset:0,meterLabel:"Hour meter (as read)",seed:{meter:0,date:"",from:"Jirnsum (RFU)"},dests:["Jirnsum (RFU)","Sneek","Grou","Leeuwarden","Lemmer","Harlingen","Stavoren","Enkhuizen","Volendam","Muiden","Amsterdam","Vlissingen","Oulton Broad (UK)"],fromPicks:["Jirnsum (RFU)","Sneek","Grou"],pts:{"Jirnsum (RFU)":[53.0786,5.79],Sneek:[53.0326,5.659],Grou:[53.0949,5.837],Leeuwarden:[53.2012,5.7999],Lemmer:[52.844,5.711],Harlingen:[53.175,5.414],Stavoren:[52.885,5.36],Enkhuizen:[52.704,5.294],Volendam:[52.495,5.071],Muiden:[52.332,5.07],Amsterdam:[52.378,4.91],Vlissingen:[51.443,3.596],"Oulton Broad (UK)":[52.476,1.713]},lat:53,lon:5.7,km:!0,pnw:!1,captain:"Josh"};H=Qu,cr=""});function Dt(e,t){try{let n=window.localStorage.getItem(e);return n?JSON.parse(n):t}catch{return t}}function fr(e,t){try{window.localStorage.setItem(e,JSON.stringify(t))}catch{}}function sg(){let e=Dt("hm2-sync-url",""),t=Dt("hm2-sync-key","");if(!e)return null;let n=()=>{},r=()=>{},o={withSuccessHandler:i=>(n=i,o),withFailureHandler:i=>(r=i,o),logTrip:i=>{fetch(e,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({key:t,trip:JSON.parse(i)})}).then(l=>l.json()).then(l=>l&&l.ok?n(l):r({message:l&&l.error||"Sync refused"})).catch(l=>r({message:"Network: "+l.message}))}};return o}function bu(e){let t={...e};return delete t.sent,JSON.stringify(t)}function op(e=""){return{pending:Object.keys(Dt(dr,{})).length,last:Dt(rp,""),err:e}}function ip(e,t){Ju=e,Zu=t,e(op())}function tl(e=""){Ju&&Ju(op(e))}function lp(e){let t=Dt(Gu,{}),n=Dt(dr,{});for(let r of e)t[r.id]!==bu(r)&&(n[r.id]=r);fr(dr,n),ko()}function ko(){let e=Dt(dr,{}),t=Object.keys(e).sort((i,l)=>e[i].when<e[l].when?-1:1);if(tl(),el||!t.length)return;let n=sg();if(!n){tl("Not linked yet: open the setup link once to connect your logbook.");return}if(navigator.onLine===!1){tl("No signal. Saved on the phone, will sync later.");return}el=!0;let r=e[t[0]],o=bu(r);n.withSuccessHandler(()=>{el=!1;let i=Dt(dr,{});i[r.id]&&bu(i[r.id])===o&&delete i[r.id],fr(dr,i);let l=Dt(Gu,{});l[r.id]=o,fr(Gu,l),fr(rp,new Date().toLocaleString()),ko()}).withFailureHandler(i=>{el=!1,tl(String(i&&i.message||i))}).logTrip(JSON.stringify(Zu?Zu(r):r))}var dr,Gu,rp,el,Ju,Zu,sp=Lo(()=>{dr="hm2-sync-queue",Gu="hm2-sync-hash",rp="hm2-sync-last";(function(){try{let e=new URLSearchParams(location.hash.slice(1)),t=e.get("setup")||e.get("sync");t&&(fr("hm2-sync-url",t),fr("hm2-sync-key",e.get("key")||e.get("k")||""),history.replaceState(null,"",location.pathname+location.search))}catch{}})();el=!1,Ju=null,Zu=null});var ap=ht(nl=>{"use strict";var ug=Pr(),ag=Symbol.for("react.element"),cg=Symbol.for("react.fragment"),dg=Object.prototype.hasOwnProperty,fg=ug.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner,pg={key:!0,ref:!0,__self:!0,__source:!0};function up(e,t,n){var r,o={},i=null,l=null;n!==void 0&&(i=""+n),t.key!==void 0&&(i=""+t.key),t.ref!==void 0&&(l=t.ref);for(r in t)dg.call(t,r)&&!pg.hasOwnProperty(r)&&(o[r]=t[r]);if(e&&e.defaultProps)for(r in t=e.defaultProps,t)o[r]===void 0&&(o[r]=t[r]);return{$$typeof:ag,type:e,key:i,ref:l,props:o,_owner:fg.current}}nl.Fragment=cg;nl.jsx=up;nl.jsxs=up});var Eo=ht((Gg,cp)=>{"use strict";cp.exports=ap()});function ta(e){return`${e.at.slice(11,16)} [${e.cat}] ${e.text}${e.name?` (${e.name}${e.boat?`, ${e.boat}`:""})`:e.boat?` (${e.boat})`:""}${e.star?" \u2B50":""}`}function dp(e){return!!(e.media&&e.media.length||e.tools&&e.tools.length||e.clips||e.photos)}function fp(e,t){try{let n=window.localStorage.getItem(e);return window.localStorage.setItem(e+"-t","1"),{v:n?JSON.parse(n):t,ok:!0}}catch{return{v:t,ok:!1}}}function pp(e,t){try{return window.localStorage.setItem(e,JSON.stringify(t)),!0}catch{return!1}}function ol(){let e=new Date;return e.setMinutes(e.getMinutes()-e.getTimezoneOffset()),e.toISOString().slice(0,16)}function pr(e){return e.toTimeString().slice(0,5)}function _n(e){let t=Math.round(e*60);return`${Math.floor(t/60)}h ${t%60}m`}function ul(e){return`\u2248 ${e.toFixed(1)} nm${H.km?` (${Math.round(e*1.852)} km)`:""}`}function Cg(e,t){let n=Math.PI/180,r=(t[0]-e[0])*n,o=(t[1]-e[1])*n,i=Math.sin(r/2)**2+Math.cos(e[0]*n)*Math.cos(t[0]*n)*Math.sin(o/2)**2;return 3440.065*2*Math.asin(Math.sqrt(i))}function Tg(e){if(isNaN(e.getTime()))return!1;let[t,n]=H.prefix==="ZO"?[53,5.8]:[48.29,-122.64],r=Math.PI/180,i=e.getTime()/864e5+24405875e-1-2451545,l=(280.46+.9856474*i)%360,s=(357.528+.9856003*i)%360*r,a=(l+1.915*Math.sin(s)+.02*Math.sin(2*s))*r,p=(23.439-4e-7*i)*r,h=Math.asin(Math.sin(p)*Math.sin(a)),y=Math.atan2(Math.cos(p)*Math.sin(a),Math.cos(a)),C=((18.697374558+24.06570982441908*i)%24*15+n)*r-y;return Math.asin(Math.sin(t*r)*Math.sin(h)+Math.cos(t*r)*Math.cos(h)*Math.cos(C))/r<-.833}function _g(e,t,n){let r=Math.PI/180,o=new Date(e.getFullYear(),0,0).getTime(),i=Math.floor((new Date(e.getFullYear(),e.getMonth(),e.getDate()).getTime()-o)/864e5),l=n/15,s=i+(18-l)/24,a=.9856*s-3.289,p=a+1.916*Math.sin(a*r)+.02*Math.sin(2*a*r)+282.634;p=(p%360+360)%360;let h=Math.atan(.91764*Math.tan(p*r))/r;h=(h%360+360)%360,h=(h+Math.floor(p/90)*90-Math.floor(h/90)*90)/15;let y=.39782*Math.sin(p*r),g=Math.cos(Math.asin(y)),C=(Math.cos(90.833*r)-y*Math.sin(t*r))/(g*Math.cos(t*r)),R=((Math.acos(C)/r/15+h-.06571*s-6.622-l)%24+24)%24,m=Date.UTC(e.getFullYear(),e.getMonth(),e.getDate())+R*36e5,f=new Date(e.getFullYear(),e.getMonth(),e.getDate(),12).getTime();return m<f&&(m+=864e5),new Date(m)}function al(){try{let e=window,t=e.AudioContext||e.webkitAudioContext;if(!t)return;let n=new t,r=o=>{[1,2.76,5.4,8.93].forEach((i,l)=>{let s=n.createOscillator(),a=n.createGain();s.type="sine",s.frequency.value=660*i,a.gain.setValueAtTime(1e-4,n.currentTime+o),a.gain.exponentialRampToValueAtTime(.35/(l+1),n.currentTime+o+.01),a.gain.exponentialRampToValueAtTime(1e-4,n.currentTime+o+2.2/(l+1)),s.connect(a),a.connect(n.destination),s.start(n.currentTime+o),s.stop(n.currentTime+o+2.5)})};r(0),r(.45)}catch{}}function Pg(e){let t=["trip_id","boat","logged_by","date_time","from","destination","purpose","aboard","deborah","weather","meter","true_hours","crabs","notes","maintenance","maintenance_note","est_nm","est_hours","est_gallons","wind_kn","advisory","deception_pass","app_eta","captain_eta","arrived","eta_winner","starfish","media_tools","media_types","video_clips","photos","best_moment_tags","port_to_port_worthy","along_the_way"],n=r=>`"${String(r===void 0?"":r).replace(/"/g,'""')}"`;return[t.join(","),...e.map(r=>[un(r),H.name,r.by,r.when,r.from,r.to,r.purpose,r.aboard,r.deborah?"yes":"no",r.weather,r.meter,r.trueHrs,r.crabs,r.notes,r.maint?"yes":"no",r.maintText,r.nm!==void 0?r.nm.toFixed(1):"",r.hrsEst!==void 0?r.hrsEst.toFixed(2):"",r.gal!==void 0?r.gal.toFixed(1):"",r.wind,r.advisory===void 0?"":r.advisory?"yes":"no",r.deception===void 0?"":r.deception?"yes":"no",r.appEta,r.captainEta,r.arrived,r.etaWinner,r.stars,(r.tools||[]).join("; "),(r.media||[]).join("; "),r.clips,r.photos,(r.tags||[]).join("; "),r.p2p===void 0?"":r.p2p?"yes":"no",(r.journal||[]).map(ta).join(" | ")].map(n).join(","))].join(`
-`)}function Ng(e,t){return`${H.prefix}-${e.slice(0,10).replace(/-/g,"")}-${np(cr)}${t.slice(-4)}`}function un(e){return e.tid||`HM2-${e.when.slice(0,10).replace(/-/g,"")}-${e.id.slice(-4)}`}function Mg(e){return{...e,tripId:un(e),boat:H.name,loggedBy:e.by||cr,captain:H.captain,offset:H.offset,km:H.km,journalLines:(e.journal||[]).map(ta)}}function il(e,t){try{navigator.clipboard.writeText(e).then(()=>t("Copied to clipboard"),()=>t("Select the text below to copy"))}catch{t("Select the text below to copy")}}function gp({on:e,size:t=22}){return(0,c.jsx)("img",{src:"starfish.png",alt:"",width:t,height:t,style:{verticalAlign:"middle",opacity:e?1:.35,filter:e?"none":"grayscale(1)"}})}function mp({n:e,size:t}){return(0,c.jsx)("span",{"aria-label":`${e} of 5 starfish`,children:[1,2,3,4,5].map(n=>(0,c.jsx)(gp,{on:n<=e,size:t},n))})}function zg(e){return"\u2B50".repeat(e)+"\u2606".repeat(5-e)}function hp(e,t){return new Date(`${t.slice(0,10)}T${e}`).getTime()/6e4}function Lg(e){let t=0,n=0,r=0,o=!0;for(let i of e)i.etaWinner&&(i.etaWinner==="Captain"?(t++,o&&r++):(n++,o=!1));return{cap:t,app:n,streak:r}}function Rg(e){let t=So(),n=(0,I.useRef)(null),[r,o]=(0,I.useState)(0),[i,l]=(0,I.useState)(!0),[s,a]=(0,I.useState)(""),p=e.e,h=e.tally,y=H.pts,g=(p.journal||[]).filter(f=>f.star).slice(0,3),C=24+g.length*2.5,x=C+3,_=typeof window!="undefined"&&typeof window.MediaRecorder!="undefined";(0,I.useEffect)(()=>{let f=n.current;if(!f)return;let d=f.getContext("2d");if(!d)return;let v=720,S=1280,T=0,N=!1,M=performance.now(),V="#0b2340",F="#123a63",Pe="rgba(255,255,255,0.08)",we="#ffffff",Ae="#ffd166",ie="#ff7b6b",Et=y[p.from],mr=y[p.to],hr=Object.values(y).length?Object.values(y):[[H.lat,H.lon]],gr=hr.map(Se=>Se[0]),vr=hr.map(Se=>Se[1]),dl=Math.min(...gr)-.05,an=Math.max(...gr)+.05,yr=Math.min(...vr)-.08,fl=Math.max(...vr)+.08,Nn=Se=>[80+(Se[1]-yr)/(fl-yr)*560,220+(an-Se[0])/(an-dl)*840],xt=Se=>1-Math.pow(1-Math.min(1,Math.max(0,Se)),3),Q=(Se,K,O,j,J="700")=>{d.fillStyle=j,d.font=`${J} ${O}px system-ui, sans-serif`,d.textAlign="center",d.fillText(Se,v/2,K)},Co=(Se,K,O)=>{d.font=`600 ${O}px system-ui, sans-serif`;let j=Se.split(" "),J="",q=K;for(let ke of j){let $=J?J+" "+ke:ke;d.measureText($).width>600?(Q(J,q,O,we,"600"),J=ke,q+=O*1.3):J=$}J&&Q(J,q,O,we,"600")},To=`${p.aboard||"?"}${p.deborah?" + Deborah":""}`,wr=[["Distance",p.nm!==void 0?ul(p.nm):"\u2014"],["Underway",p.arrived?_n((new Date(p.arrived).getTime()-new Date(p.when).getTime())/36e5):p.hrsEst!==void 0?`\u2248 ${_n(p.hrsEst)}`:"\u2014"],["Weather",p.weather||"\u2014"],["Crew",To],["Crabs",p.crabs?`\u{1F980} ${p.crabs}`:"0"],["ETA game",p.etaWinner?`${p.etaWinner} wins!`:"No race"]],Mn=Se=>{let K=(Se-M)/1e3;d.fillStyle=V,d.fillRect(0,0,v,S),d.strokeStyle=Pe,d.lineWidth=2;for(let O=0;O<=v;O+=80)d.beginPath(),d.moveTo(O,0),d.lineTo(O,S),d.stroke();for(let O=0;O<=S;O+=80)d.beginPath(),d.moveTo(0,O),d.lineTo(v,O),d.stroke();if(K<3){let O=xt(K/.8);d.globalAlpha=O,Q("\u2693",470,120,Ae),Q("Port to Port",620,92,we,"800"),Q(H.name,720,54,Ae,"700"),Q(p.when.slice(0,10),800,40,we,"500"),Q(un(p),860,34,"rgba(255,255,255,0.7)","500"),d.globalAlpha=1}else if(K<9){Q(`${p.from} \u2192 ${p.to}`,140,48,we,"800"),d.fillStyle=F,d.fillRect(60,200,600,880);for(let[j,J]of Object.entries(y)){let[q,ke]=Nn(J);d.fillStyle="rgba(255,255,255,0.35)",d.beginPath(),d.arc(q,ke,7,0,7),d.fill(),d.font="500 24px system-ui, sans-serif",d.textAlign="left",d.fillText(j,q+12,ke+8)}let O=xt((K-3.5)/4.5);if(Et&&mr){let[j,J]=Nn(Et),[q,ke]=Nn(mr);d.strokeStyle=Ae,d.lineWidth=8,d.setLineDash([22,14]),d.beginPath(),d.moveTo(j,J),d.lineTo(j+(q-j)*O,J+(ke-J)*O),d.stroke(),d.setLineDash([]),d.fillStyle=ie,d.beginPath(),d.arc(q,ke,14,0,7),d.fill(),d.font="64px system-ui, sans-serif",d.textAlign="center",d.fillText("\u{1F6A4}",j+(q-j)*O,J+(ke-J)*O+20)}else Q("\u{1F6A4}",640+Math.sin(K*3)*10,120,we),Q("A secret spot",780,44,Ae);Q("Stylized chart \xB7 not for navigation",1150,26,"rgba(255,255,255,0.6)","500")}else if(K<17.5)Q("Trip stats",180,64,Ae,"800"),wr.forEach((O,j)=>{let J=9.3+j*1.3;if(K<J)return;let q=xt((K-J)/.5),ke=260+j*150;d.globalAlpha=q;let $=.8+.2*q;d.save(),d.translate(v/2,ke+60),d.scale($,$),d.fillStyle="rgba(255,255,255,0.1)",d.fillRect(-300,-60,600,128),d.fillStyle="rgba(255,255,255,0.7)",d.font="500 30px system-ui, sans-serif",d.textAlign="left",d.fillText(O[0],-270,-10),d.fillStyle=we,d.font="800 46px system-ui, sans-serif",d.fillText(O[1],-270,46),d.restore(),d.globalAlpha=1});else if(K<20.5){Q(`${p.to}`,520,60,we,"800");let O=p.stars||0;if(O){for(let j=0;j<5;j++){let J=xt((K-17.7-j*.3)/.4);d.globalAlpha=Math.max(.15,j<O?J:.25);let q=80+20*(j<O?J:0);ll&&ll.complete&&ll.naturalWidth?(d.filter=j<O?"none":"grayscale(1)",d.drawImage(ll,160+j*100-q/2,700-q*.8,q,q),d.filter="none"):(d.font=`${q}px system-ui`,d.textAlign="center",d.fillText(j<O?"\u2B50":"\u2606",160+j*100,700))}d.globalAlpha=1,Q(`${O} starfish`,820,44,Ae)}else Q("Not rated yet",700,48,Ae)}else if(K<24)Q("Best moment",420,52,Ae,"800"),d.globalAlpha=xt((K-20.7)/.8),Co(p.notes?`\u201C${p.notes}\u201D`:"Just a good day on the water.",560,52),d.globalAlpha=1;else if(K<C){let O=Math.min(g.length-1,Math.floor((K-24)/2.5)),j=g[O];Q("Along the way",380,50,Ae,"800"),Q(`${j.at.slice(11,16)} \xB7 ${j.cat}`,460,34,"rgba(255,255,255,0.75)","600"),d.globalAlpha=xt((K-24-O*2.5)/.6),Co(`\u201C${j.text}\u201D${j.name?` (${j.name}${j.boat?`, ${j.boat}`:""})`:""}`,580,50),d.globalAlpha=1}else{let O=xt((K-C)/.8);d.globalAlpha=O,Q("Captain vs App",430,56,Ae,"800"),Q(`${h.cap}  \u2013  ${h.app}`,580,120,we,"800"),h.streak>1&&Q(`\u{1F525} ${h.streak} wins in a row`,680,40,we,"600"),Q("Next port: ?",860,72,ie,"800"),Q(H.name,1100,36,"rgba(255,255,255,0.7)","600"),d.globalAlpha=1,!N&&K>C+.4&&(N=!0,i&&al())}K<x&&(T=requestAnimationFrame(Mn))};return T=requestAnimationFrame(Mn),()=>cancelAnimationFrame(T)},[r]);let R=()=>{let f=n.current;try{if(!f||!f.captureStream)throw new Error("no");let d=f.captureStream(30),v=new MediaRecorder(d,{mimeType:MediaRecorder.isTypeSupported("video/webm")?"video/webm":"video/mp4"}),S=[];v.ondataavailable=T=>{T.data.size&&S.push(T.data)},v.onstop=()=>{try{let T=new Blob(S,{type:v.mimeType}),N=URL.createObjectURL(T),M=document.createElement("a");M.href=N,M.download=`${un(p)}.${v.mimeType.includes("mp4")?"mp4":"webm"}`,M.click(),a("Video saved. If nothing downloaded, screen-record this instead.")}catch{a("Download blocked here. Screen-record this instead.")}},v.start(),a(`Recording\u2026 about ${Math.round(x)} seconds`),o(r+1),window.setTimeout(()=>v.stop(),x*1e3+300)}catch{a("Video save isn't available here. Use the iPhone screen recorder instead.")}},m={flex:"1 1 30%",minHeight:52,fontSize:17,borderRadius:14,border:`1px solid ${t.border.default}`,background:t.bg.elevated,color:t.text.primary,fontFamily:t.font.family,cursor:"pointer"};return(0,c.jsx)("div",{style:{position:"fixed",inset:0,background:t.bg.base,zIndex:20,overflowY:"auto",padding:12,boxSizing:"border-box"},children:(0,c.jsxs)("div",{style:{maxWidth:420,margin:"0 auto"},children:[(0,c.jsx)("canvas",{ref:n,width:720,height:1280,style:{width:"100%",aspectRatio:"9 / 16",borderRadius:16,display:"block"}}),(0,c.jsxs)("div",{style:{display:"flex",flexWrap:"wrap",gap:8,marginTop:10},children:[(0,c.jsx)("button",{style:m,onClick:()=>o(r+1),children:"\u21BB Replay"}),(0,c.jsx)("button",{style:m,onClick:()=>l(!i),children:i?"\u{1F514} Bell on":"\u{1F515} Bell off"}),_?(0,c.jsx)("button",{style:m,onClick:R,children:"\u{1F4BE} Save as video"}):(0,c.jsx)("div",{style:{...m,display:"flex",alignItems:"center",justifyContent:"center"},children:"\u{1F4F1} Screen-record this"}),(0,c.jsx)("button",{style:m,onClick:e.onClose,children:"Close"})]}),s&&(0,c.jsx)("div",{style:{color:t.text.secondary,fontSize:15,marginTop:8,fontFamily:t.font.family},children:s})]})})}function na(e){let t=So(),n=H.key,r=H.key+"-settings",o=H.offset,i=H.seed,l=H.dests,s=H.pts,a=rl()||H.pnw&&H.prefix!=="ZO"?hg:gg,p=H.pnw?kg:Eg,[h,y]=(0,I.useState)([]),[g,C]=(0,I.useState)(!0),[x,_]=(0,I.useState)(qu),[R,m]=(0,I.useState)(-1),[f,d]=(0,I.useState)(""),[v,S]=(0,I.useState)("home"),[T,N]=(0,I.useState)(""),[M,V]=(0,I.useState)(""),[F,Pe]=(0,I.useState)(!1),[we,Ae]=(0,I.useState)(!1),[ie,Et]=(0,I.useState)({date:ol().slice(0,10),nights:"1",len:"32",guests:"2",power:!0}),[mr,hr]=(0,I.useState)(""),[gr,vr]=(0,I.useState)(""),[dl,an]=(0,I.useState)(""),[yr,fl]=(0,I.useState)(""),[Nn,xt]=(0,I.useState)(""),[Q,Co]=(0,I.useState)(""),[To,wr]=(0,I.useState)(null),[Mn,Se]=(0,I.useState)(null),[K,O]=(0,I.useState)(!1),[j,J]=(0,I.useState)(""),[q,ke]=(0,I.useState)(""),[$,It]=(0,I.useState)({at:"",cat:"",text:"",name:"",boat:"",star:!1}),[Sr,wp]=(0,I.useState)(!1),[ra,pl]=(0,I.useState)(""),[$t,Sp]=(0,I.useState)({pending:0,last:"",err:""}),Ft=h[0],ot=Ft?Ft.meter:i.meter,kp=Ft?Ft.purpose===void 0&&Xu.includes(Ft.to)?Ft.from:Ft.to:i.from,ml=Array.from(new Set(h.flatMap(u=>[u.to,u.from]).filter(u=>u&&u!=="Other"&&!l.includes(u)&&!Xu.includes(u)))).slice(0,6),oa=()=>({when:ol(),from:kp,to:"",purpose:"",aboard:"",deborah:!1,weather:"",meter:"",notes:"",maint:!1,maintText:"",crabs:"",nmManual:"",wind:"",advisory:!1,deception:!1,capEta:"",stars:0,id:String(Date.now()),tools:[],media:[],clips:"",photos:"",tags:[],p2p:!1}),[k,Re]=(0,I.useState)(oa());(0,I.useEffect)(()=>{let u=fp(n,[]);y(u.v),C(u.ok);let w=fp(r,qu);_({...qu,...w.v}),ip(Sp,se=>Mg(se));let z=()=>ko();window.addEventListener("online",z);let Je=window.setInterval(z,6e4);return()=>{window.removeEventListener("online",z),window.clearInterval(Je)}},[]);let _o=u=>{_(u),pp(r,u)},kr=u=>{y(u),C(pp(n,u)),lp(u)},hl=Number(k.meter),zn=k.meter!==""&&ot>0&&hl-ot,Po=k.to!==""&&k.to!=="Other",ia=Number(x.factor)||1.3,la=Number(x.speed)||7,gl=Number(x.burn)||0,vl=Number(x.tank)||0,Er=s[k.from]&&s[k.to]?Cg(s[k.from],s[k.to])*ia:null,Ln=Er!==null?Er:k.nmManual!==""?Number(k.nmManual):null,it=Ln!==null?Ln/la:null,Rn=it!==null?it*gl:null,xr=Rn!==null?Rn*1.2:null,yl=new Date(k.when),No=it!==null?new Date(yl.getTime()+it*36e5):null,Mo=_g(yl,H.lat,H.lon),Cr=(Mo.getTime()-yl.getTime())/36e5,wl=Number(k.wind)||0,On=[];(wl>15||k.advisory)&&On.push(k.advisory?"Small craft advisory posted. Worth a second look.":`Wind ${wl} kn is over 15. Bumpy ride ahead.`),it!==null&&it>Cr&&On.push(Cr<=0?`Sun's already down (sunset ${pr(Mo)}). Night run.`:`Trip \u2248 ${_n(it)} but only ${_n(Cr)} of daylight left (sunset ${pr(Mo)}).`),xr!==null&&vl>0&&xr>vl&&On.push(`Fuel with reserve \u2248 ${xr.toFixed(1)} gal is more than your ${vl} gal tank setting.`),k.deception&&On.push("Deception Pass: time it for slack water.");let zo=h.filter(u=>u.when.startsWith(String(new Date().getFullYear()))),Ep=zo.reduce((u,w,z)=>{let Je=zo[z+1],se=Je?Je.meter:i.meter;return u+(se>0?Math.max(0,w.meter-se):0)},0),xp=zo.reduce((u,w)=>u+(w.crabs||0),0),sa=(()=>{let u=0,w=Date.now();for(let z of h){let Je=new Date(z.when).getTime();if(w-Je<=14*864e5)u++,w=Je;else break}return u})(),lt=Lg(h),Cp=lt.cap+lt.app===0?"First ETA race is up for grabs.":lt.cap>lt.app?"The Captain knows these waters. \u{1F9ED}":lt.cap===lt.app?"Dead even. Tiebreaker next trip?":"The robot's ahead. Time to show it who's skipper.",je=h.find(u=>!u.arrived&&u.appEta!==void 0&&Date.now()-new Date(u.when).getTime()<2*864e5),Sl=(()=>{let u={};for(let w of h){if(!w.to||Xu.includes(w.to))continue;let z=u[w.to]||{sum:0,n:0,visits:0,last:""};z.visits++,w.stars&&(z.sum+=w.stars,z.n++),w.when>z.last&&(z.last=w.when),u[w.to]=z}return Object.entries(u).map(([w,z])=>({name:w,avg:z.n?z.sum/z.n:0,visits:z.visits,last:z.last})).sort((w,z)=>z.avg-w.avg)})(),ua=()=>{if(!Po){Pe(!0),m(ea);return}let u=hl||ot,w={id:k.id,tid:Ng(k.when,k.id),by:cr,boat:H.name,when:k.when,from:k.from,to:k.to,purpose:k.purpose==="Other"?"":k.purpose,aboard:k.aboard,deborah:k.deborah,weather:k.weather,meter:u,trueHrs:u?u+o:0,notes:k.notes,maint:k.maint,maintText:k.maintText,crabs:k.purpose==="Crabbing"&&Number(k.crabs)||0,nm:Ln!==null?Ln:void 0,hrsEst:it!==null?it:void 0,gal:Rn!==null&&gl>0?Rn:void 0,wind:k.wind!==""?wl:void 0,advisory:k.advisory,deception:k.deception,appEta:No?pr(No):void 0,captainEta:k.capEta||void 0,stars:k.stars||void 0,tools:k.tools.length?k.tools:void 0,media:k.media.length?k.media:void 0,clips:k.clips!==""?Number(k.clips)||0:void 0,photos:k.photos!==""?Number(k.photos)||0:void 0,tags:k.tags.length?k.tags:void 0,p2p:k.p2p};kr([w,...h]),Se(w),al(),d(`${w.from} \u2192 ${w.to}`),m(-1),Pe(!1),window.setTimeout(()=>d(""),2600)},Tp=u=>{let w=ol(),z,Je="Welcome in, Captain!";if(u.appEta&&u.captainEta){let se=new Date(w).getTime()/6e4,xl=Math.abs(hp(u.captainEta,u.when)-se),Cl=Math.abs(hp(u.appEta,u.when)-se);z=xl<=Cl?"Captain":"App",Je=z==="Captain"?`\u{1F3C6} Captain wins! Off by ${Math.round(xl)} min, the app by ${Math.round(Cl)}.`:`\u{1F916} App wins this one. It was off by ${Math.round(Cl)} min, you by ${Math.round(xl)}.`}kr(h.map(se=>se.id===u.id?{...se,arrived:w,etaWinner:z}:se)),fl(Je),an(u.id),El(u),al()},_p=(u,w)=>{kr(h.map(z=>z.id===u?{...z,stars:w}:z)),D&&D.id===u||an("")},Pp=()=>{let u=Pg(h);N(u);try{let w=new Blob([u],{type:"text/csv"}),z=document.createElement("a");z.href=URL.createObjectURL(w),z.download=`${H.key}.csv`,z.click()}catch{}il(u,V)},Np=()=>{let u=[`\u2693 ${H.name} \xB7 Starfish ratings`,...Sl.map(w=>`${w.avg?zg(Math.round(w.avg)):"\u2606\u2606\u2606\u2606\u2606"} ${w.name}${w.avg?` (${w.avg.toFixed(1)})`:""} \xB7 ${w.visits} visit${w.visits===1?"":"s"} \xB7 last ${w.last.slice(0,10)}`)].join(`
-`);xt(u),il(u,Co)},Mp=()=>{let u=`VP Marine: please check guest moorage at ${k.to} for ${H.name} (${ie.len} ft), arriving ${ie.date}, ${ie.nights} night${ie.nights==="1"?"":"s"}, power ${ie.power?"y":"n"}, ${ie.guests} aboard. Draft only, no booking or payment without my OK.`;hr(u),il(u,vr)},aa={fontFamily:t.font.family,color:t.text.primary,background:t.bg.base,minHeight:"100vh",padding:"calc(env(safe-area-inset-top) + 14px) 18px 30px",maxWidth:520,margin:"0 auto",boxSizing:"border-box"},de=u=>({flex:"1 1 45%",minHeight:64,fontSize:20,fontFamily:t.font.family,borderRadius:16,border:`2px solid ${u?t.border.focus:t.border.default}`,background:u?t.fill.accentSubtle:t.bg.elevated,color:t.text.primary,cursor:"pointer",padding:10}),At={width:"100%",minHeight:64,fontSize:22,fontWeight:600,borderRadius:18,border:"none",background:t.fill.primary,color:t.text.onPrimary,cursor:"pointer",fontFamily:t.font.family,marginTop:14},fe={...At,background:"transparent",color:t.text.secondary,border:`1px solid ${t.border.default}`,fontSize:17,fontWeight:500,minHeight:50},Y={width:"100%",boxSizing:"border-box",fontSize:22,padding:14,borderRadius:14,border:`2px solid ${t.border.default}`,background:t.bg.elevated,color:t.text.primary,fontFamily:t.font.family},He={display:"flex",flexWrap:"wrap",gap:10},Ge={fontSize:28,fontWeight:600,margin:"8px 0 16px"},L={color:t.text.secondary,fontSize:16,margin:"6px 0"},pe={...L,margin:"10px 0 4px"},be={border:`1px solid ${t.border.default}`,borderRadius:16,padding:14,marginTop:12},ca={...de(!1),display:"block",textDecoration:"none",minHeight:0,fontSize:16,padding:12,marginTop:8,textAlign:"left"},Tr=(u,w,z,Je)=>(0,c.jsxs)("div",{children:[(0,c.jsx)("div",{style:He,children:u.map(se=>(0,c.jsx)("button",{style:de(k[w]===se),onClick:()=>{Re({...k,[w]:se,...w==="to"&&rl()?{deception:se==="Anacortes"||k.from==="Anacortes"&&se!=="La Conner"}:{}}),w==="to"&&Pe(!1)},children:se},se))}),z&&!u.slice(0,-1).includes(k[w])&&k[w]!==""&&(0,c.jsx)("input",{style:{...Y,marginTop:12},placeholder:Je||"Where?",value:k[w]==="Other"?"":k[w],onChange:se=>Re({...k,[w]:se.target.value||"Other"})})]}),da=(u,w)=>(0,c.jsx)("div",{style:{...He,justifyContent:"center"},children:[1,2,3,4,5].map(z=>(0,c.jsx)("button",{"aria-label":`${z} starfish`,style:{fontSize:40,background:"transparent",border:"none",cursor:"pointer",padding:4},onClick:()=>w(z),children:(0,c.jsx)(gp,{on:z<=u,size:48})},z))}),kl=(u,w)=>(0,c.jsxs)("div",{style:{flex:"1 1 28%",border:`1px solid ${t.border.default}`,borderRadius:16,padding:12,textAlign:"center"},children:[(0,c.jsx)("div",{style:{fontSize:28,fontWeight:600},children:w}),(0,c.jsx)("div",{style:L,children:u})]}),fa=h.flatMap(u=>(u.journal||[]).map(w=>({...w,trip:u}))),zp=Array.from(new Set([...a,...fa.filter(u=>(u.cat==="Bridge"||u.cat==="Lock")&&u.name).map(u=>u.name)])),pa=fa.filter(u=>u.cat==="Person we met"),ma=u=>{ke(q===u?"":u),It({at:"",cat:"",text:"",name:"",boat:"",star:!1}),pl("")},Lp=()=>{if(!$.text&&!$.name){pl("Add a few words first.");return}let u={at:ol(),cat:$.cat||"Experience",text:$.text,star:$.star,...$.name?{name:$.name}:{},...$.boat&&$.cat==="Person we met"?{boat:$.boat}:{}};kr(h.map(w=>w.id===q?{...w,journal:[...w.journal||[],u]}:w)),ke(""),pl("")},ha=()=>(0,c.jsxs)("div",{style:{...be,marginTop:10},children:[(0,c.jsxs)("div",{style:{fontSize:20,fontWeight:600},children:["\u{1F4DD} Along the way \xB7 ",pr(new Date)]}),(0,c.jsx)("input",{style:{...Y,marginTop:10},placeholder:"What happened? (tap the mic to talk)",value:$.text,onChange:u=>It({...$,text:u.target.value})}),(0,c.jsx)("div",{style:{...He,marginTop:10},children:mg.map(u=>(0,c.jsx)("button",{style:{...de($.cat===u),flex:"1 1 30%",minHeight:46,fontSize:15},onClick:()=>It({...$,cat:u,name:u===$.cat?$.name:""}),children:u},u))}),$.cat==="Person we met"&&(0,c.jsxs)("div",{children:[(0,c.jsx)("input",{style:{...Y,marginTop:10},placeholder:"Their name (optional)",value:$.name||"",onChange:u=>It({...$,name:u.target.value})}),(0,c.jsx)("input",{style:{...Y,marginTop:10},placeholder:"Boat name (optional)",value:$.boat||"",onChange:u=>It({...$,boat:u.target.value})})]}),($.cat==="Bridge"||$.cat==="Lock")&&(0,c.jsxs)("div",{children:[(0,c.jsx)("div",{style:{...He,marginTop:10},children:zp.filter(u=>$.cat==="Lock"?/lock|sluis/i.test(u)||!a.includes(u):!/lock|sluis/i.test(u)).map(u=>(0,c.jsx)("button",{style:{...de($.name===u),flex:"1 1 45%",minHeight:44,fontSize:15},onClick:()=>It({...$,name:u}),children:u},u))}),(0,c.jsx)("input",{style:{...Y,marginTop:10},placeholder:`${$.cat} name`,value:$.name||"",onChange:u=>It({...$,name:u.target.value})})]}),(0,c.jsx)("button",{style:{...de(!!$.star),width:"100%",marginTop:10,minHeight:50,fontSize:17},onClick:()=>It({...$,star:!$.star}),children:$.star?"Story-worthy \u2B50":"Story-worthy?"}),ra&&(0,c.jsx)("div",{style:L,children:ra}),(0,c.jsx)("button",{style:At,onClick:Lp,children:"Save note"}),(0,c.jsx)("button",{style:{...fe,border:"none"},onClick:()=>ke(""),children:"Cancel"})]}),Rp=`${k.from||"?"} \u2192 ${Po?k.to:"no destination yet"}${k.purpose&&k.purpose!=="Other"?` \xB7 ${k.purpose}`:""}${Ln!==null?` \xB7 ${ul(Ln)}`:""}`,Op=[...H.fromPicks,...ml.filter(u=>!H.fromPicks.includes(u)).slice(0,3),"Other"],ga=[(0,c.jsxs)("div",{children:[(0,c.jsx)("div",{style:Ge,children:"When's this trip?"}),(0,c.jsx)("input",{type:"datetime-local",style:Y,value:k.when,onChange:u=>Re({...k,when:u.target.value})}),(0,c.jsx)("div",{style:L,children:"Filled in for you. Tap to change."})]},"0"),(0,c.jsxs)("div",{children:[(0,c.jsx)("div",{style:Ge,children:"Where are you?"}),Tr(Op,"from",!0)]},"1"),(0,c.jsxs)("div",{children:[(0,c.jsx)("div",{style:Ge,children:"Where to?"}),F&&(0,c.jsx)("div",{style:{...L,color:t.text.warning,fontSize:18},children:"Just need where you're headed, then you're done."}),Tr([...l,...ml.filter(u=>!l.includes(u)),"Other"],"to",!0,"Type a place"),ml.length>0&&(0,c.jsx)("div",{style:L,children:"Your recent spots are in the list too."}),Po&&k.to!==i.from&&(0,c.jsxs)("div",{style:{marginTop:14},children:[(0,c.jsx)("button",{style:fe,onClick:()=>Ae(!we),children:we?"Close reserve form":"\u2693 Ask VP Marine to reserve"}),we&&(0,c.jsxs)("div",{style:{marginTop:8},children:[(0,c.jsx)("div",{style:pe,children:"Arriving"}),(0,c.jsx)("input",{type:"date",style:Y,value:ie.date,onChange:u=>Et({...ie,date:u.target.value})}),(0,c.jsx)("div",{style:pe,children:"Nights"}),(0,c.jsx)("input",{type:"number",inputMode:"numeric",style:Y,value:ie.nights,onChange:u=>Et({...ie,nights:u.target.value})}),(0,c.jsx)("div",{style:pe,children:"Boat length (ft)"}),(0,c.jsx)("input",{type:"number",inputMode:"numeric",style:Y,value:ie.len,onChange:u=>Et({...ie,len:u.target.value})}),(0,c.jsx)("div",{style:pe,children:"Guests aboard"}),(0,c.jsx)("input",{type:"number",inputMode:"numeric",style:Y,value:ie.guests,onChange:u=>Et({...ie,guests:u.target.value})}),(0,c.jsx)("div",{style:pe,children:"Shore power?"}),(0,c.jsxs)("div",{style:He,children:[(0,c.jsx)("button",{style:de(ie.power),onClick:()=>Et({...ie,power:!0}),children:"Yes"}),(0,c.jsx)("button",{style:de(!ie.power),onClick:()=>Et({...ie,power:!1}),children:"No"})]}),(0,c.jsx)("button",{style:At,onClick:Mp,children:"Make the request"}),gr&&(0,c.jsx)("div",{style:L,children:gr}),mr&&(0,c.jsxs)("div",{children:[(0,c.jsx)("textarea",{readOnly:!0,style:{...Y,fontSize:15,height:130,marginTop:8},value:mr}),(0,c.jsx)("div",{style:L,children:"Paste this into your VP Marine chat. The app can't contact anyone itself."})]})]})]})]},"2"),(0,c.jsxs)("div",{children:[(0,c.jsx)("div",{style:Ge,children:"What's the plan?"}),Tr([...Sg,"Other"],"purpose",!0,"What for?"),k.purpose==="Crabbing"&&(0,c.jsxs)("div",{style:{marginTop:14},children:[(0,c.jsx)("div",{style:L,children:"Crabs kept (add later if you like)"}),(0,c.jsx)("input",{type:"number",inputMode:"numeric",style:Y,value:k.crabs,onChange:u=>Re({...k,crabs:u.target.value})})]})]},"3"),(0,c.jsxs)("div",{children:[(0,c.jsx)("div",{style:Ge,children:"Trip check"}),Er!==null?(0,c.jsxs)("div",{style:{fontSize:34,fontWeight:600},children:[ul(Er),(0,c.jsxs)("div",{style:{...L,fontWeight:400},children:["\u2248 estimate, by water may differ (straight line \xD7 ",ia,")"]})]}):k.from===k.to?(0,c.jsx)("div",{style:L,children:"Out and back from the same spot. Add the nm if you know it."}):null,Er===null&&(0,c.jsxs)("div",{children:[(0,c.jsx)("div",{style:pe,children:"Distance (nm), your number"}),(0,c.jsx)("input",{type:"number",inputMode:"decimal",style:Y,value:k.nmManual,onChange:u=>Re({...k,nmManual:u.target.value})})]}),it!==null&&(0,c.jsxs)("div",{style:be,children:[(0,c.jsxs)("div",{style:{fontSize:20},children:["\u23F1 \u2248 ",_n(it)," at ",la," kn"]}),gl>0&&Rn!==null&&xr!==null&&(0,c.jsxs)("div",{style:{fontSize:20,marginTop:6},children:["\u26FD \u2248 ",Rn.toFixed(1)," gal \xB7 ",xr.toFixed(1)," with 20% reserve"]}),(0,c.jsxs)("div",{style:L,children:["Burn rate ",x.burn," gal/hr is a placeholder, to confirm. Set yours in Settings."]}),(0,c.jsxs)("div",{style:L,children:["\u{1F305} Sunset ",pr(Mo)," \xB7 ",Cr>0?`${_n(Cr)} of daylight left`:"after dark"]})]}),(0,c.jsxs)("div",{style:be,children:[(0,c.jsx)("div",{style:{fontSize:20,fontWeight:600},children:"\u{1F32C} Forecast"}),(0,c.jsx)("div",{style:L,children:"One-tap forecast links. Tap in the wind you see."}),p.map(u=>(0,c.jsxs)("a",{style:ca,href:u.url,target:"_blank",rel:"noreferrer",children:[u.id," \xB7 ",u.name]},u.id)),(0,c.jsx)("div",{style:pe,children:"Forecast wind (kn)"}),(0,c.jsx)("input",{type:"number",inputMode:"numeric",style:Y,value:k.wind,onChange:u=>Re({...k,wind:u.target.value})}),(0,c.jsx)("button",{style:{...de(k.advisory),width:"100%",marginTop:10},onClick:()=>Re({...k,advisory:!k.advisory}),children:k.advisory?"\u26A0\uFE0F Small craft / wind warning posted":"No advisory"}),rl()&&(0,c.jsx)("button",{style:{...de(k.deception),width:"100%",marginTop:10},onClick:()=>Re({...k,deception:!k.deception}),children:k.deception?"\u{1F300} Going through Deception Pass":"Not via Deception Pass"}),rl()&&k.deception&&(0,c.jsx)("a",{style:ca,href:xg,target:"_blank",rel:"noreferrer",children:"Deception Pass (Narrows) current predictions \xB7 NOAA"})]}),On.length>0&&(0,c.jsx)("div",{style:{...be,borderColor:t.text.warning},children:On.map(u=>(0,c.jsxs)("div",{style:{fontSize:17,margin:"4px 0"},children:["\u26A0\uFE0F ",u]},u))}),No&&(0,c.jsxs)("div",{style:be,children:[(0,c.jsx)("div",{style:{fontSize:20,fontWeight:600},children:"\u{1F3C1} ETA game"}),(0,c.jsxs)("div",{style:{fontSize:18,marginTop:6},children:["App's guess: ",pr(No)]}),(0,c.jsx)("div",{style:pe,children:"Your guess"}),(0,c.jsx)("input",{type:"time",style:Y,value:k.capEta,onChange:u=>Re({...k,capEta:u.target.value})}),(0,c.jsx)("div",{style:L,children:"Tap Arrived! on the home screen when you tie up. Closest wins."})]})]},"4"),(0,c.jsxs)("div",{children:[(0,c.jsx)("div",{style:Ge,children:"Who's aboard?"}),Tr(["1","2","3+"],"aboard"),(0,c.jsx)("button",{style:{...de(k.deborah),width:"100%",marginTop:12},onClick:()=>Re({...k,deborah:!k.deborah}),children:k.deborah?"Deborah's aboard \u2713":"+ Deborah"})]},"5"),(0,c.jsxs)("div",{children:[(0,c.jsx)("div",{style:Ge,children:"How's the weather?"}),Tr(["\u2600\uFE0F Sunny","\u2601\uFE0F Cloudy","\u{1F4A8} Breezy","\u{1F327} Rain","\u{1F32B} Fog","\u{1F319} Night"],"weather")]},"6"),(0,c.jsxs)("div",{children:[(0,c.jsx)("div",{style:Ge,children:H.meterLabel}),ot>0&&(0,c.jsxs)("div",{style:L,children:["Last time: ",ot,o?` (true ${ot+o})`:"",Ft?"":i.date?` \xB7 ${i.date}`:""]}),(0,c.jsx)("input",{type:"number",inputMode:"decimal",style:Y,placeholder:ot?String(ot):"Hours as read",value:k.meter,onChange:u=>Re({...k,meter:u.target.value})}),k.meter!==""&&o>0&&(0,c.jsxs)("div",{style:{...L,fontSize:20,color:t.text.primary},children:["True hours: ",hl+o,typeof zn=="number"&&zn>0?` \xB7 +${zn.toFixed(1)} hrs`:""]}),typeof zn=="number"&&zn>6&&(0,c.jsxs)("div",{style:{...L,fontSize:18,color:t.text.accent},children:["\u2693 Welcome back, Captain! She's run ",zn.toFixed(1)," hours since the last log. Sneaky trip in there? Add it anytime."]})]},"7"),(0,c.jsxs)("div",{children:[(0,c.jsx)("div",{style:Ge,children:"Rate the spot"}),(0,c.jsxs)("div",{style:pe,children:["Rate ",Po?k.to:"the spot"," (optional, or rate on arrival)"]}),da(k.stars,u=>Re({...k,stars:u})),(0,c.jsx)("div",{style:{...L,textAlign:"center"},children:"starfish"})]},"9")],[D,Ue]=(0,I.useState)(null),El=u=>Ue({id:u.id,notes:u.notes||"",tools:u.tools||[],media:u.media||[],clips:u.clips!==void 0?String(u.clips):"",photos:u.photos!==void 0?String(u.photos):"",tags:u.tags||[],p2p:!!u.p2p,maint:!!u.maint,maintText:u.maintText||""}),Dp=()=>{let u=D;kr(h.map(w=>w.id===u.id?{...w,notes:u.notes,maint:u.maint,maintText:u.maintText,tools:u.tools.length?u.tools:void 0,media:u.media.length?u.media:void 0,clips:u.clips!==""?Number(u.clips)||0:void 0,photos:u.photos!==""?Number(u.photos)||0:void 0,tags:u.tags.length?u.tags:void 0,p2p:u.p2p}:w)),Ue(null),an(""),al()},va=u=>(0,c.jsxs)("div",{children:[(0,c.jsxs)("div",{children:[(0,c.jsx)("div",{style:Ge,children:"Best moment?"}),(0,c.jsx)("input",{style:Y,placeholder:"One line is plenty",value:D.notes,onChange:w=>Ue({...D,notes:w.target.value})}),(0,c.jsx)("div",{style:L,children:"\u{1F399} Tap the iPhone keyboard mic to talk. Your logbook entry gets written up for you."})]}),",",(0,c.jsxs)("div",{children:[(0,c.jsx)("div",{style:Ge,children:"What did you film?"}),(0,c.jsx)("div",{style:pe,children:"Shot on"}),(0,c.jsx)("div",{style:He,children:vg.map(w=>(0,c.jsx)("button",{style:{...de(D.tools.includes(w)),flex:"1 1 30%",minHeight:52,fontSize:17},onClick:()=>Ue({...D,tools:D.tools.includes(w)?D.tools.filter(z=>z!==w):[...D.tools,w]}),children:w},w))}),(0,c.jsx)("div",{style:pe,children:"What kind"}),(0,c.jsx)("div",{style:He,children:yg.map(w=>(0,c.jsx)("button",{style:{...de(D.media.includes(w)),flex:"1 1 30%",minHeight:52,fontSize:17},onClick:()=>Ue({...D,media:D.media.includes(w)?D.media.filter(z=>z!==w):[...D.media,w]}),children:w},w))}),(0,c.jsxs)("div",{style:He,children:[(0,c.jsxs)("div",{style:{flex:"1 1 40%"},children:[(0,c.jsx)("div",{style:pe,children:"Video clips"}),(0,c.jsx)("input",{type:"number",inputMode:"numeric",style:Y,placeholder:"0",value:D.clips,onChange:w=>Ue({...D,clips:w.target.value})})]}),(0,c.jsxs)("div",{style:{flex:"1 1 40%"},children:[(0,c.jsx)("div",{style:pe,children:"Photos"}),(0,c.jsx)("input",{type:"number",inputMode:"numeric",style:Y,placeholder:"0",value:D.photos,onChange:w=>Ue({...D,photos:w.target.value})})]})]}),(0,c.jsx)("div",{style:pe,children:"Best moment tags"}),(0,c.jsx)("div",{style:He,children:wg.map(w=>(0,c.jsx)("button",{style:{...de(D.tags.includes(w)),flex:"1 1 30%",minHeight:52,fontSize:17},onClick:()=>Ue({...D,tags:D.tags.includes(w)?D.tags.filter(z=>z!==w):[...D.tags,w]}),children:w},w))}),(0,c.jsx)("button",{style:{...de(D.p2p),width:"100%",marginTop:12},onClick:()=>Ue({...D,p2p:!D.p2p}),children:D.p2p?"\u2B50 Port to Port worthy!":"\u2606 Port to Port worthy?"}),(0,c.jsxs)("div",{style:{...be,textAlign:"center"},children:[(0,c.jsx)("div",{style:L,children:"Trip ID"}),(0,c.jsx)("div",{style:{fontSize:28,fontWeight:600,fontFamily:t.font.mono,userSelect:"all"},children:un(u)}),(0,c.jsx)("button",{style:fe,onClick:()=>il(un(u),J),children:"Copy Trip ID"}),j&&(0,c.jsx)("div",{style:L,children:j}),(0,c.jsxs)("div",{style:L,children:["Tip: name the footage folder with this ID, e.g. ",un(u)," ",u.to||"Place",", so clips match the log."]})]})]}),",",(0,c.jsxs)("div",{children:[(0,c.jsx)("div",{style:Ge,children:"Any boat work?"}),(0,c.jsx)("button",{style:{...de(D.maint),width:"100%"},onClick:()=>Ue({...D,maint:!D.maint}),children:D.maint?"\u{1F527} Yes, did some work":"Nope, just fun"}),D.maint&&(0,c.jsx)("input",{style:{...Y,marginTop:12},placeholder:"What did you do?",value:D.maintText,onChange:w=>Ue({...D,maintText:w.target.value})})]}),(0,c.jsx)("button",{style:At,onClick:Dp,children:"\u{1F514} Log it!"}),(0,c.jsx)("button",{style:{...fe,border:"none"},onClick:()=>Ue(null),children:"Later"})]}),Ip=ga.findIndex(u=>u&&u.key==="6");if((0,I.useEffect)(()=>{R===Ip&&k.weather===""&&Tg(new Date(k.when))&&Re({...k,weather:"\u{1F319} Night"})},[R]),To)return(0,c.jsx)(Rg,{e:To,tally:lt,onClose:()=>wr(null)});if(R>=0)return(0,c.jsxs)("div",{style:aa,children:[(0,c.jsx)("div",{style:{height:6,borderRadius:3,background:t.border.subtle,marginBottom:14},children:(0,c.jsx)("div",{style:{height:6,borderRadius:3,width:`${(R+1)/sl*100}%`,background:t.dataviz.categorical[0],transition:"width .3s"}})}),R>ea&&(0,c.jsx)("div",{style:{...L,fontSize:15},children:Rp}),ga[R],(0,c.jsx)("button",{style:At,onClick:()=>R===sl-1?ua():m(R+1),children:R===sl-1?"\u{1F514} Log it!":"Next"}),(0,c.jsx)("button",{style:fe,onClick:()=>m(R-1),children:R===0?"Cancel":"Back"}),R>=ea&&R<sl-1&&(0,c.jsx)("button",{style:{...fe,border:"none"},onClick:ua,children:"Done, log it now"})]});let jt=h.find(u=>u.id===dl),$p=$t.pending?`\u23F3 ${$t.pending} waiting to sync${$t.err?` \xB7 ${$t.err}`:""}`:$t.last?`\u2705 All synced to the logbook \xB7 ${$t.last}`:$t.err?$t.err:"Logbook sync ready";return(0,c.jsxs)("div",{style:aa,children:[(0,c.jsx)("style",{children:"@keyframes stampIn{0%{transform:scale(3) rotate(-25deg);opacity:0}60%{transform:scale(.9) rotate(-12deg);opacity:1}100%{transform:scale(1) rotate(-12deg);opacity:1}}"}),f&&(0,c.jsxs)("div",{style:{position:"fixed",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",pointerEvents:"none",zIndex:10},children:[(0,c.jsx)("div",{style:{animation:"stampIn .5s ease-out forwards",border:`6px solid ${t.text.danger}`,color:t.text.danger,borderRadius:16,padding:"12px 28px",fontSize:52,fontWeight:600,background:t.bg.base},children:"LOGGED!"}),(0,c.jsx)("div",{style:{marginTop:18,fontSize:20,background:t.bg.base,padding:"4px 10px",borderRadius:8},children:f})]}),(0,c.jsxs)("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center"},children:[(0,c.jsxs)("div",{style:{fontSize:30,fontWeight:600},children:["\u2693 ",H.name]}),(0,c.jsx)("button",{style:{...fe,width:"auto",marginTop:0,minHeight:40,padding:"0 12px",fontSize:15},onClick:e.onSwitch,children:"Switch"})]}),(0,c.jsxs)("div",{style:L,children:["Trip log \xB7 ",cr," \xB7 ",sa>0?`\u{1F525} ${sa}-trip streak`:"Ready when you are"]}),(0,c.jsx)("div",{style:{...L,fontSize:14},onClick:()=>ko(),children:$p}),je&&(0,c.jsxs)("div",{style:be,children:[(0,c.jsxs)("div",{style:{fontSize:20,fontWeight:600},children:["\u{1F6A4} Underway to ",je.to]}),(0,c.jsxs)("div",{style:L,children:["App says ",je.appEta,je.captainEta?` \xB7 you said ${je.captainEta}`:""]}),(0,c.jsx)("button",{style:{...At,background:"transparent",color:t.text.primary,border:`2px solid ${t.border.strong}`,minHeight:72,fontSize:24},onClick:()=>ma(je.id),children:"\u{1F4DD} Note"}),q===je.id&&ha(),(je.journal||[]).length>0&&(0,c.jsxs)("div",{style:L,children:[(je.journal||[]).length," note",(je.journal||[]).length===1?"":"s"," so far \xB7 last: ",ta((je.journal||[])[(je.journal||[]).length-1])]}),(0,c.jsx)("button",{style:At,onClick:()=>Tp(je),children:"\u2693 Arrived!"})]}),jt&&(0,c.jsxs)("div",{style:be,children:[yr&&(0,c.jsx)("div",{style:{fontSize:18,marginBottom:8},children:yr}),(0,c.jsxs)("div",{style:{fontSize:18},children:["How was ",jt.to,"? Give it starfish:"]}),da(jt.stars||0,u=>_p(jt.id,u)),(0,c.jsx)("button",{style:{...fe,border:"none"},onClick:()=>an(""),children:"Later"}),D&&D.id===jt.id?va(jt):(0,c.jsx)("button",{style:fe,onClick:()=>El(jt),children:"\u270F\uFE0F Best moment, film & boat work"})]}),Mn&&!jt&&(0,c.jsx)("button",{style:fe,onClick:()=>wr(h.find(u=>u.id===Mn.id)||Mn),children:"\u25B6\uFE0F Play my trip"}),(0,c.jsxs)("div",{style:{...He,marginTop:14},children:[kl("hours",Ep.toFixed(1)),kl("trips",String(zo.length)),kl("crabs",String(xp))]}),(0,c.jsxs)("div",{style:L,children:["This season",ot?` \xB7 last meter ${ot}${o?` (true ${ot+o})`:""}`:""]}),(0,c.jsxs)("div",{style:{...be,textAlign:"center"},children:[(0,c.jsx)("div",{style:L,children:"ETA game \xB7 forever"}),(0,c.jsxs)("div",{style:{fontSize:26,fontWeight:600},children:["Captain ",lt.cap," \xB7 App ",lt.app]}),lt.streak>1&&(0,c.jsxs)("div",{style:L,children:["\u{1F525} ",lt.streak," Captain wins in a row"]}),(0,c.jsx)("div",{style:L,children:Cp})]}),(0,c.jsx)("button",{style:{...At,minHeight:90,fontSize:26},onClick:()=>{Re(oa()),Ae(!1),hr(""),vr(""),Pe(!1),m(0)},children:"\u{1F6A4} Log a trip"}),(0,c.jsxs)("div",{style:{...He,marginTop:4},children:[(0,c.jsx)("button",{style:{...fe,flex:"1 1 45%"},onClick:()=>S(v==="history"?"home":"history"),children:v==="history"?"Hide history":"History"}),(0,c.jsx)("button",{style:{...fe,flex:"1 1 45%"},onClick:()=>S(v==="places"?"home":"places"),children:v==="places"?"Hide places":"\u2B50 Places"}),h.length>0&&(0,c.jsx)("button",{style:{...fe,flex:"1 1 45%"},onClick:Pp,children:"Export entries"}),(0,c.jsx)("button",{style:{...fe,flex:"1 1 45%"},onClick:()=>S(v==="settings"?"home":"settings"),children:v==="settings"?"Hide settings":"\u2699\uFE0F Settings"})]}),M&&(0,c.jsx)("div",{style:L,children:M}),T&&(0,c.jsx)("textarea",{readOnly:!0,style:{...Y,fontSize:12,height:120,marginTop:8,fontFamily:t.font.mono},value:T}),v==="settings"&&(0,c.jsxs)("div",{style:be,children:[(0,c.jsx)("div",{style:pe,children:"Cruise speed (kn)"}),(0,c.jsx)("input",{type:"number",inputMode:"decimal",style:Y,value:x.speed,onChange:u=>_o({...x,speed:u.target.value})}),(0,c.jsx)("div",{style:pe,children:"Fuel burn (gal/hr) \xB7 to confirm, set yours"}),(0,c.jsx)("input",{type:"number",inputMode:"decimal",style:Y,value:x.burn,onChange:u=>_o({...x,burn:u.target.value})}),(0,c.jsx)("div",{style:pe,children:"Usable fuel tank (gal) \xB7 to confirm"}),(0,c.jsx)("input",{type:"number",inputMode:"decimal",style:Y,placeholder:"Not set",value:x.tank,onChange:u=>_o({...x,tank:u.target.value})}),(0,c.jsx)("div",{style:pe,children:"Route factor (straight line \xD7 this)"}),(0,c.jsx)("input",{type:"number",inputMode:"decimal",style:Y,value:x.factor,onChange:u=>_o({...x,factor:u.target.value})}),(0,c.jsx)("div",{style:L,children:"Settings are kept per boat. Place coordinates are approximate and not for navigation."})]}),v==="places"&&Sl.length>0&&(0,c.jsxs)("div",{style:be,children:[Sl.map(u=>(0,c.jsxs)("div",{style:{borderBottom:`1px solid ${t.border.subtle}`,padding:"10px 0"},children:[(0,c.jsx)("div",{style:{fontSize:18,fontWeight:600},children:u.name}),(0,c.jsxs)("div",{style:L,children:[u.avg?(0,c.jsxs)(c.Fragment,{children:[(0,c.jsx)(mp,{n:Math.round(u.avg)})," ",u.avg.toFixed(1)," starfish"]}):"Not rated yet"," \xB7 ",u.visits," visit",u.visits===1?"":"s"," \xB7 last ",u.last.slice(0,10)]})]},u.name)),(0,c.jsx)("button",{style:fe,onClick:Np,children:"Share ratings"}),Q&&(0,c.jsx)("div",{style:L,children:Q}),Nn&&(0,c.jsx)("textarea",{readOnly:!0,style:{...Y,fontSize:14,height:140,marginTop:8},value:Nn})]}),v==="history"&&h.length>0&&(0,c.jsxs)("div",{style:{...He,marginTop:10},children:[(0,c.jsx)("button",{style:{...de(!K),minHeight:44,fontSize:16},onClick:()=>O(!1),children:"All trips"}),(0,c.jsx)("button",{style:{...de(K),minHeight:44,fontSize:16},onClick:()=>O(!0),children:"\u{1F3AC} Media"}),(0,c.jsx)("button",{style:{...de(Sr),minHeight:44,fontSize:16},onClick:()=>wp(!Sr),children:Sr?"\u2B50 Story-worthy only":"\u2606 Story-worthy"})]}),v==="history"&&pa.length>0&&(0,c.jsxs)("div",{style:be,children:[(0,c.jsx)("div",{style:{fontSize:18,fontWeight:600},children:"\u{1F44B} People met"}),pa.map((u,w)=>(0,c.jsxs)("div",{style:L,children:[u.name||"Someone",u.boat?` \xB7 \u26F5 ${u.boat}`:""," \xB7 ",u.trip.to," ",u.at.slice(0,10),u.text?` \xB7 ${u.text}`:""]},w))]}),v==="history"&&h.filter(u=>(!K||dp(u)||u.p2p)&&(!Sr||(u.journal||[]).some(w=>w.star))).map(u=>(0,c.jsxs)("div",{style:{borderBottom:`1px solid ${t.border.subtle}`,padding:"12px 0"},children:[(0,c.jsxs)("div",{style:{fontSize:18,fontWeight:600},children:[u.from," \u2192 ",u.to||"?",u.purpose?` \xB7 ${u.purpose}`:""]}),(0,c.jsxs)("div",{style:L,children:[u.when.replace("T"," ")," \xB7 ",u.weather," \xB7 aboard ",u.aboard||"?",u.deborah?" + Deborah":"",u.by?` \xB7 logged by ${u.by}`:""]}),(0,c.jsxs)("div",{style:L,children:[un(u)," \xB7 Meter ",u.meter,o?` (true ${u.trueHrs})`:"",u.crabs?` \xB7 \u{1F980} ${u.crabs}`:"",u.maint?` \xB7 \u{1F527} ${u.maintText}`:""]}),(u.nm!==void 0||u.gal!==void 0)&&(0,c.jsxs)("div",{style:L,children:[u.nm!==void 0?ul(u.nm):"",u.hrsEst!==void 0?` \xB7 \u2248 ${_n(u.hrsEst)}`:"",u.gal!==void 0?` \xB7 \u2248 ${u.gal.toFixed(1)} gal`:"",u.wind!==void 0?` \xB7 wind ${u.wind} kn`:"",u.advisory?" \xB7 advisory":"",u.deception?" \xB7 Deception Pass":""]}),(u.appEta||u.arrived)&&(0,c.jsxs)("div",{style:L,children:["ETA app ",u.appEta||"\u2014"," \xB7 you ",u.captainEta||"\u2014",u.arrived?` \xB7 arrived ${u.arrived.slice(11)}`:"",u.etaWinner?` \xB7 ${u.etaWinner} wins`:""]}),u.stars?(0,c.jsxs)("div",{style:L,children:[(0,c.jsx)(mp,{n:u.stars})," starfish"]}):null,u.notes&&(0,c.jsx)("div",{style:L,children:u.notes}),(dp(u)||u.p2p)&&(0,c.jsxs)("div",{style:L,children:["\u{1F3AC} ",u.p2p?"\u2B50 Port to Port worthy":"",u.tools?` \xB7 ${u.tools.join(", ")}`:"",u.media?` \xB7 ${u.media.join(", ")}`:"",u.clips?` \xB7 ${u.clips} clips`:"",u.photos?` \xB7 ${u.photos} photos`:"",u.tags?` \xB7 #${u.tags.join(" #")}`:""]}),(u.journal||[]).length>0&&(0,c.jsx)("div",{style:{borderLeft:`3px solid ${t.dataviz.categorical[0]}`,paddingLeft:12,marginTop:8},children:(u.journal||[]).filter(w=>!Sr||w.star).map((w,z)=>(0,c.jsxs)("div",{style:{margin:"6px 0"},children:[(0,c.jsxs)("div",{style:{fontSize:14,color:t.text.tertiary},children:[w.at.slice(11,16)," \xB7 ",w.cat,w.star?" \xB7 \u2B50":""]}),(0,c.jsxs)("div",{style:{fontSize:16},children:[w.text,w.name?` (${w.name}${w.boat?`, \u26F5 ${w.boat}`:""})`:w.boat?` (\u26F5 ${w.boat})`:""]})]},z))}),(0,c.jsxs)("div",{style:He,children:[(0,c.jsx)("button",{style:{...fe,minHeight:44,marginTop:6,flex:"1 1 45%"},onClick:()=>wr(u),children:"\u25B6\uFE0F Play my trip"}),(0,c.jsx)("button",{style:{...fe,minHeight:44,marginTop:6,flex:"1 1 45%"},onClick:()=>ma(u.id),children:"\u{1F4DD} Note"}),(0,c.jsx)("button",{style:{...fe,minHeight:44,marginTop:6,flex:"1 1 45%"},onClick:()=>D&&D.id===u.id?Ue(null):El(u),children:"\u270F\uFE0F After trip"})]}),q===u.id&&ha(),D&&D.id===u.id&&va(u)]},u.id)),!g&&(0,c.jsx)("div",{style:{...L,marginTop:16,fontSize:13},children:"This browser isn't keeping data. Use Export entries before you leave."})]})}var c,mg,hg,gg,vg,yg,wg,Sg,Xu,qu,kg,Eg,xg,rl,ll,sl,ea,vp=Lo(()=>{Vu();Yu();sp();c=cn(Eo()),mg=["Sight","Experience","Bridge","Lock","Person we met","Wildlife","Food or drink","Funny","Problem","Story idea"],hg=["Fremont Bridge","Ballard Bridge","Montlake Bridge","University Bridge","Hiram M. Chittenden Locks","Deception Pass Bridge"],gg=["Houtwiel bridge (Sneek)","Prinses Margrietkanaal bridges","Lemmer lock","Houtribsluizen (Lelystad)","Krabbersgatsluizen (Enkhuizen)","Oranjesluizen (Amsterdam)"];vg=["iPhone","GoPro","Drone","Insta360","Camera"],yg=["Video","Photos","Timelapse","Aerial","Audio"],wg=["Wildlife","Sunset","Crabbing","Docking","Scenery","Crew","Funny"];Sg=["Crabbing","Just a cruise","Fuel stop"],Xu=["Crabbing","Just a cruise","Fuel stop"],qu={speed:"7",burn:"2",tank:"",factor:"1.3"},kg=[{id:"PZZ133",name:"Northern Inland Waters & San Juans",url:"https://forecast.weather.gov/MapClick.php?zoneid=PZZ133"},{id:"PZZ134",name:"Admiralty Inlet",url:"https://forecast.weather.gov/MapClick.php?zoneid=PZZ134"},{id:"PZZ135",name:"Puget Sound & Hood Canal",url:"https://forecast.weather.gov/MapClick.php?zoneid=PZZ135"}],Eg=[{id:"KNMI",name:"KNMI wind & weather (Netherlands)",url:"https://www.knmi.nl/nederland-nu/weer/verwachtingen"},{id:"Windfinder",name:"Windfinder \xB7 IJsselmeer",url:"https://www.windfinder.com/forecast/ijsselmeer"},{id:"Met Office",name:"UK inshore waters forecast",url:"https://weather.metoffice.gov.uk/specialist-forecasts/coast-and-sea/inshore-waters-forecast"}],xg="https://tidesandcurrents.noaa.gov/noaacurrents/predictions?id=PUG1701_33",rl=()=>H.prefix==="HM2";ll=typeof Image!="undefined"?Object.assign(new Image,{src:"starfish.png"}):null;sl=9,ea=2});var Dg=ht(()=>{var Pn=cn(Pr()),yp=cn(qf());vp();Yu();Vu();var B=cn(Eo());function cl(e,t){try{let n=localStorage.getItem(e);return n?JSON.parse(n):t}catch{return t}}function xo(e,t){try{localStorage.setItem(e,JSON.stringify(t))}catch{}}function Og(){let e=So(),[t,n]=(0,Pn.useState)(cl("triplog-user","")),[r,o]=(0,Pn.useState)(cl("triplog-names",["Wishy","Deborah"])),[i,l]=(0,Pn.useState)(cl("triplog-other-boats",[])),[s,a]=(0,Pn.useState)(null),[p,h]=(0,Pn.useState)(""),[y,g]=(0,Pn.useState)(""),C={fontFamily:e.font.family,color:e.text.primary,background:e.bg.base,minHeight:"100vh",padding:"calc(env(safe-area-inset-top) + 18px) 18px 30px",maxWidth:520,margin:"0 auto",boxSizing:"border-box"},x={width:"100%",minHeight:70,fontSize:22,borderRadius:18,border:`2px solid ${e.border.default}`,background:e.bg.elevated,color:e.text.primary,fontFamily:e.font.family,marginTop:12,cursor:"pointer"},_={...x,padding:14,boxSizing:"border-box",textAlign:"left"},R={color:e.text.secondary,fontSize:16,margin:"6px 0"};if(s)return(0,B.jsx)(na,{onSwitch:()=>a(null)},s.key);if(!t)return(0,B.jsxs)("div",{style:C,children:[(0,B.jsx)("div",{style:{fontSize:30,fontWeight:700},children:"\u{1F514} HM2 Log"}),(0,B.jsx)("div",{style:{fontSize:26,fontWeight:600,margin:"18px 0 6px"},children:"Who's logging?"}),(0,B.jsx)("div",{style:R,children:'Asked once on this phone. Every entry gets stamped "Logged by".'}),r.map(S=>(0,B.jsx)("button",{style:x,onClick:()=>{n(S),xo("triplog-user",S)},children:S},S)),y==="name"?(0,B.jsxs)("div",{children:[(0,B.jsx)("input",{style:_,autoFocus:!0,placeholder:"Your name",value:p,onChange:S=>h(S.target.value)}),(0,B.jsx)("button",{style:{...x,background:e.fill.primary,color:e.text.onPrimary,border:"none"},onClick:()=>{let S=p.trim();if(!S)return;let T=[...r,S];o(T),xo("triplog-names",T),n(S),xo("triplog-user",S),g(""),h("")},children:"That's me"})]}):(0,B.jsx)("button",{style:x,onClick:()=>g("name"),children:"+ Add name"})]});let m=[Qu,ep,...i.map(Ku)],f=S=>{let T=cl(S.key,[]),N=String(new Date().getFullYear()),M=T.filter(V=>V.when.startsWith(N));return{trips:M.length,crabs:M.reduce((V,F)=>V+(F.crabs||0),0),last:T[0]?T[0].when.slice(0,10):""}},d=m.map(f).reduce((S,T)=>({trips:S.trips+T.trips,crabs:S.crabs+T.crabs}),{trips:0,crabs:0}),v=S=>{tp(S,t),a(S)};return(0,B.jsxs)("div",{style:C,children:[(0,B.jsx)("div",{style:{fontSize:30,fontWeight:700},children:"\u{1F514} HM2 Log"}),(0,B.jsxs)("div",{style:R,children:["Hi ",t," \xB7 ",(0,B.jsx)("span",{style:{textDecoration:"underline"},onClick:()=>{n(""),xo("triplog-user","")},children:"not you?"})]}),(0,B.jsxs)("div",{style:{border:`1px solid ${e.border.default}`,borderRadius:16,padding:12,marginTop:10,textAlign:"center"},children:[(0,B.jsx)("div",{style:R,children:"Fleet this season (this phone)"}),(0,B.jsxs)("div",{style:{fontSize:24,fontWeight:600},children:[d.trips," trips \xB7 \u{1F980} ",d.crabs]})]}),(0,B.jsx)("div",{style:{fontSize:26,fontWeight:600,margin:"18px 0 0"},children:"Which boat?"}),m.map(S=>{let T=f(S);return(0,B.jsxs)("button",{style:x,onClick:()=>v(S),children:[S.name,(0,B.jsxs)("div",{style:{fontSize:14,color:e.text.secondary},children:[T.trips," trips this season",T.last?` \xB7 last ${T.last}`:""]})]},S.key)}),y==="boat"?(0,B.jsxs)("div",{children:[(0,B.jsx)("input",{style:_,autoFocus:!0,placeholder:"Boat name",value:p,onChange:S=>h(S.target.value)}),(0,B.jsx)("button",{style:{...x,background:e.fill.primary,color:e.text.onPrimary,border:"none"},onClick:()=>{let S=p.trim();if(!S)return;let T=i.includes(S)?i:[...i,S];l(T),xo("triplog-other-boats",T),g(""),h(""),v(Ku(S))},children:"Log this boat"})]}):(0,B.jsx)("button",{style:x,onClick:()=>g("boat"),children:"+ Other boat"})]})}(0,yp.createRoot)(document.getElementById("root")).render((0,B.jsx)(Og,{}));"serviceWorker"in navigator&&navigator.serviceWorker.register("sw.js").catch(()=>{})});Dg();})();
-/*! Bundled license information:
+/* HM2 Log v5. Fresh store: IndexedDB hm2log-v5 (localStorage only if IndexedDB fails). */
+import {
+  ALONG_TYPES,
+  BEST_TAGS,
+  BOATS,
+  CONDITIONS,
+  DECEPTION_PASS_URL,
+  FILM_KINDS,
+  FILM_TOOLS,
+  PERSON_CATEGORIES,
+  PURPOSES,
+  SERVICE_TAGS,
+  ZONES,
+  describeWeather,
+  exportPayload,
+  freshState,
+  importPayload,
+  makeTripCode,
+  normalizeState,
+  nowIso,
+  sentenceFromChips,
+  uid,
+  weatherUrl,
+} from "./logic.js";
 
-react/cjs/react.production.min.js:
-  (**
-   * @license React
-   * react.production.min.js
-   *
-   * Copyright (c) Facebook, Inc. and its affiliates.
-   *
-   * This source code is licensed under the MIT license found in the
-   * LICENSE file in the root directory of this source tree.
-   *)
+const KIND_LABEL = {
+  note: "Note",
+  repair: "Repair",
+  wash: "Wash",
+  fuel: "Fuel",
+  water: "Water fill",
+  pumpout: "Pump-out",
+  rating: "Narrative rating",
+  crab: "Crab catch",
+};
+const TICKET_STATUS = [
+  ["open", "Open"],
+  ["progress", "In progress"],
+  ["waiting", "Waiting on parts"],
+  ["closed", "Closed"],
+  ["cancelled", "Cancelled"],
+];
+const REGION_LABEL = { pnw: "Puget Sound", nl: "Netherlands", uk: "UK", other: "Other" };
+const CHECKS = [
+  ["spare", "Spare camera in the bag"],
+  ["cards", "Cards and a battery packed"],
+  ["cloth", "Lens cloth in the helm pocket"],
+];
 
-scheduler/cjs/scheduler.production.min.js:
-  (**
-   * @license React
-   * scheduler.production.min.js
-   *
-   * Copyright (c) Facebook, Inc. and its affiliates.
-   *
-   * This source code is licensed under the MIT license found in the
-   * LICENSE file in the root directory of this source tree.
-   *)
+const ui = {
+  screen: "home",
+  boatId: "hm2",
+  tripId: null,
+  form: null,
+  stash: null,
+  picker: null,
+  confirm: null,
+  flash: "",
+  online: navigator.onLine,
+  busy: false,
+  activityPrompt: false,
+  journalScope: "trip",
+  maintScope: "open",
+  peopleScope: "all",
+  serviceTag: null,
+  placeScope: "recents",
+  placeQuery: "",
+  placeShow: 12,
+  mediaScope: "planned",
+  ticketId: null,
+  ticketTab: "details",
+};
+let state = null;
+let saveTimer = 0;
+let paintedScreen = "";
 
-react-dom/cjs/react-dom.production.min.js:
-  (**
-   * @license React
-   * react-dom.production.min.js
-   *
-   * Copyright (c) Facebook, Inc. and its affiliates.
-   *
-   * This source code is licensed under the MIT license found in the
-   * LICENSE file in the root directory of this source tree.
-   *)
+const app = document.getElementById("app");
 
-react/cjs/react-jsx-runtime.production.min.js:
-  (**
-   * @license React
-   * react-jsx-runtime.production.min.js
-   *
-   * Copyright (c) Facebook, Inc. and its affiliates.
-   *
-   * This source code is licensed under the MIT license found in the
-   * LICENSE file in the root directory of this source tree.
-   *)
-*/
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+}
+
+function boat() {
+  return BOATS[ui.boatId] || BOATS.hm2;
+}
+
+function flash(message) {
+  ui.flash = message;
+  let node = document.getElementById("flash");
+  if (!node) return;
+  node.hidden = !message;
+  node.textContent = message;
+  clearTimeout(flash.timer);
+  flash.timer = setTimeout(() => {
+    ui.flash = "";
+    node = document.getElementById("flash");
+    if (node) node.hidden = true;
+  }, 2800);
+}
+
+function saveLabel() {
+  return ui.online ? "Saved on this phone." : "No signal. Saved on this phone.";
+}
+
+function updateSaveLabel() {
+  const node = document.getElementById("save-state");
+  if (node) node.textContent = saveLabel();
+}
+
+function fmt(iso) {
+  if (!iso) return "";
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return String(iso);
+  return date.toLocaleString(undefined, { day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" });
+}
+
+function toLocalInput(iso) {
+  const date = iso ? new Date(iso) : new Date();
+  if (Number.isNaN(date.getTime())) return "";
+  date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+  return date.toISOString().slice(0, 16);
+}
+
+function fromLocalInput(value) {
+  if (!value) return nowIso();
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? nowIso() : date.toISOString();
+}
+
+function tripById(id) {
+  return state.trips.find((trip) => trip.id === id) || null;
+}
+function ticketById(id) {
+  return state.tickets.find((ticket) => ticket.id === id) || null;
+}
+function personName(id) {
+  return state.people.find((person) => person.id === id)?.name || "Someone";
+}
+function placeById(id) {
+  return state.places.find((place) => place.id === id) || null;
+}
+function placeName(id) {
+  return placeById(id)?.name || "Choose place";
+}
+function businessName(id) {
+  return state.businesses.find((business) => business.id === id)?.name || "";
+}
+
+function boatTrips() {
+  return state.trips
+    .filter((trip) => trip.boatId === ui.boatId)
+    .sort((a, b) => (b.departedAt || b.createdAt || "").localeCompare(a.departedAt || a.createdAt || ""));
+}
+function currentTrip() {
+  const trips = boatTrips();
+  return trips.find((trip) => trip.status === "underway") || trips.find((trip) => trip.status === "planned") || null;
+}
+function shownTrip() {
+  if (ui.tripId) {
+    const found = state.trips.find((trip) => trip.id === ui.tripId && trip.boatId === ui.boatId);
+    if (found) return found;
+  }
+  return currentTrip();
+}
+function boatEntries() {
+  return state.entries
+    .filter((entry) => entry.boatId === ui.boatId)
+    .sort((a, b) => (b.at || "").localeCompare(a.at || ""));
+}
+
+function openDb() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("hm2log-v5", 1);
+    request.onupgradeneeded = () => {
+      if (!request.result.objectStoreNames.contains("kv")) request.result.createObjectStore("kv");
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+function idbGet(db, key) {
+  return new Promise((resolve, reject) => {
+    const request = db.transaction("kv", "readonly").objectStore("kv").get(key);
+    request.onsuccess = () => resolve(request.result || null);
+    request.onerror = () => reject(request.error);
+  });
+}
+function idbSet(db, key, value) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("kv", "readwrite");
+    tx.objectStore("kv").put(value, key);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function loadState() {
+  try {
+    const db = await openDb();
+    const value = await idbGet(db, "state");
+    if (value && value.version === 5) return value;
+  } catch (error) {
+    console.warn(error);
+  }
+  try {
+    const raw = localStorage.getItem("hm2log-v5");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && parsed.version === 5) return parsed;
+    }
+  } catch (error) {
+    console.warn(error);
+  }
+  return null;
+}
+
+async function saveState(next) {
+  let saved = false;
+  try {
+    const db = await openDb();
+    await idbSet(db, "state", next);
+    saved = true;
+  } catch (error) {
+    console.warn(error);
+  }
+  if (!saved) localStorage.setItem("hm2log-v5", JSON.stringify(next));
+}
+
+async function persist(options = {}) {
+  state = normalizeState(state);
+  await saveState(state);
+  updateSaveLabel();
+  if (options.announce) flash(options.announce);
+}
+
+function queueSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    persist().catch(() => flash("Not saved. Export a backup if this keeps happening."));
+  }, 250);
+}
+
+async function saving(work) {
+  if (ui.busy) return;
+  ui.busy = true;
+  try {
+    await work();
+  } finally {
+    ui.busy = false;
+  }
+}
+
+function touchPlace(id) {
+  const place = placeById(id);
+  if (!place) return;
+  place.lastUsedAt = nowIso();
+  place.updatedAt = place.lastUsedAt;
+}
+
+function weatherFromForm(form) {
+  const wind = form.wind === "" || form.wind == null ? null : Number(form.wind);
+  const text = (form.weatherText || "").trim();
+  return {
+    text,
+    kind: form.weatherKind || (text ? "observed" : ""),
+    source: form.weatherSource || (text ? "Manual" : ""),
+    at: form.weatherAt || (text ? nowIso() : ""),
+    windKn: Number.isFinite(wind) ? wind : null,
+    night: !!form.night,
+    conditions: form.conditions || [],
+    code: form.weatherCode ?? null,
+    advisory: !!form.advisory,
+  };
+}
+
+function writeWeather(announce) {
+  const trip = tripById(ui.tripId);
+  if (!trip || !ui.form || ui.form._kind !== "weather") return;
+  trip.weather = weatherFromForm(ui.form);
+  trip.deception = !!ui.form.deception;
+  trip.updatedAt = nowIso();
+  if (trip.weather.text || trip.weather.night) state.settings.weatherByBoat[trip.boatId] = { ...trip.weather };
+  if (announce) persist({ announce });
+  else queueSave();
+}
+
+function writeFilm() {
+  const trip = shownTrip();
+  if (!trip || !ui.form || ui.form._kind !== "film") return;
+  trip.film = {
+    tools: ui.form.filmTools || [],
+    kinds: ui.form.filmKinds || [],
+    clips: ui.form.clips || "",
+    photos: ui.form.photos || "",
+    note: ui.form.filmNote || "",
+  };
+  trip.updatedAt = nowIso();
+  queueSave();
+}
+
+function leaveScreen() {
+  if (ui.form?._kind === "weather") writeWeather(false);
+  if (ui.form?._kind === "film") writeFilm();
+}
+
+function weatherForm(trip) {
+  const weather = trip.weather || {};
+  return {
+    _kind: "weather",
+    weatherText: weather.text || "",
+    generated: weather.text || "",
+    wind: weather.windKn == null || weather.windKn === "" ? "" : String(weather.windKn),
+    advisory: !!weather.advisory,
+    night: !!weather.night,
+    conditions: weather.conditions || [],
+    weatherKind: weather.kind || "",
+    weatherSource: weather.source || "",
+    weatherAt: weather.at || "",
+    weatherCode: weather.code ?? null,
+    deception: !!trip.deception,
+  };
+}
+
+function tripForm(trip) {
+  const night = sunIsDown();
+  const weather = trip?.weather || {};
+  return {
+    _kind: "trip",
+    id: trip?.id || null,
+    title: trip?.title || "",
+    fromId: trip?.fromId || "",
+    toId: trip?.toId || "",
+    purpose: trip?.purpose || "Just a cruise",
+    peopleIds: trip?.peopleIds || ["myself"],
+    notes: trip?.notes || "",
+    meter: trip?.meter || "",
+    deception: !!trip?.deception,
+    weatherText: weather.text || "",
+    generated: weather.text || "",
+    wind: weather.windKn == null || weather.windKn === "" ? "" : String(weather.windKn),
+    advisory: !!weather.advisory,
+    night: trip ? !!weather.night : night,
+    conditions: weather.conditions || [],
+    weatherKind: weather.kind || "",
+    weatherSource: weather.source || "",
+    weatherAt: weather.at || "",
+    weatherCode: weather.code ?? null,
+  };
+}
+
+function blankEntry(kind, tripId) {
+  const here = boat();
+  return {
+    _kind: "entry",
+    id: null,
+    kind,
+    link: !!tripId,
+    tripId: tripId || "",
+    at: toLocalInput(),
+    placeId: "",
+    title: "",
+    notes: "",
+    tank: kind === "water" ? "Fresh water" : kind === "fuel" ? (here.id === "hm2" ? "Main diesel" : "Main") : "",
+    quantity: "",
+    units: here.units,
+    cost: "",
+    currency: here.currency,
+    unitPrice: "",
+    engineHours: "",
+    parts: "",
+    receipt: "",
+    catchName: "Dungeness",
+    count: "",
+    timeOfDay: "",
+    narrative: "",
+    stars: 0,
+    alongType: "Note",
+    story: false,
+    photo: "",
+    openTicket: false,
+  };
+}
+
+function entryToForm(entry) {
+  return {
+    _kind: "entry",
+    id: entry.id,
+    kind: entry.kind,
+    link: !!entry.tripId,
+    tripId: entry.tripId || "",
+    at: toLocalInput(entry.at),
+    placeId: entry.placeId || "",
+    title: entry.title || "",
+    notes: entry.notes || "",
+    tank: entry.tank || "",
+    quantity: entry.quantity ?? "",
+    units: entry.units || boat().units,
+    cost: entry.cost ?? "",
+    currency: entry.currency || boat().currency,
+    unitPrice: entry.unitPrice ?? "",
+    engineHours: entry.engineHours ?? "",
+    parts: entry.parts || "",
+    receipt: entry.receipt || "",
+    catchName: entry.catchName || "",
+    count: entry.count ?? "",
+    timeOfDay: entry.timeOfDay || "",
+    narrative: entry.narrative || entry.notes || "",
+    stars: entry.stars || 0,
+    alongType: entry.alongType || "Note",
+    story: !!entry.story,
+    photo: entry.photo || "",
+    openTicket: false,
+  };
+}
+
+function filmForm(trip) {
+  const film = trip.film || {};
+  return {
+    _kind: "film",
+    filmTools: film.tools || [],
+    filmKinds: film.kinds || [],
+    clips: film.clips || "",
+    photos: film.photos || "",
+    filmNote: film.note || "",
+  };
+}
+
+function blankPerson() {
+  return { _kind: "person", id: null, name: "", categories: [], serviceTags: [], businessName: "", phone: "", notes: "", photo: "" };
+}
+function blankPlace() {
+  return { _kind: "place", id: null, name: "", detail: "", tags: "", favorite: false, region: boat().region };
+}
+
+function sunIsDown() {
+  const here = boat();
+  const date = new Date();
+  if (Number.isNaN(date.getTime())) return false;
+  const r = Math.PI / 180;
+  const i = date.getTime() / 864e5 + 2440587.5 - 2451545;
+  const l = (280.46 + 0.9856474 * i) % 360;
+  const s = ((357.528 + 0.9856003 * i) % 360) * r;
+  const a = (l + 1.915 * Math.sin(s) + 0.02 * Math.sin(2 * s)) * r;
+  const p = (23.439 - 4e-7 * i) * r;
+  const h = Math.asin(Math.sin(p) * Math.sin(a));
+  const y = Math.atan2(Math.cos(p) * Math.sin(a), Math.cos(a));
+  const hourAngle = ((((18.697374558 + 24.06570982441908 * i) % 24) * 15 + here.lon) * r) - y;
+  const alt = Math.asin(Math.sin(here.lat * r) * Math.sin(h) + Math.cos(here.lat * r) * Math.cos(h) * Math.cos(hourAngle)) / r;
+  return alt < -0.833;
+}
+
+function resizeImage(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => {
+      const scale = Math.min(1, 1280 / Math.max(image.width, image.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(image.width * scale));
+      canvas.height = Math.max(1, Math.round(image.height * scale));
+      canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL("image/jpeg", 0.72));
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("photo"));
+    };
+    image.src = url;
+  });
+}
+
+function field(label, name, value, options = {}) {
+  const id = `f-${name}`;
+  if (options.area) {
+    return `<label class="field" for="${id}"><span>${esc(label)}</span><textarea id="${id}" name="${name}">${esc(value)}</textarea></label>`;
+  }
+  const type = options.type || "text";
+  const extra = [
+    options.inputMode ? ` inputmode="${options.inputMode}"` : "",
+    options.step ? ` step="${options.step}"` : "",
+    options.placeholder ? ` placeholder="${esc(options.placeholder)}"` : "",
+    options.readOnly ? " readonly" : "",
+  ].join("");
+  return `<label class="field" for="${id}"><span>${esc(label)}</span><input id="${id}" name="${name}" type="${type}" value="${esc(value)}"${extra}></label>`;
+}
+
+function chips(group, options, selected, multi) {
+  const set = new Set(Array.isArray(selected) ? selected : [selected]);
+  return `<div class="chiprow">${options.map((option) => `<button type="button" class="chip${set.has(option.value) ? " on" : ""}" data-action="chip" data-group="${esc(group)}" data-value="${esc(option.value)}" data-multi="${multi ? "1" : "0"}">${esc(option.label)}</button>`).join("")}</div>`;
+}
+
+function photoHtml(src) {
+  if (!src || !String(src).startsWith("data:image/")) return "";
+  return `<img class="thumb" alt="Attached photo" src="${src}">`;
+}
+
+function starsHtml(count) {
+  return `<div class="stars" role="group" aria-label="Starfish score">${[1, 2, 3, 4, 5].map((n) => `<button type="button" data-action="star" data-value="${n}" aria-label="${n} of 5 starfish"><img src="starfish.png" alt="" width="32" height="32" style="opacity:${n <= count ? 1 : 0.35};filter:${n <= count ? "none" : "grayscale(1)"}"></button>`).join("")}</div>`;
+}
+
+function statusLabel(status) {
+  if (status === "underway") return "Underway";
+  if (status === "arrived") return "Arrived";
+  return "Planned";
+}
+
+function weatherMeta(weather) {
+  if (!weather || (!weather.text && !weather.night)) return "No conditions saved on this phone yet.";
+  const kind = weather.kind === "forecast" ? "Forecast" : weather.kind === "observed" ? "What I saw" : "Noted";
+  const when = weather.at ? fmt(weather.at) : "";
+  return `${kind} · ${weather.source || "Manual"}${when ? ` · ${when}` : ""}. Saved on this phone, not a live warning.`;
+}
+
+function zoneLinks() {
+  const links = (ZONES[ui.boatId] || []).map((zone) => `<a class="btn block" href="${esc(zone.url)}" target="_blank" rel="noopener">${esc(zone.name)}</a>`);
+  if (boat().pnw) links.push(`<a class="btn block" href="${DECEPTION_PASS_URL}" target="_blank" rel="noopener">Deception Pass current · NOAA</a>`);
+  return `<div class="stack">${links.join("")}</div>`;
+}
+
+function weatherEditor(form) {
+  const night = !!form.night;
+  const options = CONDITIONS.map((item) => (item.id === "sunny" && night ? { value: "sunny", label: "Clear" } : { value: item.id, label: item.label }));
+  return `<section class="card">
+    <p class="kicker">Conditions</p>
+    <button type="button" class="btn block${night ? " on" : ""}" id="night-toggle" data-action="night">${night ? "Night weather on" : "Night weather off"}</button>
+    <p class="hint">${night ? "Sun is down, or you turned Night on. Clear is not called sunny." : "Turn Night on after dark. Sunny is only used when you mean it, or a sky code says so."}</p>
+    ${chips("conditions", options, form.conditions || [], true)}
+    ${field("Plain-language conditions", "weatherText", form.weatherText || "", { area: true, placeholder: "Cloudy, windy, light rain" })}
+    ${field("Wind (kn)", "wind", form.wind || "", { type: "number", inputMode: "decimal", step: "1" })}
+    <div class="split">
+      <button type="button" class="btn${form.weatherKind === "forecast" ? " on" : ""}" data-action="weatherKind" data-value="forecast">Forecast</button>
+      <button type="button" class="btn${form.weatherKind === "observed" ? " on" : ""}" data-action="weatherKind" data-value="observed">What I saw</button>
+    </div>
+    <p class="meta" id="weather-meta">${esc(weatherMeta(weatherFromForm(form)))}</p>
+    <button type="button" class="btn block" data-action="forecast">Read conditions</button>
+    <p class="hint">Read conditions needs a signal. It uses the sky, rain, snow, fog, and wind actually returned. Wind alone is not called sunny.</p>
+    <button type="button" class="btn block${form.advisory ? " on" : ""}" data-action="flag" data-flag="advisory">${form.advisory ? "Small craft / wind warning posted" : "No advisory"}</button>
+    ${boat().pnw ? `<button type="button" class="btn block${form.deception ? " on" : ""}" data-action="flag" data-flag="deception">${form.deception ? "Deception Pass: timing for slack" : "Deception Pass not on this plan"}</button>` : ""}
+    <p class="hint">Forecast zones, same pages as before. They open in the browser and need a signal.</p>
+    ${zoneLinks()}
+  </section>`;
+}
+
+function peoplePicker(selected) {
+  const ids = new Set(selected || ["myself"]);
+  ids.add("myself");
+  const buttons = state.people.map((person) => {
+    if (person.id === "myself") return `<span class="chip on">Myself</span>`;
+    const on = ids.has(person.id);
+    return `<button type="button" class="chip${on ? " on" : ""}" data-action="personToggle" data-id="${esc(person.id)}">${esc(person.name)}</button>`;
+  });
+  return `<div class="field"><span>People aboard</span><p class="hint">Myself stays person 1. Logged by is separate.</p><div class="chiprow">${buttons.join("")}</div>
+    <button type="button" class="btn quiet block" data-action="addPerson">Add a person</button></div>`;
+}
+
+function placeButton(label, fieldName) {
+  const id = ui.form?.[fieldName] || "";
+  return `<div class="field"><span>${esc(label)}</span><button type="button" class="btn block" data-action="pickPlace" data-field="${esc(fieldName)}">${esc(id ? placeName(id) : "Choose place")}</button></div>`;
+}
+
+function tripSwitch(selectedId) {
+  const trips = boatTrips();
+  if (!trips.length) return "";
+  return `<label class="field"><span>Trip</span><select name="switchTrip">${trips.map((trip) => `<option value="${esc(trip.id)}"${trip.id === selectedId ? " selected" : ""}>${esc(trip.title)} · ${esc(statusLabel(trip.status))}</option>`).join("")}</select></label>`;
+}
+
+function aboardLine(trip) {
+  const names = [];
+  for (const id of trip.peopleIds || ["myself"]) {
+    const name = personName(id);
+    if (!names.includes(name)) names.push(name);
+  }
+  return `${names.map((name, index) => `${index + 1}. ${name}`).join(" · ")} · ${names.length} aboard`;
+}
+
+function faces(trip) {
+  return `<div class="faces">${(trip.peopleIds || []).map((id) => {
+    const person = state.people.find((item) => item.id === id);
+    const name = person?.name || "Someone";
+    const photo = person?.photo && String(person.photo).startsWith("data:image/") ? `<img src="${person.photo}" alt="">` : esc(name.slice(0, 1).toUpperCase());
+    return `<span class="face" title="${esc(name)}">${photo}</span>`;
+  }).join("")}</div>`;
+}
+
+function entryTitle(entry) {
+  if (entry.kind === "note" && entry.alongType && entry.alongType !== "Note") return entry.alongType;
+  if (entry.title && entry.kind !== "rating") return entry.title;
+  if (entry.kind === "note") return entry.tripId ? "Trip note" : "Note";
+  return KIND_LABEL[entry.kind] || "Entry";
+}
+
+function entrySummary(entry) {
+  if (entry.kind === "fuel" || entry.kind === "water") {
+    return [entry.tank, entry.quantity != null ? `${entry.quantity} ${entry.units || ""}`.trim() : "", entry.cost != null ? `${entry.cost} ${entry.currency || ""}`.trim() : ""].filter(Boolean).join(" · ");
+  }
+  if (entry.kind === "pumpout") return [entry.placeId ? placeName(entry.placeId) : "", entry.cost != null ? `${entry.cost} ${entry.currency || ""}`.trim() : "", entry.notes].filter(Boolean).join(" · ");
+  if (entry.kind === "crab") return [entry.catchName, entry.count != null ? String(entry.count) : "", entry.timeOfDay, entry.notes].filter(Boolean).join(" · ");
+  if (entry.kind === "rating") return entry.narrative || entry.notes || "";
+  return entry.notes || "";
+}
+
+function entryMeta(entry) {
+  const trip = entry.tripId ? tripById(entry.tripId) : null;
+  return `${fmt(entry.at)} · ${trip ? `Trip: ${trip.title}` : "Boat activity, no trip"} · Logged by ${entry.loggedBy || state.settings.loggedBy || "Wishy"}`;
+}
+
+function placeQueryValue() {
+  return ui.picker ? ui.picker.query : ui.placeQuery;
+}
+function placeScopeValue() {
+  return ui.picker ? ui.picker.scope : ui.placeScope;
+}
+function sortPlaces(list) {
+  const region = boat().region;
+  return list.slice().sort((a, b) => (a.region === region ? 0 : 1) - (b.region === region ? 0 : 1) || a.name.localeCompare(b.name));
+}
+function placesToShow() {
+  const query = placeQueryValue().trim().toLowerCase();
+  if (query) {
+    return sortPlaces(state.places.filter((place) => `${place.name} ${place.detail} ${(place.tags || []).join(" ")}`.toLowerCase().includes(query))).slice(0, 30);
+  }
+  const scope = placeScopeValue();
+  if (scope === "recents") {
+    return state.places.filter((place) => place.lastUsedAt).sort((a, b) => b.lastUsedAt.localeCompare(a.lastUsedAt)).slice(0, 8);
+  }
+  if (scope === "favorites") return sortPlaces(state.places.filter((place) => place.favorite));
+  return sortPlaces(state.places).slice(0, ui.placeShow);
+}
+function placeMeta(place) {
+  return [place.favorite ? "Favorite" : "", place.lastUsedAt ? "Recent" : "", REGION_LABEL[place.region] || "", (place.tags || []).join(", ")].filter(Boolean).join(" · ");
+}
+function placeCards(mode) {
+  const list = placesToShow();
+  if (!list.length) {
+    const query = placeQueryValue().trim();
+    const empty = query ? "No places match that search." : placeScopeValue() === "recents" ? "No recent places yet. A place lands here after you use it." : "No favorite places yet.";
+    return `<p class="empty">${esc(empty)}</p>${query ? `<button type="button" class="btn block" data-action="clearSearch">Clear search</button>` : ""}`;
+  }
+  return list.map((place) => {
+    const body = `<span class="rowtitle">${esc(place.name)}</span><span class="rowdetail">${esc(place.detail || "")}</span><span class="rowmeta">${esc(placeMeta(place))}</span>`;
+    if (mode === "picker") return `<button type="button" class="rowmain" data-action="choosePlace" data-id="${esc(place.id)}">${body}</button>`;
+    return `<div class="row"><button type="button" class="rowmain" data-action="openPlace" data-id="${esc(place.id)}">${body}</button><button type="button" class="iconbtn" data-action="fav" data-id="${esc(place.id)}" aria-label="Favorite ${esc(place.name)}" aria-pressed="${place.favorite ? "true" : "false"}">${place.favorite ? "★" : "☆"}</button></div>`;
+  }).join("");
+}
+
+function backBtn() {
+  return `<button type="button" class="btn quiet block" data-action="back">Back</button>`;
+}
+
+function screenHome() {
+  const trips = boatTrips();
+  const current = currentTrip();
+    const past = trips.filter((trip) => trip.status === "arrived");
+    const other = trips.filter((trip) => trip !== current && trip.status !== "arrived");
+  const saved = state.settings.weatherByBoat[ui.boatId];
+  return `<p class="kicker">Boat</p><h1>${esc(boat().name)}</h1>
+    <div class="split">
+      <button type="button" class="btn${ui.boatId === "hm2" ? " on" : ""}" data-action="boat" data-id="hm2">Halve Maan II</button>
+      <button type="button" class="btn${ui.boatId === "zeeotter" ? " on" : ""}" data-action="boat" data-id="zeeotter">Zeeotter</button>
+    </div>
+    <section class="card"><h2>Current trip</h2>
+      ${current ? `<p><span class="pill${current.status === "underway" ? " warn" : ""}">${esc(statusLabel(current.status))}</span></p><p><strong>${esc(current.title)}</strong></p><p class="meta">${esc(current.tripCode || "")}</p><button type="button" class="btn primary" data-action="openTrip" data-id="${esc(current.id)}">Open trip log</button>` : `<p>No trip underway.</p><button type="button" class="btn primary" data-action="startTrip">Start a trip</button>`}
+    </section>
+    <section class="card"><h2>Add boat activity</h2><p>Dock work, a tank fill, washing, or a pump-out. No trip required.</p>
+      <button type="button" class="btn primary" data-action="activity">Add boat activity</button>
+    </section>
+    ${other.length ? `<section class="card"><h2>Also planned</h2><div class="stack">${other.map((trip) => `<button type="button" class="rowmain" data-action="openTrip" data-id="${esc(trip.id)}"><span class="rowtitle">${esc(trip.title)}</span><span class="rowmeta">${esc(statusLabel(trip.status))} · ${esc(trip.tripCode || "")}</span></button>`).join("")}</div></section>` : ""}
+    ${past.length ? `<section class="card"><h2>Arrived</h2><div class="stack">${past.map((trip) => `<button type="button" class="rowmain" data-action="openTrip" data-id="${esc(trip.id)}"><span class="rowtitle">${esc(trip.title)}</span><span class="rowmeta">${esc(fmt(trip.arrivedAt || trip.departedAt))} · ${esc(trip.tripCode || "")}</span></button>`).join("")}</div></section>` : ""}
+    <section class="card"><h2>Forecast</h2><p>${saved?.text ? esc(saved.text) : "No conditions saved yet."}</p><p class="meta">${esc(weatherMeta(saved))}</p>${zoneLinks()}<button type="button" class="btn block" data-action="forecast">Read conditions</button></section>`;
+}
+
+function screenTrip() {
+  const trip = shownTrip();
+  if (!trip) {
+    return `<p class="kicker">Trip</p><h1>No trip yet</h1><p>The trip is the log. Notes, crab, photos, and the rating hang off it.</p><button type="button" class="btn primary" data-action="startTrip">Start a trip</button>`;
+  }
+  const weather = trip.weather || {};
+  return `<p class="kicker">Trip</p>${tripSwitch(trip.id)}
+    <h1>${esc(trip.title)}</h1>
+    <p><span class="pill${trip.status === "underway" ? " warn" : trip.status === "arrived" ? " ok" : ""}">${esc(statusLabel(trip.status))}</span></p>
+    <p class="meta">Trip ID <strong>${esc(trip.tripCode || "")}</strong></p>
+    <section class="card"><p>${esc(placeName(trip.fromId))} → ${esc(placeName(trip.toId))}</p><p>${esc(trip.purpose || "")}</p>${faces(trip)}<p>${esc(aboardLine(trip))}</p>
+      ${trip.meter ? `<p class="meta">${esc(boat().meterLabel)}: ${esc(trip.meter)}${boat().meterOffset ? ` · true hours ≈ ${Number(trip.meter) + boat().meterOffset}` : ""}</p>` : ""}
+      <button type="button" class="btn quiet block" data-action="editTrip">Edit trip</button>
+    </section>
+    ${trip.status === "underway" ? `<button type="button" class="btn alert" data-action="addNote" data-id="${esc(trip.id)}">Add note underway</button>` : ""}
+    ${weatherEditor(ui.form && ui.form._kind === "weather" ? ui.form : weatherForm(trip))}
+    <div class="stack">
+      <button type="button" class="btn primary" data-action="journal" data-scope="trip">Journal</button>
+      <button type="button" class="btn" data-action="newEntry" data-kind="rating" data-link="1">Narrative rating</button>
+      <button type="button" class="btn" data-action="newEntry" data-kind="crab" data-link="1">Crab catch</button>
+      <button type="button" class="btn" data-action="nav" data-screen="media">Media</button>
+      <button type="button" class="btn" data-action="newEntry" data-kind="repair" data-link="1">Repair</button>
+      <button type="button" class="btn" data-action="newEntry" data-kind="note" data-link="1">Trip note</button>
+      <button type="button" class="btn" data-action="best">Best moment</button>
+      <button type="button" class="btn" data-action="newTicket" data-link="1">Maintenance ticket</button>
+    </div>
+    ${trip.bestMoment?.text ? `<section class="card"><h2>Best moment</h2><p>${esc(trip.bestMoment.text)}</p><p class="meta">${esc((trip.bestMoment.tags || []).join(" · "))}</p></section>` : ""}
+    ${trip.rating?.narrative ? `<section class="card"><h2>Narrative</h2>${starsHtml(trip.rating.stars || 0)}<p>${esc(trip.rating.narrative)}</p></section>` : ""}
+    ${trip.status === "underway" ? `<button type="button" class="btn primary" data-action="arrive">Arrived — wrap up</button>` : `<button type="button" class="btn" data-action="arrive">Edit wrap-up</button>`}
+    <p class="hint">${weather.advisory ? "Small craft / wind warning was marked on this trip. " : ""}${trip.deception ? "Deception Pass is on this plan." : ""}</p>`;
+}
+
+function screenTripForm() {
+  const form = ui.form;
+    const editing = !!form.id;
+  const existingStatus = editing ? tripById(form.id)?.status : "";
+  const showDepart = !editing || existingStatus === "planned";
+  return `<p class="kicker">${editing ? "Edit trip" : "Start a trip"}</p><h1>${editing ? "Trip details" : "Depart"}</h1>
+    ${field("Title", "title", form.title, { placeholder: "Filled in from the places if you leave it blank" })}
+    ${placeButton("Departure", "fromId")}
+    ${placeButton("Destination", "toId")}
+    <div class="field"><span>Purpose</span>${chips("purpose", PURPOSES.map((item) => ({ value: item, label: item })), form.purpose, false)}</div>
+    ${peoplePicker(form.peopleIds)}
+    ${field(boat().meterLabel, "meter", form.meter, { type: "number", inputMode: "decimal", step: "0.1" })}
+    <p class="hint" id="meter-hint">${esc(meterHint(form.meter))}</p>
+    ${field("Trip note", "notes", form.notes, { area: true })}
+    ${weatherEditor(form)}
+    ${showDepart ? `<button type="button" class="btn primary" data-action="saveTrip" data-mode="depart">Depart</button>` : ""}
+    <button type="button" class="btn block" data-action="saveTrip" data-mode="${editing ? "save" : "plan"}">${editing ? "Save changes" : "Save as planned"}</button>
+    ${editing ? `<button type="button" class="btn danger block" data-action="deleteTrip">Delete trip</button>` : ""}
+    ${backBtn()}`;
+}
+
+function meterHint(value) {
+  const reading = Number(value);
+  if (!boat().meterOffset || !value || !Number.isFinite(reading)) return boat().id === "hm2" ? "Optional. True hours are the reading plus 1231." : "Optional.";
+  return `True hours ≈ ${reading + boat().meterOffset} (reading + ${boat().meterOffset}).`;
+}
+
+function journalKinds() {
+  const trip = shownTrip();
+  const linked = ui.journalScope === "trip" && !!trip;
+  const kinds = [["note", "Note"], ["repair", "Repair"], ["wash", "Wash"], ["fuel", "Fuel"], ["water", "Water"], ["pumpout", "Pump-out"]];
+  if (trip) kinds.push(["rating", "Rating"], ["crab", "Crab"]);
+  return `<div class="chiprow">${kinds.map(([kind, label]) => `<button type="button" class="chip" data-action="newEntry" data-kind="${kind}" data-link="${linked || kind === "rating" || kind === "crab" ? "1" : "0"}">${label}</button>`).join("")}</div>`;
+}
+
+function screenJournal() {
+  const trip = shownTrip();
+  const scope = ui.journalScope === "trip" && trip ? "trip" : "all";
+  const entries = boatEntries().filter((entry) => (scope === "all" ? true : entry.tripId === trip.id));
+  return `<p class="kicker">Journal</p><h1>${ui.activityPrompt ? "Add boat activity" : "Journal"}</h1>
+    ${ui.activityPrompt ? `<p>No trip required. You can link one later.</p>` : ""}
+    <div class="split">
+      <button type="button" class="btn${scope === "trip" ? " on" : ""}" data-action="journalScope" data-value="trip">This trip</button>
+      <button type="button" class="btn${scope === "all" ? " on" : ""}" data-action="journalScope" data-value="all">All boat</button>
+    </div>
+    ${scope === "trip" && trip ? `<p class="meta">${esc(trip.title)}</p>` : `<p class="meta">Everything logged on ${esc(boat().name)}, with or without a trip.</p>`}
+    ${journalKinds()}
+    <div class="stack">${entries.length ? entries.map((entry) => `<button type="button" class="rowmain" data-action="openEntry" data-id="${esc(entry.id)}"><span class="rowtitle">${esc(entryTitle(entry))}${entry.story ? " · story" : ""}</span><span class="rowdetail">${esc(entrySummary(entry))}</span><span class="rowmeta">${esc(entryMeta(entry))}</span></button>`).join("") : `<p class="empty">Nothing here yet.</p>`}</div>`;
+}
+
+function screenEntry() {
+  const form = ui.form;
+  const label = form.kind === "note" && form.link ? "Trip note" : KIND_LABEL[form.kind] || "Entry";
+  const trip = form.tripId ? tripById(form.tripId) : null;
+  const heading = form.link && trip ? `${trip.title} · ${label}` : form.link ? label : `Boat activity · ${label}`;
+  const locked = form.kind === "rating" || form.kind === "crab";
+  let extra = "";
+  if (form.kind === "note") {
+    extra += `<div class="field"><span>Type</span>${chips("alongType", ALONG_TYPES.map((item) => ({ value: item, label: item })), form.alongType, false)}</div>`;
+    extra += `<button type="button" class="btn block${form.story ? " on" : ""}" data-action="flag" data-flag="story">${form.story ? "Story-worthy" : "Mark story-worthy"}</button>`;
+  }
+  if (form.kind === "repair") {
+    extra += field("Engine hours", "engineHours", form.engineHours, { type: "number", inputMode: "decimal", step: "0.1" });
+    extra += field("Parts", "parts", form.parts, { placeholder: "What you know. Don't guess a part number." });
+    extra += field("Receipt", "receipt", form.receipt);
+    extra += `<button type="button" class="btn block${form.openTicket ? " on" : ""}" data-action="flag" data-flag="openTicket">${form.openTicket ? "Will also open a maintenance ticket" : "Also open a maintenance ticket"}</button>`;
+  }
+  if (form.kind === "fuel" || form.kind === "water") {
+    extra += field("Tank", "tank", form.tank);
+    extra += field("Quantity added", "quantity", form.quantity, { type: "number", inputMode: "decimal", step: "0.1" });
+    extra += `<label class="field"><span>Units</span><select name="units">${["gallons", "liters"].map((unit) => `<option${form.units === unit ? " selected" : ""}>${esc(unit)}</option>`).join("")}</select></label>`;
+    extra += field("Total cost", "cost", form.cost, { type: "number", inputMode: "decimal", step: "0.01" });
+    extra += `<label class="field"><span>Currency</span><select name="currency">${["USD", "EUR", "GBP", "CAD"].map((currency) => `<option${form.currency === currency ? " selected" : ""}>${currency}</option>`).join("")}</select></label>`;
+    extra += field("Unit price (optional)", "unitPrice", form.unitPrice, { type: "number", inputMode: "decimal", step: "0.01" });
+    extra += `<p class="hint">${esc(priceHint(form))}</p>`;
+  }
+  if (form.kind === "pumpout") {
+    extra += field("Cost", "cost", form.cost, { type: "number", inputMode: "decimal", step: "0.01" });
+    extra += `<label class="field"><span>Currency</span><select name="currency">${["USD", "EUR", "GBP", "CAD"].map((currency) => `<option${form.currency === currency ? " selected" : ""}>${currency}</option>`).join("")}</select></label>`;
+    extra += `<p class="hint">Quantity only if you know it.</p>`;
+    extra += field("Quantity (optional)", "quantity", form.quantity, { type: "number", inputMode: "decimal", step: "0.1" });
+  }
+  if (form.kind === "crab") {
+    extra += field("Catch", "catchName", form.catchName);
+    extra += field("Count", "count", form.count, { type: "number", inputMode: "numeric", step: "1" });
+    extra += field("Time", "timeOfDay", form.timeOfDay, { placeholder: "Late afternoon" });
+  }
+  if (form.kind === "rating") {
+    extra += `<div class="field"><span>Starfish, optional</span>${starsHtml(form.stars || 0)}</div>`;
+    extra += field("How the trip went", "narrative", form.narrative, { area: true });
+  }
+  const notes = form.kind === "rating" ? "" : field("Notes", "notes", form.notes, { area: true });
+  const link = locked
+    ? `<p class="meta">Attached to ${esc(trip ? trip.title : "this trip")}.</p>`
+    : `<button type="button" class="btn block${form.link ? " on" : ""}" data-action="toggleLink">${form.link ? `Linked to this trip${trip ? `: ${trip.title}` : ""}` : "No trip — boat activity only"}</button>${form.link ? tripChoices(form.tripId) : ""}`;
+  return `<p class="kicker">${form.id ? "Edit" : "Add"}</p><h1>${esc(heading)}</h1>
+    ${field("When", "at", form.at, { type: "datetime-local" })}
+    ${placeButton("Location", "placeId")}
+    ${extra}
+    ${notes}
+    <label class="field"><span>Photo</span><input type="file" accept="image/*" id="photo-file"></label>
+    ${photoHtml(form.photo)}
+    ${link}
+    <p class="hint">Logged by ${esc(state.settings.loggedBy || "Wishy")}. That is who writes it down, not who is aboard.</p>
+    <button type="button" class="btn primary" data-action="saveEntry">${form.id ? "Save changes" : "Save"}</button>
+    ${form.id ? `<button type="button" class="btn danger block" data-action="deleteEntry">Delete entry</button>` : ""}
+    ${backBtn()}`;
+}
+
+function priceHint(form) {
+  const quantity = Number(form.quantity);
+  const cost = Number(form.cost);
+  if (!(quantity > 0) || form.cost === "" || Number.isNaN(cost)) return "";
+  return `About ${(cost / quantity).toFixed(2)} ${form.currency || ""} per ${form.units || "unit"}.`;
+}
+
+function tripChoices(selected) {
+  const trips = boatTrips();
+  if (!trips.length) return "";
+  return `<label class="field"><span>Which trip</span><select name="tripId">${trips.map((trip) => `<option value="${esc(trip.id)}"${trip.id === selected ? " selected" : ""}>${esc(trip.title)}</option>`).join("")}</select></label>`;
+}
+
+function screenMedia() {
+  const trip = shownTrip();
+  if (!trip) return `<p class="kicker">Media</p><h1>Media</h1><p>Cameras, shots, and reminders belong to a trip.</p><button type="button" class="btn primary" data-action="startTrip">Start a trip</button>`;
+  const items = state.media.filter((item) => item.tripId === trip.id && item.boatId === ui.boatId && item.status === ui.mediaScope);
+  const checks = trip.checks || {};
+  const form = ui.form && ui.form._kind === "film" ? ui.form : filmForm(trip);
+  return `<p class="kicker">Media</p><h1>${esc(trip.title)}</h1>
+    <section class="card"><h2>Preflight</h2><p class="hint">A reminder, not a view count. Saved on this phone.</p>
+      <div class="stack">${CHECKS.map(([id, label]) => `<button type="button" class="btn block${checks[id] ? " on" : ""}" data-action="check" data-id="${id}" aria-pressed="${checks[id] ? "true" : "false"}">${checks[id] ? "Packed · " : ""}${esc(label)}</button>`).join("")}</div>
+    </section>
+    <section class="card"><h2>What did you film?</h2>
+      <div class="field"><span>Shot on</span>${chips("filmTools", FILM_TOOLS.map((item) => ({ value: item, label: item })), form.filmTools, true)}</div>
+      <div class="field"><span>What kind</span>${chips("filmKinds", FILM_KINDS.map((item) => ({ value: item, label: item })), form.filmKinds, true)}</div>
+      ${field("Video clips", "clips", form.clips, { type: "number", inputMode: "numeric" })}
+      ${field("Photos", "photos", form.photos, { type: "number", inputMode: "numeric" })}
+      ${field("Film note", "filmNote", form.filmNote, { area: true })}
+      <p class="hint">Video files stay in the camera roll. The log keeps the counts and the note.</p>
+    </section>
+    <div class="split">
+      <button type="button" class="btn${ui.mediaScope === "planned" ? " on" : ""}" data-action="mediaScope" data-value="planned">Planned</button>
+      <button type="button" class="btn${ui.mediaScope === "captured" ? " on" : ""}" data-action="mediaScope" data-value="captured">Captured</button>
+    </div>
+    <div class="stack">
+      <button type="button" class="btn" data-action="newMedia" data-status="planned" data-type="reminder">Add camera reminder</button>
+      <button type="button" class="btn" data-action="newMedia" data-status="planned" data-type="shot">Add planned shot</button>
+      <button type="button" class="btn" data-action="newMedia" data-status="captured" data-type="file">Add captured photo</button>
+    </div>
+    <div class="stack">${items.length ? items.map((item) => `<button type="button" class="rowmain" data-action="openMedia" data-id="${esc(item.id)}"><span class="rowtitle">${esc(item.title || "Untitled")}</span><span class="rowdetail">${esc(item.detail || "")}</span><span class="rowmeta">${esc(item.type)} · ${esc(item.status)}${item.videoName ? ` · ${item.videoName}` : ""}</span></button>`).join("") : `<p class="empty">Nothing in this list yet.</p>`}</div>`;
+}
+
+function screenMediaForm() {
+  const form = ui.form;
+  return `<p class="kicker">Media</p><h1>${form.id ? "Edit" : "Add"}</h1>
+    ${field("Title", "title", form.title, { placeholder: form.type === "reminder" ? "Spare camera in the bag" : "Wide departure" })}
+    ${field("Notes", "detail", form.detail, { area: true, placeholder: "Viewpoint, lens, or why this shot" })}
+    <label class="field"><span>Photo or video name</span><input type="file" accept="image/*,video/*" id="photo-file"></label>
+    ${form.videoName ? `<p class="meta">Video stays in the camera roll: ${esc(form.videoName)}</p>` : ""}
+    ${photoHtml(form.photo)}
+    <button type="button" class="btn primary" data-action="saveMedia">Save</button>
+    ${form.id ? `<button type="button" class="btn danger block" data-action="deleteMedia">Delete</button>` : ""}
+    ${backBtn()}`;
+}
+
+function screenBest() {
+  const form = ui.form;
+  return `<p class="kicker">Best moment</p><h1>Best moment</h1>
+    ${field("What stayed with you", "bestText", form.bestText, { area: true })}
+    <div class="field"><span>Tags</span>${chips("bestTags", BEST_TAGS.map((item) => ({ value: item, label: item })), form.bestTags, true)}</div>
+    <button type="button" class="btn primary" data-action="saveBest">Save best moment</button>
+    ${backBtn()}`;
+}
+
+function screenWrap() {
+  const trip = shownTrip();
+  const form = ui.form;
+  const arrived = trip?.status === "arrived";
+  return `<p class="kicker">${esc(trip?.tripCode || "")}</p><h1>${arrived ? "Wrap-up" : "Arrived"}</h1>
+    <p>${esc(trip?.title || "")}</p>
+    <section class="card"><h2>Narrative rating</h2><p class="hint">Starfish is optional.</p>${starsHtml(form.stars || 0)}
+      ${field("How the trip went", "narrative", form.narrative, { area: true })}
+    </section>
+    <section class="card"><h2>Best moment</h2>
+      ${field("Best moment", "bestText", form.bestText, { area: true })}
+      ${chips("bestTags", BEST_TAGS.map((item) => ({ value: item, label: item })), form.bestTags, true)}
+    </section>
+    <section class="card"><h2>What did you film?</h2>
+      ${chips("filmTools", FILM_TOOLS.map((item) => ({ value: item, label: item })), form.filmTools, true)}
+      ${chips("filmKinds", FILM_KINDS.map((item) => ({ value: item, label: item })), form.filmKinds, true)}
+      ${field("Video clips", "clips", form.clips, { type: "number", inputMode: "numeric" })}
+      ${field("Photos", "photos", form.photos, { type: "number", inputMode: "numeric" })}
+      ${field("Film note", "filmNote", form.filmNote)}
+    </section>
+    <button type="button" class="btn primary" data-action="saveWrap">${arrived ? "Save wrap-up" : "Save and mark arrived"}</button>
+    ${arrived ? "" : `<button type="button" class="btn block" data-action="skipWrap">Arrive without the story</button>`}
+    ${backBtn()}`;
+}
+
+function filteredTickets() {
+  const open = new Set(["open", "progress", "waiting"]);
+  return state.tickets
+    .filter((ticket) => ticket.boatId === ui.boatId && (ui.maintScope === "open" ? open.has(ticket.status) : !open.has(ticket.status)))
+    .sort((a, b) => (b.updatedAt || "").localeCompare(a.updatedAt || ""));
+}
+
+function screenMaint() {
+  const tickets = filteredTickets();
+  const parts = state.parts.filter((part) => part.boatId === ui.boatId).sort((a, b) => (b.at || "").localeCompare(a.at || ""));
+  return `<p class="kicker">Maintenance</p><h1>${esc(boat().name)}</h1>
+    <p>Tickets are work still to manage. A closed ticket does not mean a part was replaced.</p>
+    <div class="split">
+      <button type="button" class="btn${ui.maintScope === "open" ? " on" : ""}" data-action="maintScope" data-value="open">Open</button>
+      <button type="button" class="btn${ui.maintScope === "closed" ? " on" : ""}" data-action="maintScope" data-value="closed">Closed</button>
+    </div>
+    <button type="button" class="btn primary" data-action="newTicket">Add ticket</button>
+    <div class="stack">${tickets.length ? tickets.map((ticket) => `<button type="button" class="rowmain" data-action="openTicket" data-id="${esc(ticket.id)}"><span class="rowtitle">${esc(ticket.title)}</span><span class="rowdetail">${esc(ticket.detail || "")}</span><span class="rowmeta">${esc(TICKET_STATUS.find((item) => item[0] === ticket.status)?.[1] || ticket.status)}</span></button>`).join("") : `<p class="empty">No ${ui.maintScope} tickets.</p>`}</div>
+    <section class="card"><h2>Parts ledger</h2><p class="hint">A part is recorded only when you add it. Closing a ticket does not add one.</p>
+      <button type="button" class="btn block" data-action="newPart">Add part</button>
+      <div class="stack">${parts.length ? parts.map((part) => `<button type="button" class="rowmain" data-action="openPart" data-id="${esc(part.id)}"><span class="rowtitle">${esc(part.name)}</span><span class="rowmeta">${esc([part.partNumber ? `No. ${part.partNumber}` : "", part.verified ? "Number checked" : "Number not checked", part.at ? fmt(part.at) : ""].filter(Boolean).join(" · "))}</span></button>`).join("") : `<p class="empty">No parts recorded.</p>`}</div>
+    </section>`;
+}
+
+function screenTicket() {
+  const ticket = ticketById(ui.ticketId);
+  if (!ticket) return `<h1>Ticket</h1><p>That ticket is gone.</p>${backBtn()}`;
+  const label = TICKET_STATUS.find((item) => item[0] === ticket.status)?.[1] || ticket.status;
+  const parts = state.parts.filter((part) => part.ticketId === ticket.id);
+  let body = "";
+  if (ui.ticketTab === "parts") {
+    body = `<p class="hint">Parts for this ticket. The boat ledger is on the Maintenance screen.</p><div class="stack">${parts.length ? parts.map((part) => `<p><strong>${esc(part.name)}</strong><br><span class="meta">${esc(part.partNumber || "No part number")} · ${part.verified ? "Number checked" : "Number not checked"}</span></p>`).join("") : `<p class="empty">No part is attached. Closed does not mean one was replaced.</p>`}</div><button type="button" class="btn block" data-action="newPart" data-ticket="${esc(ticket.id)}">Add part to this ticket</button>`;
+  } else if (ui.ticketTab === "reference") {
+    body = field("Reference", "reference", ticket.reference || "", { area: true, placeholder: "Manual page, hose diagram, supplier note" });
+  } else {
+    body = `<p>${esc(ticket.detail || "No detail yet.")}</p><p class="meta">${ticket.tripId && tripById(ticket.tripId) ? `Linked to ${esc(tripById(ticket.tripId).title)}` : "No trip link"}</p><button type="button" class="btn quiet block" data-action="editTicket">Edit title and detail</button>`;
+  }
+  const closed = ticket.status === "closed" || ticket.status === "cancelled";
+  return `<p class="kicker">Ticket</p><h1>${esc(ticket.title)}</h1>
+    <p><span class="pill${closed ? "" : " warn"}">${esc(label)}</span></p>
+    <div class="chiprow">
+      <button type="button" class="chip${ui.ticketTab === "details" ? " on" : ""}" data-action="ticketTab" data-value="details">Details</button>
+      <button type="button" class="chip${ui.ticketTab === "parts" ? " on" : ""}" data-action="ticketTab" data-value="parts">Parts history</button>
+      <button type="button" class="chip${ui.ticketTab === "reference" ? " on" : ""}" data-action="ticketTab" data-value="reference">Reference</button>
+    </div>
+    <section class="card">${body}</section>
+    <div class="chiprow">${TICKET_STATUS.map(([value, text]) => `<button type="button" class="chip${ticket.status === value ? " on" : ""}" data-action="ticketStatus" data-value="${value}">${text}</button>`).join("")}</div>
+    ${closed ? `<p>This ticket is ${esc(label.toLowerCase())}. That is not proof a part was replaced.</p>` : ""}
+    ${backBtn()}`;
+}
+
+function screenTicketForm() {
+  const form = ui.form;
+  const trips = boatTrips();
+  return `<p class="kicker">Ticket</p><h1>${form.id ? "Edit ticket" : "New ticket"}</h1>
+    ${field("Title", "title", form.title)}
+    ${field("Detail", "detail", form.detail, { area: true })}
+    ${field("Reference", "reference", form.reference || "", { area: true })}
+    <button type="button" class="btn block${form.link ? " on" : ""}" data-action="flag" data-flag="link">${form.link ? "Linked to a trip" : "No trip"}</button>
+    ${form.link && trips.length ? `<label class="field"><span>Trip</span><select name="tripId">${trips.map((trip) => `<option value="${esc(trip.id)}"${trip.id === form.tripId ? " selected" : ""}>${esc(trip.title)}</option>`).join("")}</select></label>` : ""}
+    <button type="button" class="btn primary" data-action="saveTicket">Save ticket</button>
+    ${backBtn()}`;
+}
+
+function screenPart() {
+  const form = ui.form;
+  const tickets = state.tickets.filter((ticket) => ticket.boatId === ui.boatId);
+  return `<p class="kicker">Part</p><h1>${form.id ? "Edit part" : "Add part"}</h1>
+    ${field("Part", "name", form.name)}
+    ${field("Part number", "partNumber", form.partNumber, { placeholder: "Leave blank if you have not checked it" })}
+    <button type="button" class="btn block${form.verified ? " on" : ""}" data-action="flag" data-flag="verified">${form.verified ? "Part number checked" : "Part number not checked"}</button>
+    ${field("Date", "at", form.at, { type: "datetime-local" })}
+    ${field("Engine hours", "hours", form.hours, { type: "number", inputMode: "decimal", step: "0.1" })}
+    ${field("Quantity", "quantity", form.quantity, { type: "number", inputMode: "decimal", step: "1" })}
+    ${field("Source", "source", form.source)}
+    ${field("Warranty", "warranty", form.warranty)}
+    ${field("Receipt", "receipt", form.receipt)}
+    ${field("Notes", "notes", form.notes, { area: true })}
+    ${tickets.length ? `<label class="field"><span>Ticket</span><select name="ticketId"><option value="">No ticket</option>${tickets.map((ticket) => `<option value="${esc(ticket.id)}"${ticket.id === form.ticketId ? " selected" : ""}>${esc(ticket.title)}</option>`).join("")}</select></label>` : ""}
+    <button type="button" class="btn primary" data-action="savePart">Save part</button>
+    ${form.id ? `<button type="button" class="btn danger block" data-action="deletePart">Delete part</button>` : ""}
+    ${backBtn()}`;
+}
+
+function filteredPeople() {
+  return state.people.filter((person) => {
+    if (ui.peopleScope === "all") return ui.serviceTag ? (person.serviceTags || []).includes(ui.serviceTag) : true;
+    if (ui.peopleScope === "guest") return person.categories.includes("guest") || person.categories.includes("visitor");
+    if (ui.peopleScope === "service") return person.categories.includes("service") && (!ui.serviceTag || (person.serviceTags || []).includes(ui.serviceTag));
+    return person.categories.includes(ui.peopleScope);
+  });
+}
+
+function screenPeople() {
+  const people = filteredPeople();
+  return `<p class="kicker">People & Services</p><h1>Contacts</h1>
+    <p>One person can be in several categories and still appears once. Shared by both boats.</p>
+    <div class="chiprow">
+      ${[["all", "All"], ["friend", "Friends"], ["guest", "Visitors / guests"], ["crew", "Crew"], ["service", "Service"]].map(([id, label]) => `<button type="button" class="chip${ui.peopleScope === id ? " on" : ""}" data-action="peopleScope" data-value="${id}">${label}</button>`).join("")}
+    </div>
+    <p class="hint">Service tags</p>
+    <div class="chiprow">${SERVICE_TAGS.map((tag) => `<button type="button" class="chip${ui.serviceTag === tag ? " on" : ""}" data-action="serviceTag" data-value="${tag}">${esc(tag)}</button>`).join("")}</div>
+    <button type="button" class="btn primary" data-action="addPerson">Add a person</button>
+    <div class="stack">${people.map((person) => `<button type="button" class="rowmain" data-action="openPerson" data-id="${esc(person.id)}"><span class="rowtitle">${esc(person.name)}</span><span class="rowdetail">${esc(person.notes || "")}</span><span class="rowmeta">${esc([...(person.categories || []).map((id) => PERSON_CATEGORIES.find((item) => item.id === id)?.label || id), businessName(person.businessId), ...(person.serviceTags || [])].filter(Boolean).join(" · "))}</span></button>`).join("")}</div>
+    ${state.businesses.length ? `<section class="card"><h2>Companies</h2><div class="stack">${state.businesses.map((business) => `<p><strong>${esc(business.name)}</strong><br><span class="meta">${esc((business.serviceTags || []).join(" · "))}</span></p>`).join("")}</div></section>` : ""}
+    ${backBtn()}`;
+}
+
+function screenPerson() {
+  const form = ui.form;
+  const myself = form.id === "myself";
+  return `<p class="kicker">Contact</p><h1>${myself ? "Myself" : form.id ? "Edit person" : "New person"}</h1>
+    ${myself ? `<p class="hint">Myself stays person 1 on every new trip.</p>` : field("Name", "name", form.name)}
+    <div class="field"><span>Categories</span>${chips("categories", PERSON_CATEGORIES.map((item) => ({ value: item.id, label: item.label })), form.categories, true)}</div>
+    <div class="field"><span>Service tags</span>${chips("serviceTags", SERVICE_TAGS.map((tag) => ({ value: tag, label: tag })), form.serviceTags, true)}</div>
+    ${field("Company", "businessName", form.businessName, { placeholder: "Sample Marine Shop" })}
+    ${field("Phone", "phone", form.phone, { type: "tel" })}
+    ${field("Notes", "notes", form.notes, { area: true })}
+    <label class="field"><span>Photo</span><input type="file" accept="image/*" id="photo-file"></label>
+    ${photoHtml(form.photo)}
+    <button type="button" class="btn primary" data-action="savePerson">Save contact</button>
+    ${form.id && !myself ? `<button type="button" class="btn danger block" data-action="deletePerson">Delete contact</button>` : ""}
+    ${backBtn()}`;
+}
+
+function screenPlaces() {
+  const more = !placeQueryValue().trim() && ui.placeScope === "all" && state.places.length > ui.placeShow;
+  return `<p class="kicker">Places</p><h1>Places</h1>
+    <p>Shared library for both boats. Recent and favorite stay short. Search the rest.</p>
+    ${field("Search places", "placeQuery", ui.placeQuery, { type: "search", placeholder: "Harbor, lock, fuel" })}
+    <div class="chiprow">
+      ${[["recents", "Recents"], ["favorites", "Favorites"], ["all", "All"]].map(([id, label]) => `<button type="button" class="chip${ui.placeScope === id ? " on" : ""}" data-action="placeScope" data-value="${id}">${label}</button>`).join("")}
+    </div>
+    <div class="stack" id="place-list">${placeCards("library")}</div>
+    ${more ? `<button type="button" class="btn block" data-action="morePlaces">Show more</button>` : ""}
+    <button type="button" class="btn primary" data-action="newPlace">Add a place</button>
+    ${backBtn()}`;
+}
+
+function screenPlace() {
+  const form = ui.form;
+  const used = form.id ? placeRefs(form.id) : 0;
+  return `<p class="kicker">Place</p><h1>${form.id ? "Edit place" : "New place"}</h1>
+    ${field("Name", "name", form.name)}
+    ${field("Notes", "detail", form.detail, { area: true })}
+    ${field("Tags", "tags", form.tags, { placeholder: "fuel, pump-out, lock" })}
+    <label class="field"><span>Region</span><select name="region">${Object.entries(REGION_LABEL).map(([value, label]) => `<option value="${value}"${form.region === value ? " selected" : ""}>${esc(label)}</option>`).join("")}</select></label>
+    <button type="button" class="btn block${form.favorite ? " on" : ""}" data-action="flag" data-flag="favorite">${form.favorite ? "Favorite" : "Not a favorite"}</button>
+    <button type="button" class="btn primary" data-action="savePlace">Save place</button>
+    ${form.id ? `<button type="button" class="btn danger block" data-action="deletePlace">${used ? "Used by a log — keep it" : "Delete place"}</button>` : ""}
+    ${backBtn()}`;
+}
+
+function screenMore() {
+  return `<p class="kicker">More</p><h1>HM2 Log v5</h1>
+    <div class="stack">
+      <button type="button" class="btn" data-action="nav" data-screen="maint">Maintenance</button>
+      <button type="button" class="btn" data-action="nav" data-screen="people">People & Services</button>
+      <button type="button" class="btn" data-action="nav" data-screen="places">Places</button>
+      <button type="button" class="btn" data-action="nav" data-screen="backup">Backup</button>
+    </div>`;
+}
+
+function screenBackup() {
+  return `<p class="kicker">Backup</p><h1>On this phone</h1>
+    <p>HM2 Log v5 keeps this log in this browser under <code>hm2log-v5</code>. The previous log is not copied and is not changed.</p>
+    ${field("Your name (logged by)", "loggedBy", state.settings.loggedBy || "Wishy")}
+    <p class="hint">Logged by is who writes the entry. Myself is still person 1 aboard.</p>
+    <button type="button" class="btn primary" data-action="exportJson">Export backup</button>
+    <button type="button" class="btn block" data-action="importPick">Import backup</button>
+    <input id="import-file" type="file" accept="application/json,.json" hidden>
+    <p class="hint">Import merges by id. The same entry is not added twice. A newer copy replaces an older one. An older copy is skipped.</p>
+    <p class="hint">Photos live in this phone's browser storage. Export a backup before you clear the browser. Video files are not stored, only the name and the counts.</p>
+    ${backBtn()}`;
+}
+
+function confirmHtml() {
+  if (!ui.confirm) return "";
+  return `<section class="card warncard"><p>${esc(ui.confirm.text)}</p>
+    <button type="button" class="btn danger block" data-action="confirmYes">${esc(ui.confirm.yes || "Delete")}</button>
+    <button type="button" class="btn quiet block" data-action="confirmNo">Cancel</button></section>`;
+}
+
+function pickerHtml() {
+  if (!ui.picker) return "";
+  return `<div class="sheet" role="dialog" aria-label="Choose a place">
+    <h1>Place</h1>
+    ${field("Search", "pickerQuery", ui.picker.query, { type: "search" })}
+    <div class="chiprow">
+      ${[["recents", "Recents"], ["favorites", "Favorites"], ["all", "All"]].map(([id, label]) => `<button type="button" class="chip${ui.picker.scope === id ? " on" : ""}" data-action="pickerScope" data-value="${id}">${label}</button>`).join("")}
+    </div>
+    <div class="stack" id="picker-list">${placeCards("picker")}</div>
+    <button type="button" class="btn primary" data-action="newPlace">Add a new place</button>
+    <button type="button" class="btn quiet block" data-action="closePicker">Cancel</button>
+  </div>`;
+}
+
+function header() {
+  return `<header class="topbar"><button class="brand" type="button" data-action="goHome"><span class="brandname">HM2 Log <span id="version" class="ver">v5</span></span><span class="boatline">${esc(boat().name)}</span></button><p id="save-state" class="saveline">${esc(saveLabel())}</p></header>`;
+}
+
+function underwayBar() {
+  const trip = boatTrips().find((item) => item.status === "underway");
+  const forms = new Set(["trip-form", "entry-form", "media-form", "person-form", "place-form", "ticket-form", "part-form", "wrap", "best"]);
+  if (!trip || forms.has(ui.screen) || ui.picker) return "";
+  return `<div class="underway"><div class="underway-copy"><strong>Underway</strong> · ${esc(trip.title)}</div><button type="button" class="btn alert" data-action="addNote" data-id="${esc(trip.id)}">Add note</button></div>`;
+}
+
+function navHtml() {
+  const items = [["home", "Boat"], ["trip", "Trip"], ["journal", "Journal"], ["media", "Media"], ["more", "More"]];
+  const active = (name) => {
+    if (name === "home") return ui.screen === "home";
+    if (name === "trip") return ["trip", "trip-form", "wrap", "best"].includes(ui.screen);
+    if (name === "journal") return ["journal", "entry-form"].includes(ui.screen);
+    if (name === "media") return ["media", "media-form"].includes(ui.screen);
+    return ["more", "maint", "ticket", "ticket-form", "part-form", "people", "person-form", "places", "place-form", "backup"].includes(ui.screen);
+  };
+  return `<nav class="nav">${items.map(([id, label]) => `<button type="button" data-action="nav" data-screen="${id}" class="${active(id) ? "on" : ""}">${label}</button>`).join("")}</nav>`;
+}
+
+function screenHtml() {
+  const screens = {
+    home: screenHome,
+    trip: screenTrip,
+    "trip-form": screenTripForm,
+    journal: screenJournal,
+    "entry-form": screenEntry,
+    media: screenMedia,
+    "media-form": screenMediaForm,
+    best: screenBest,
+    wrap: screenWrap,
+    maint: screenMaint,
+    ticket: screenTicket,
+    "ticket-form": screenTicketForm,
+    "part-form": screenPart,
+    people: screenPeople,
+    "person-form": screenPerson,
+    places: screenPlaces,
+    "place-form": screenPlace,
+    more: screenMore,
+    backup: screenBackup,
+  };
+  return (screens[ui.screen] || screenHome)();
+}
+
+function paint() {
+  const changed = paintedScreen !== ui.screen;
+  paintedScreen = ui.screen;
+  app.innerHTML = `${header()}${underwayBar()}<div id="flash" class="flash"${ui.flash ? "" : " hidden"}>${esc(ui.flash)}</div><main class="main">${confirmHtml()}${screenHtml()}</main>${navHtml()}${pickerHtml()}`;
+  document.title = `HM2 Log v5 · ${boat().name}`;
+  if (changed) window.scrollTo(0, 0);
+}
+
+function openScreen(screen) {
+  leaveScreen();
+  ui.picker = null;
+  ui.confirm = null;
+  ui.screen = screen;
+  if (["home", "more", "people", "places", "maint", "backup", "journal"].includes(screen)) ui.form = null;
+  if (screen === "trip") {
+    const trip = shownTrip();
+    ui.tripId = trip ? trip.id : null;
+    ui.form = trip ? weatherForm(trip) : null;
+  }
+  if (screen === "media") {
+    const trip = shownTrip();
+    ui.tripId = trip ? trip.id : null;
+    ui.form = trip ? filmForm(trip) : null;
+  }
+  if (screen === "journal" && ui.journalScope === "trip" && !shownTrip()) ui.journalScope = "all";
+  paint();
+}
+
+function placeRefs(id) {
+  return state.trips.filter((trip) => trip.fromId === id || trip.toId === id).length + state.entries.filter((entry) => entry.placeId === id).length;
+}
+
+function personRefs(id) {
+  return state.trips.filter((trip) => (trip.peopleIds || []).includes(id)).length;
+}
+
+function buildEntry(form) {
+  const notes = (form.notes || "").trim();
+  const narrative = (form.narrative || "").trim();
+  if (form.kind === "note" && !notes) return { error: "Write the note first." };
+  if (form.kind === "wash" && !notes) return { error: "Write what you washed." };
+  if (form.kind === "repair" && !notes && !(form.parts || "").trim()) return { error: "Write the repair, or the parts." };
+  if (form.kind === "fuel" || form.kind === "water") {
+    if (!(form.tank || "").trim()) return { error: "Name the tank." };
+    if (!(Number(form.quantity) > 0)) return { error: "Enter the quantity added." };
+    if (form.cost === "" || Number.isNaN(Number(form.cost))) return { error: "Enter the total cost. Zero is fine." };
+  }
+  if (form.kind === "pumpout" && !form.placeId && !notes) return { error: "Add a location or a note." };
+  if (form.kind === "crab") {
+    if (!(form.catchName || "").trim()) return { error: "What did you keep?" };
+    if (form.count === "" || Number.isNaN(Number(form.count))) return { error: "Enter the count." };
+  }
+  if (form.kind === "rating" && !narrative) return { error: "Write how the trip went." };
+  let tripId = form.link && form.tripId ? form.tripId : "";
+  if ((form.kind === "rating" || form.kind === "crab") && !tripId) {
+    const trip = shownTrip();
+    if (!trip) return { error: "Open a trip first." };
+    tripId = trip.id;
+  }
+  const stamp = nowIso();
+  const id = form.id || (form.kind === "rating" ? `rating-${tripId}` : uid());
+  const existing = state.entries.find((entry) => entry.id === id);
+  return {
+    entry: {
+      id,
+      boatId: ui.boatId,
+      tripId,
+      kind: form.kind,
+      at: fromLocalInput(form.at),
+      placeId: form.placeId || "",
+      loggedBy: state.settings.loggedBy || "Wishy",
+      title: (form.title || "").trim(),
+      notes: form.kind === "rating" ? narrative : notes,
+      tank: form.tank || "",
+      quantity: form.quantity === "" ? null : Number(form.quantity),
+      units: form.units || "",
+      cost: form.cost === "" ? null : Number(form.cost),
+      currency: form.currency || "",
+      unitPrice: form.unitPrice === "" ? null : Number(form.unitPrice),
+      engineHours: form.engineHours === "" ? null : Number(form.engineHours),
+      parts: form.parts || "",
+      receipt: form.receipt || "",
+      catchName: form.catchName || "",
+      count: form.count === "" ? null : Number(form.count),
+      timeOfDay: form.timeOfDay || "",
+      narrative,
+      stars: Number(form.stars) || 0,
+      alongType: form.alongType || "",
+      story: !!form.story,
+      photo: form.photo || "",
+      createdAt: existing?.createdAt || stamp,
+      updatedAt: stamp,
+    },
+  };
+}
+
+function saveRating(trip, narrative, stars) {
+  const text = (narrative || "").trim();
+  const score = Number(stars) || 0;
+  if (!text && !score) return;
+  const id = `rating-${trip.id}`;
+  const existing = state.entries.find((entry) => entry.id === id);
+  const stamp = nowIso();
+  const entry = {
+    id,
+    boatId: trip.boatId,
+    tripId: trip.id,
+    kind: "rating",
+    at: existing?.at || stamp,
+    placeId: "",
+    loggedBy: state.settings.loggedBy || "Wishy",
+    title: "Narrative rating",
+    notes: text,
+    narrative: text,
+    stars: score,
+    story: false,
+    photo: existing?.photo || "",
+    createdAt: existing?.createdAt || stamp,
+    updatedAt: stamp,
+  };
+  if (existing) Object.assign(existing, entry);
+  else state.entries.push(entry);
+  trip.rating = { narrative: text, stars: score, entryId: id };
+}
+
+function restoreStash(extra) {
+  const stash = ui.stash;
+  ui.stash = null;
+  if (!stash) {
+    ui.screen = "home";
+    ui.form = null;
+    return;
+  }
+  ui.screen = stash.screen;
+  ui.form = stash.form;
+  ui.tripId = stash.tripId || ui.tripId;
+  if (extra) extra(stash);
+}
+
+const actions = {
+  nav(btn) {
+    ui.activityPrompt = false;
+    openScreen(btn.dataset.screen);
+  },
+  goHome() {
+    ui.activityPrompt = false;
+    openScreen("home");
+  },
+  boat(btn) {
+    leaveScreen();
+    ui.boatId = btn.dataset.id;
+    ui.tripId = null;
+    ui.form = null;
+    ui.screen = "home";
+    state.settings.activeBoatId = ui.boatId;
+    persist().then(() => paint());
+  },
+  startTrip() {
+    ui.form = tripForm(null);
+    ui.screen = "trip-form";
+    paint();
+  },
+  openTrip(btn) {
+    ui.tripId = btn.dataset.id;
+    openScreen("trip");
+  },
+  editTrip() {
+    const trip = shownTrip();
+    if (!trip) return;
+    ui.form = tripForm(trip);
+    ui.screen = "trip-form";
+    paint();
+  },
+  saveTrip(btn) {
+    return saving(async () => {
+      const form = ui.form;
+      if (!form.fromId || !form.toId) {
+        flash("Choose a departure and a destination.");
+        return;
+      }
+      const stamp = nowIso();
+      let trip = form.id ? tripById(form.id) : null;
+      if (!trip) {
+        const id = uid();
+        trip = {
+          id,
+          boatId: ui.boatId,
+          tripCode: makeTripCode(boat().prefix, stamp, state.settings.loggedBy, id),
+          createdAt: stamp,
+          status: "planned",
+          peopleIds: ["myself"],
+          film: { tools: [], kinds: [], clips: "", photos: "", note: "" },
+          checks: {},
+        };
+        state.trips.push(trip);
+      }
+      trip.title = (form.title || "").trim() || `${placeName(form.fromId)} → ${placeName(form.toId)}`;
+      trip.fromId = form.fromId;
+      trip.toId = form.toId;
+      trip.purpose = form.purpose || "Just a cruise";
+      trip.peopleIds = Array.from(new Set(["myself", ...(form.peopleIds || [])]));
+      trip.notes = form.notes || "";
+      trip.meter = form.meter || "";
+      trip.deception = !!form.deception;
+      trip.weather = weatherFromForm(form);
+      trip.updatedAt = stamp;
+      if (btn.dataset.mode === "depart") {
+        trip.status = trip.status === "arrived" ? "arrived" : "underway";
+        if (!trip.departedAt) trip.departedAt = stamp;
+      }
+      touchPlace(form.fromId);
+      touchPlace(form.toId);
+      if (trip.weather.text) state.settings.weatherByBoat[ui.boatId] = { ...trip.weather };
+      ui.tripId = trip.id;
+      ui.form = weatherForm(trip);
+      ui.screen = "trip";
+      await persist({ announce: btn.dataset.mode === "depart" && trip.status === "underway" ? "Underway. Saved on this phone." : "Trip saved on this phone." });
+      paint();
+    });
+  },
+  deleteTrip() {
+    const trip = tripById(ui.form?.id);
+    if (!trip) return;
+    const notes = state.entries.filter((entry) => entry.tripId === trip.id).length;
+    ui.confirm = {
+      text: `Delete ${trip.tripCode || trip.title}? ${notes} journal entries on it go too. Parts stay in the ledger.`,
+      run: async () => {
+        state.trips = state.trips.filter((item) => item.id !== trip.id);
+        state.entries = state.entries.filter((entry) => entry.tripId !== trip.id);
+        state.media = state.media.filter((item) => item.tripId !== trip.id);
+        state.tickets.forEach((ticket) => {
+          if (ticket.tripId === trip.id) ticket.tripId = "";
+        });
+        ui.confirm = null;
+        ui.tripId = null;
+        ui.form = null;
+        ui.screen = "home";
+        await persist({ announce: "Trip deleted" });
+        paint();
+      },
+    };
+    paint();
+  },
+  arrive() {
+    const trip = shownTrip();
+    if (!trip) return;
+    leaveScreen();
+    ui.tripId = trip.id;
+    const rating = state.entries.find((entry) => entry.id === `rating-${trip.id}`);
+    ui.form = {
+      _kind: "wrap",
+      narrative: trip.rating?.narrative || rating?.narrative || "",
+      stars: trip.rating?.stars || rating?.stars || 0,
+      bestText: trip.bestMoment?.text || "",
+      bestTags: trip.bestMoment?.tags || [],
+      filmTools: trip.film?.tools || [],
+      filmKinds: trip.film?.kinds || [],
+      clips: trip.film?.clips || "",
+      photos: trip.film?.photos || "",
+      filmNote: trip.film?.note || "",
+    };
+    ui.screen = "wrap";
+    paint();
+  },
+  saveWrap() {
+    return saving(async () => {
+      const trip = shownTrip();
+      if (!trip) return;
+      trip.status = "arrived";
+      if (!trip.arrivedAt) trip.arrivedAt = nowIso();
+      trip.bestMoment = { text: (ui.form.bestText || "").trim(), tags: ui.form.bestTags || [] };
+      trip.film = {
+        tools: ui.form.filmTools || [],
+        kinds: ui.form.filmKinds || [],
+        clips: ui.form.clips || "",
+        photos: ui.form.photos || "",
+        note: ui.form.filmNote || "",
+      };
+      trip.updatedAt = nowIso();
+      saveRating(trip, ui.form.narrative, ui.form.stars);
+      ui.form = weatherForm(trip);
+      ui.screen = "trip";
+      await persist({ announce: "Arrived. Saved on this phone." });
+      paint();
+    });
+  },
+  skipWrap() {
+    return saving(async () => {
+      const trip = shownTrip();
+      trip.status = "arrived";
+      if (!trip.arrivedAt) trip.arrivedAt = nowIso();
+      trip.updatedAt = nowIso();
+      ui.form = weatherForm(trip);
+      ui.screen = "trip";
+      await persist({ announce: "Arrived. Saved on this phone." });
+      paint();
+    });
+  },
+  addNote(btn) {
+    const trip = tripById(btn.dataset.id) || boatTrips().find((item) => item.status === "underway");
+    if (!trip) return;
+    ui.tripId = trip.id;
+    ui.form = blankEntry("note", trip.id);
+    ui.screen = "entry-form";
+    paint();
+  },
+  journal(btn) {
+    ui.activityPrompt = false;
+    ui.journalScope = btn.dataset.scope || "trip";
+    openScreen("journal");
+  },
+  activity() {
+    ui.activityPrompt = true;
+    ui.journalScope = "all";
+    openScreen("journal");
+  },
+  journalScope(btn) {
+    ui.journalScope = btn.dataset.value;
+    if (ui.journalScope === "trip" && !shownTrip()) {
+      flash("Start a trip, or use All boat.");
+      ui.journalScope = "all";
+    }
+    paint();
+  },
+  newEntry(btn) {
+    const kind = btn.dataset.kind;
+    const trip = shownTrip();
+    if ((kind === "rating" || kind === "crab") && !trip) {
+      flash("Open a trip first. The rating and the crab catch belong to a trip.");
+      return;
+    }
+    const link = btn.dataset.link === "1" && !!trip;
+    if (kind === "rating" && trip) {
+      const existing = state.entries.find((entry) => entry.id === `rating-${trip.id}`);
+      ui.form = existing ? entryToForm(existing) : blankEntry("rating", trip.id);
+      ui.form.link = true;
+      ui.form.tripId = trip.id;
+    } else {
+      ui.form = blankEntry(kind, link ? trip.id : "");
+      ui.form.link = link || kind === "crab";
+      if (ui.form.link && trip) ui.form.tripId = trip.id;
+    }
+    ui.screen = "entry-form";
+    paint();
+  },
+  openEntry(btn) {
+    const entry = state.entries.find((item) => item.id === btn.dataset.id);
+    if (!entry) return;
+    ui.form = entryToForm(entry);
+    ui.screen = "entry-form";
+    paint();
+  },
+  saveEntry() {
+    return saving(async () => {
+      const built = buildEntry(ui.form);
+      if (built.error) {
+        flash(built.error);
+        return;
+      }
+      const { entry } = built;
+      if (entry.kind === "rating") saveRating(tripById(entry.tripId), entry.narrative, entry.stars);
+      else {
+        const existing = state.entries.find((item) => item.id === entry.id);
+        if (existing) Object.assign(existing, entry);
+        else state.entries.push(entry);
+      }
+      if (entry.placeId) touchPlace(entry.placeId);
+      if (ui.form.openTicket && entry.kind === "repair" && !state.tickets.some((ticket) => ticket.entryId === entry.id)) {
+        const stamp = nowIso();
+        state.tickets.push({
+          id: uid(),
+          boatId: ui.boatId,
+          tripId: entry.tripId || "",
+          entryId: entry.id,
+          title: (entry.notes || entry.parts || "Repair").slice(0, 80),
+          detail: entry.notes || "",
+          status: "open",
+          reference: "",
+          createdAt: stamp,
+          updatedAt: stamp,
+          closedAt: "",
+        });
+      }
+      ui.journalScope = entry.tripId ? "trip" : "all";
+      if (entry.tripId) ui.tripId = entry.tripId;
+      ui.form = null;
+      ui.screen = "journal";
+      await persist({ announce: "Saved on this phone." });
+      paint();
+    });
+  },
+  deleteEntry() {
+    const id = ui.form?.id;
+    if (!id) return;
+    ui.confirm = {
+      text: "Delete this entry from the phone? A backup you already exported still has the old copy.",
+      run: async () => {
+        state.entries = state.entries.filter((entry) => entry.id !== id);
+        ui.confirm = null;
+        ui.form = null;
+        ui.screen = "journal";
+        await persist({ announce: "Entry deleted" });
+        paint();
+      },
+    };
+    paint();
+  },
+  toggleLink() {
+    if (!ui.form || ui.form.kind === "rating" || ui.form.kind === "crab") return;
+    ui.form.link = !ui.form.link;
+    if (ui.form.link && !ui.form.tripId) {
+      const trip = shownTrip() || boatTrips()[0];
+      if (!trip) {
+        ui.form.link = false;
+        flash("Start a trip first, or leave this as a boat activity.");
+        return;
+      }
+      ui.form.tripId = trip.id;
+    }
+    paint();
+  },
+  flag(btn) {
+    const name = btn.dataset.flag;
+    ui.form[name] = !ui.form[name];
+    if (ui.form._kind === "weather" && (name === "advisory" || name === "deception")) writeWeather(false);
+    paint();
+  },
+  chip(btn) {
+    const group = btn.dataset.group;
+    const value = btn.dataset.value;
+    const multi = btn.dataset.multi === "1";
+    if (multi) {
+      const set = new Set(ui.form[group] || []);
+      if (set.has(value)) set.delete(value);
+      else set.add(value);
+      if (group === "categories" && ui.form.id === "myself") set.add("crew");
+      ui.form[group] = [...set];
+    } else ui.form[group] = value;
+    const wrap = btn.closest(".chiprow");
+    wrap.querySelectorAll(".chip").forEach((chip) => {
+      const on = multi ? (ui.form[group] || []).includes(chip.dataset.value) : ui.form[group] === chip.dataset.value;
+      chip.classList.toggle("on", on);
+    });
+    if (group === "conditions") {
+      const next = sentenceFromChips(ui.form.conditions, !!ui.form.night);
+      ui.form.weatherText = next;
+      ui.form.generated = next;
+      if (!ui.form.weatherSource) ui.form.weatherSource = "Manual";
+      ui.form.weatherKind = ui.form.weatherKind || "observed";
+      ui.form.weatherAt = ui.form.weatherAt || nowIso();
+      const input = document.querySelector('[name="weatherText"]');
+      if (input) input.value = next;
+      const meta = document.getElementById("weather-meta");
+      if (meta) meta.textContent = weatherMeta(weatherFromForm(ui.form));
+      if (ui.form._kind === "weather") writeWeather(false);
+    }
+    if (group === "filmTools" || group === "filmKinds") writeFilm();
+  },
+  personToggle(btn) {
+    const id = btn.dataset.id;
+    if (id === "myself") return;
+    const set = new Set(ui.form.peopleIds || ["myself"]);
+    if (set.has(id)) set.delete(id);
+    else set.add(id);
+    set.add("myself");
+    ui.form.peopleIds = [...set];
+    btn.classList.toggle("on", set.has(id));
+  },
+  night() {
+    ui.form.night = !ui.form.night;
+    const next = sentenceFromChips(ui.form.conditions || [], !!ui.form.night);
+    if (!ui.form.weatherText || ui.form.weatherText === ui.form.generated) {
+      ui.form.weatherText = next;
+      ui.form.generated = next;
+    }
+    if (ui.form._kind === "weather") writeWeather(false);
+    paint();
+  },
+  weatherKind(btn) {
+    ui.form.weatherKind = btn.dataset.value;
+    if (!ui.form.weatherSource || ui.form.weatherSource === "Open-Meteo") ui.form.weatherSource = btn.dataset.value === "observed" ? "Manual" : ui.form.weatherSource || "Manual";
+    if (btn.dataset.value === "forecast" && !ui.form.weatherSource) ui.form.weatherSource = "Manual";
+    ui.form.weatherAt = ui.form.weatherAt || nowIso();
+    if (ui.form._kind === "weather") writeWeather(false);
+    paint();
+  },
+  async forecast() {
+    if (!navigator.onLine) {
+      flash("No signal. Type the conditions. The zone pages need a signal too.");
+      return;
+    }
+    const here = boat();
+    flash("Reading conditions…");
+    try {
+      const response = await fetch(weatherUrl(here.lat, here.lon, here.tempUnit));
+      if (!response.ok) throw new Error(String(response.status));
+      const data = await response.json();
+      const current = data.current || {};
+      const night = ui.form ? !!ui.form.night : sunIsDown();
+      const text = describeWeather({
+        code: current.weather_code,
+        windKn: current.wind_speed_10m,
+        temp: current.temperature_2m,
+        tempUnit: here.tempUnit,
+        isNight: night,
+        visibilityM: current.visibility,
+        snowfall: current.snowfall,
+        precipitation: current.precipitation,
+      });
+      if (!text) {
+        flash("No sky condition came back. Nothing was invented. Type the line, or open a zone page.");
+        return;
+      }
+      const weather = {
+        text,
+        kind: "forecast",
+        source: "Open-Meteo",
+        at: nowIso(),
+        windKn: current.wind_speed_10m == null ? null : Math.round(current.wind_speed_10m),
+        night,
+        conditions: [],
+        code: current.weather_code ?? null,
+        advisory: ui.form?.advisory || false,
+      };
+      state.settings.weatherByBoat[ui.boatId] = weather;
+      if (ui.form && (ui.form._kind === "weather" || ui.form._kind === "trip")) {
+        ui.form.weatherText = text;
+        ui.form.generated = text;
+        ui.form.weatherKind = "forecast";
+        ui.form.weatherSource = "Open-Meteo";
+        ui.form.weatherAt = weather.at;
+        ui.form.weatherCode = weather.code;
+        ui.form.wind = weather.windKn == null ? "" : String(weather.windKn);
+        ui.form.night = night;
+        if (ui.form._kind === "weather") writeWeather(false);
+      }
+      await persist({ announce: "Forecast saved on this phone." });
+      paint();
+    } catch (error) {
+      console.warn(error);
+      flash("Could not read the forecast. The zone links are unchanged.");
+    }
+  },
+  pickPlace(btn) {
+    ui.picker = { field: btn.dataset.field, query: "", scope: "recents" };
+    paint();
+  },
+  choosePlace(btn) {
+    if (!ui.form || !ui.picker) return;
+    ui.form[ui.picker.field] = btn.dataset.id;
+    touchPlace(btn.dataset.id);
+    ui.picker = null;
+    queueSave();
+    paint();
+  },
+  closePicker() {
+    ui.picker = null;
+    paint();
+  },
+  pickerScope(btn) {
+    ui.picker.scope = btn.dataset.value;
+    paint();
+  },
+  newPlace() {
+    ui.stash = { screen: ui.screen, form: ui.form, tripId: ui.tripId, pickerField: ui.picker?.field || null };
+    ui.picker = null;
+    ui.form = blankPlace();
+    ui.screen = "place-form";
+    paint();
+  },
+  openPlace(btn) {
+    const place = placeById(btn.dataset.id);
+    if (!place) return;
+    ui.form = { _kind: "place", id: place.id, name: place.name, detail: place.detail || "", tags: (place.tags || []).join(", "), favorite: !!place.favorite, region: place.region || "other" };
+    ui.screen = "place-form";
+    paint();
+  },
+  savePlace() {
+    return saving(async () => {
+      const name = (ui.form.name || "").trim();
+      if (!name) {
+        flash("Name the place.");
+        return;
+      }
+      const duplicate = state.places.find((place) => place.name.toLowerCase() === name.toLowerCase() && place.id !== ui.form.id);
+      if (duplicate) {
+        flash("That place is already in the library.");
+        if (ui.stash?.pickerField) ui.stash.form[ui.stash.pickerField] = duplicate.id;
+        if (ui.stash) {
+          restoreStash();
+          paint();
+        }
+        return;
+      }
+      const stamp = nowIso();
+      const tags = (ui.form.tags || "").split(",").map((tag) => tag.trim()).filter(Boolean);
+      let place = ui.form.id ? placeById(ui.form.id) : null;
+      if (!place) {
+        place = { id: uid(), createdAt: stamp, lastUsedAt: "" };
+        state.places.push(place);
+      }
+      Object.assign(place, { name, detail: (ui.form.detail || "").trim(), tags, favorite: !!ui.form.favorite, region: ui.form.region || "other", updatedAt: stamp });
+      const fieldName = ui.stash?.pickerField;
+      if (fieldName) {
+        ui.stash.form[fieldName] = place.id;
+        place.lastUsedAt = stamp;
+      }
+      const back = !!ui.stash;
+      if (back) restoreStash();
+      else openScreen("places");
+      await persist({ announce: "Place saved" });
+      if (back) paint();
+    });
+  },
+  deletePlace() {
+    const id = ui.form?.id;
+    if (!id) return;
+    if (placeRefs(id)) {
+      flash("That place is on a trip or a journal entry, so it stays in the library.");
+      return;
+    }
+    ui.confirm = {
+      text: "Delete this place from the library?",
+      run: async () => {
+        state.places = state.places.filter((place) => place.id !== id);
+        ui.confirm = null;
+        ui.form = null;
+        ui.screen = "places";
+        await persist({ announce: "Place deleted" });
+        paint();
+      },
+    };
+    paint();
+  },
+  fav(btn) {
+    const place = placeById(btn.dataset.id);
+    if (!place) return;
+    place.favorite = !place.favorite;
+    place.updatedAt = nowIso();
+    btn.textContent = place.favorite ? "★" : "☆";
+    btn.setAttribute("aria-pressed", place.favorite ? "true" : "false");
+    queueSave();
+  },
+  clearSearch() {
+    if (ui.picker) ui.picker.query = "";
+    else ui.placeQuery = "";
+    paint();
+  },
+  morePlaces() {
+    ui.placeShow += 20;
+    paint();
+  },
+  placeScope(btn) {
+    ui.placeScope = btn.dataset.value;
+    paint();
+  },
+  newMedia(btn) {
+    const trip = shownTrip();
+    if (!trip) {
+      flash("Open a trip first. Shots and reminders hang off the trip.");
+      return;
+    }
+    writeFilm();
+    ui.tripId = trip.id;
+    ui.form = { _kind: "media", id: null, status: btn.dataset.status || "planned", type: btn.dataset.type || "shot", title: "", detail: "", photo: "", videoName: "" };
+    ui.mediaScope = ui.form.status;
+    ui.screen = "media-form";
+    paint();
+  },
+  openMedia(btn) {
+    const item = state.media.find((media) => media.id === btn.dataset.id);
+    if (!item) return;
+    writeFilm();
+    ui.form = { _kind: "media", ...item };
+    ui.screen = "media-form";
+    paint();
+  },
+  saveMedia() {
+    return saving(async () => {
+      const form = ui.form;
+      if (!(form.title || "").trim() && !(form.detail || "").trim() && !form.photo) {
+        flash("Add a title, a note, or a photo.");
+        return;
+      }
+      const trip = shownTrip();
+      const stamp = nowIso();
+      let item = form.id ? state.media.find((media) => media.id === form.id) : null;
+      if (!item) {
+        item = { id: uid(), createdAt: stamp, tripId: trip.id, boatId: ui.boatId };
+        state.media.push(item);
+      }
+      Object.assign(item, {
+        title: (form.title || "").trim(),
+        detail: (form.detail || "").trim(),
+        status: form.status,
+        type: form.type,
+        photo: form.photo || "",
+        videoName: form.videoName || "",
+        updatedAt: stamp,
+      });
+      ui.mediaScope = item.status;
+      await persist({ announce: "Saved on this phone." });
+      openScreen("media");
+    });
+  },
+  deleteMedia() {
+    const id = ui.form?.id;
+    if (!id) return;
+    ui.confirm = {
+      text: "Delete this media note?",
+      run: async () => {
+        state.media = state.media.filter((item) => item.id !== id);
+        ui.confirm = null;
+        await persist({ announce: "Deleted" });
+        openScreen("media");
+      },
+    };
+    paint();
+  },
+  mediaScope(btn) {
+    ui.mediaScope = btn.dataset.value;
+    paint();
+  },
+  check(btn) {
+    const trip = shownTrip();
+    if (!trip) return;
+    trip.checks = trip.checks || {};
+    trip.checks[btn.dataset.id] = !trip.checks[btn.dataset.id];
+    trip.updatedAt = nowIso();
+    queueSave();
+    btn.classList.toggle("on", !!trip.checks[btn.dataset.id]);
+    btn.setAttribute("aria-pressed", trip.checks[btn.dataset.id] ? "true" : "false");
+    btn.textContent = `${trip.checks[btn.dataset.id] ? "Packed · " : ""}${CHECKS.find((item) => item[0] === btn.dataset.id)?.[1] || ""}`;
+  },
+  best() {
+    const trip = shownTrip();
+    if (!trip) return;
+    leaveScreen();
+    ui.form = { _kind: "best", bestText: trip.bestMoment?.text || "", bestTags: trip.bestMoment?.tags || [] };
+    ui.screen = "best";
+    paint();
+  },
+  saveBest() {
+    return saving(async () => {
+      const trip = shownTrip();
+      trip.bestMoment = { text: (ui.form.bestText || "").trim(), tags: ui.form.bestTags || [] };
+      trip.updatedAt = nowIso();
+      await persist({ announce: "Best moment saved" });
+      openScreen("trip");
+    });
+  },
+  newTicket(btn) {
+    const trip = shownTrip();
+    const link = btn?.dataset?.link === "1" && !!trip;
+    ui.form = { _kind: "ticket", id: null, title: "", detail: "", status: "open", reference: "", tripId: link ? trip.id : "", link: !!link };
+    ui.screen = "ticket-form";
+    paint();
+  },
+  openTicket(btn) {
+    leaveScreen();
+    ui.ticketId = btn.dataset.id;
+    ui.ticketTab = "details";
+    ui.form = null;
+    ui.screen = "ticket";
+    paint();
+  },
+  editTicket() {
+    const ticket = ticketById(ui.ticketId);
+    if (!ticket) return;
+    ui.form = { _kind: "ticket", id: ticket.id, title: ticket.title, detail: ticket.detail || "", reference: ticket.reference || "", status: ticket.status, tripId: ticket.tripId || "", link: !!ticket.tripId };
+    ui.screen = "ticket-form";
+    paint();
+  },
+  saveTicket() {
+    return saving(async () => {
+      const form = ui.form;
+      if (!(form.title || "").trim()) {
+        flash("Give the ticket a title.");
+        return;
+      }
+      const stamp = nowIso();
+      let ticket = form.id ? ticketById(form.id) : null;
+      if (!ticket) {
+        ticket = { id: uid(), boatId: ui.boatId, createdAt: stamp, closedAt: "", entryId: "" };
+        state.tickets.push(ticket);
+      }
+      Object.assign(ticket, {
+        title: form.title.trim(),
+        detail: (form.detail || "").trim(),
+        reference: form.reference || "",
+        tripId: form.link ? form.tripId || "" : "",
+        updatedAt: stamp,
+        status: ticket.status || "open",
+      });
+      ui.ticketId = ticket.id;
+      ui.ticketTab = "details";
+      ui.form = null;
+      ui.screen = "ticket";
+      await persist({ announce: "Ticket saved" });
+      paint();
+    });
+  },
+  ticketStatus(btn) {
+    const ticket = ticketById(ui.ticketId);
+    if (!ticket) return;
+    ticket.status = btn.dataset.value;
+    ticket.updatedAt = nowIso();
+    ticket.closedAt = ticket.status === "closed" || ticket.status === "cancelled" ? nowIso() : "";
+    persist({ announce: "Ticket updated" }).then(() => paint());
+  },
+  ticketTab(btn) {
+    ui.ticketTab = btn.dataset.value;
+    paint();
+  },
+  maintScope(btn) {
+    ui.maintScope = btn.dataset.value;
+    paint();
+  },
+  newPart(btn) {
+    ui.form = {
+      _kind: "part",
+      id: null,
+      ticketId: btn?.dataset?.ticket || "",
+      name: "",
+      partNumber: "",
+      verified: false,
+      at: toLocalInput(),
+      hours: "",
+      quantity: "",
+      source: "",
+      warranty: "",
+      receipt: "",
+      notes: "",
+    };
+    ui.screen = "part-form";
+    paint();
+  },
+  openPart(btn) {
+    const part = state.parts.find((item) => item.id === btn.dataset.id);
+    if (!part) return;
+    ui.form = {
+      _kind: "part",
+      id: part.id,
+      ticketId: part.ticketId || "",
+      name: part.name || "",
+      partNumber: part.partNumber || "",
+      verified: !!part.verified,
+      at: toLocalInput(part.at),
+      hours: part.hours ?? "",
+      quantity: part.quantity ?? "",
+      source: part.source || "",
+      warranty: part.warranty || "",
+      receipt: part.receipt || "",
+      notes: part.notes || "",
+    };
+    ui.screen = "part-form";
+    paint();
+  },
+  savePart() {
+    return saving(async () => {
+      if (!(ui.form.name || "").trim()) {
+        flash("Name the part.");
+        return;
+      }
+      const stamp = nowIso();
+      let part = ui.form.id ? state.parts.find((item) => item.id === ui.form.id) : null;
+      if (!part) {
+        part = { id: uid(), boatId: ui.boatId, createdAt: stamp };
+        state.parts.push(part);
+      }
+      Object.assign(part, {
+        name: ui.form.name.trim(),
+        partNumber: (ui.form.partNumber || "").trim(),
+        verified: !!ui.form.verified,
+        at: fromLocalInput(ui.form.at),
+        hours: ui.form.hours === "" ? null : Number(ui.form.hours),
+        quantity: ui.form.quantity === "" ? null : Number(ui.form.quantity),
+        source: ui.form.source || "",
+        warranty: ui.form.warranty || "",
+        receipt: ui.form.receipt || "",
+        notes: ui.form.notes || "",
+        ticketId: ui.form.ticketId || "",
+        updatedAt: stamp,
+      });
+      await persist({ announce: "Part saved" });
+      openScreen("maint");
+    });
+  },
+  deletePart() {
+    const id = ui.form?.id;
+    if (!id) return;
+    ui.confirm = {
+      text: "Delete this part from the ledger?",
+      run: async () => {
+        state.parts = state.parts.filter((part) => part.id !== id);
+        ui.confirm = null;
+        await persist({ announce: "Part deleted" });
+        openScreen("maint");
+      },
+    };
+    paint();
+  },
+  peopleScope(btn) {
+    ui.peopleScope = btn.dataset.value;
+    if (ui.peopleScope !== "service" && ui.peopleScope !== "all") ui.serviceTag = null;
+    paint();
+  },
+  serviceTag(btn) {
+    const tag = btn.dataset.value;
+    ui.peopleScope = "service";
+    ui.serviceTag = ui.serviceTag === tag ? null : tag;
+    paint();
+  },
+  addPerson() {
+    ui.stash = ui.screen === "trip-form" ? { screen: ui.screen, form: ui.form, tripId: ui.tripId } : null;
+    ui.form = blankPerson();
+    ui.screen = "person-form";
+    paint();
+  },
+  openPerson(btn) {
+    const person = state.people.find((item) => item.id === btn.dataset.id);
+    if (!person) return;
+    ui.form = {
+      _kind: "person",
+      id: person.id,
+      name: person.name,
+      categories: person.categories || [],
+      serviceTags: person.serviceTags || [],
+      businessName: businessName(person.businessId),
+      phone: person.phone || "",
+      notes: person.notes || "",
+      photo: person.photo || "",
+    };
+    ui.screen = "person-form";
+    paint();
+  },
+  savePerson() {
+    return saving(async () => {
+      const myself = ui.form.id === "myself";
+      const name = myself ? "Myself" : (ui.form.name || "").trim();
+      if (!name) {
+        flash("Name the person.");
+        return;
+      }
+      const stamp = nowIso();
+      let categories = ui.form.categories || [];
+      const serviceTags = ui.form.serviceTags || [];
+      if (serviceTags.length && !categories.includes("service")) categories = [...categories, "service"];
+      if (myself && !categories.includes("crew")) categories = [...categories, "crew"];
+      let businessId = "";
+      const company = (ui.form.businessName || "").trim();
+      if (company) {
+        let business = state.businesses.find((item) => item.name.toLowerCase() === company.toLowerCase());
+        if (!business) {
+          business = { id: uid(), name: company, serviceTags: [], notes: "", createdAt: stamp, updatedAt: stamp };
+          state.businesses.push(business);
+        }
+        business.serviceTags = Array.from(new Set([...(business.serviceTags || []), ...serviceTags]));
+        business.updatedAt = stamp;
+        businessId = business.id;
+      }
+      let person = ui.form.id ? state.people.find((item) => item.id === ui.form.id) : null;
+      if (!person) {
+        person = { id: uid(), createdAt: stamp };
+        state.people.push(person);
+      }
+      Object.assign(person, { name, categories, serviceTags, businessId, phone: ui.form.phone || "", notes: ui.form.notes || "", photo: ui.form.photo || "", updatedAt: stamp });
+      if (ui.stash?.form?.peopleIds) ui.stash.form.peopleIds = Array.from(new Set([...(ui.stash.form.peopleIds || []), person.id, "myself"]));
+      const back = !!ui.stash;
+      if (back) restoreStash();
+      else {
+        ui.form = null;
+        ui.screen = "people";
+      }
+      await persist({ announce: "Contact saved" });
+      paint();
+    });
+  },
+  deletePerson() {
+    const id = ui.form?.id;
+    if (!id || id === "myself") return;
+    if (personRefs(id)) {
+      flash("This person is on a trip, so the contact stays.");
+      return;
+    }
+    ui.confirm = {
+      text: "Delete this contact? They are removed from the shared list only.",
+      run: async () => {
+        state.people = state.people.filter((person) => person.id !== id);
+        ui.confirm = null;
+        ui.form = null;
+        ui.screen = "people";
+        await persist({ announce: "Contact deleted" });
+        paint();
+      },
+    };
+    paint();
+  },
+  back() {
+    if (ui.picker) {
+      ui.picker = null;
+      paint();
+      return;
+    }
+    if (ui.stash) {
+      restoreStash();
+      paint();
+      return;
+    }
+    const map = {
+      "trip-form": "trip",
+      "entry-form": "journal",
+      "media-form": "media",
+      ticket: "maint",
+      "ticket-form": "maint",
+      "part-form": "maint",
+      "person-form": "people",
+      "place-form": "places",
+      wrap: "trip",
+      best: "trip",
+      backup: "more",
+      people: "more",
+      places: "more",
+      maint: "more",
+    };
+    openScreen(map[ui.screen] || "home");
+  },
+  star(btn) {
+    const count = Number(btn.dataset.value);
+    ui.form.stars = ui.form.stars === count ? 0 : count;
+    paint();
+  },
+  exportJson() {
+    const payload = exportPayload(state);
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.href = url;
+    link.download = `hm2-log-v5-${payload.exportedAt.slice(0, 10)}.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+    flash("Backup downloaded. Each entry is in there once.");
+  },
+  importPick() {
+    document.getElementById("import-file")?.click();
+  },
+  confirmYes() {
+    const run = ui.confirm?.run;
+    if (run) run();
+  },
+  confirmNo() {
+    ui.confirm = null;
+    paint();
+  },
+};
+
+function refreshList(id, html) {
+  const node = document.getElementById(id);
+  if (node) node.innerHTML = html;
+}
+
+function onField(el) {
+  if (!el || !el.name) return;
+  if (el.name === "loggedBy") {
+    state.settings.loggedBy = el.value.trim() || "Wishy";
+    queueSave();
+    return;
+  }
+  if (el.name === "placeQuery") {
+    ui.placeQuery = el.value;
+    refreshList("place-list", placeCards("library"));
+    return;
+  }
+  if (el.name === "pickerQuery") {
+    if (ui.picker) ui.picker.query = el.value;
+    refreshList("picker-list", placeCards("picker"));
+    return;
+  }
+  if (el.name === "switchTrip") {
+    ui.tripId = el.value;
+    const trip = shownTrip();
+    ui.form = trip ? weatherForm(trip) : null;
+    paint();
+    return;
+  }
+  if (el.name === "reference" && ui.screen === "ticket") {
+    const ticket = ticketById(ui.ticketId);
+    if (!ticket) return;
+    ticket.reference = el.value;
+    ticket.updatedAt = nowIso();
+    queueSave();
+    return;
+  }
+  if (!ui.form) return;
+  ui.form[el.name] = el.type === "checkbox" ? el.checked : el.value;
+  if (el.name === "meter") {
+    const hint = document.getElementById("meter-hint");
+    if (hint) hint.textContent = meterHint(el.value);
+  }
+  if (ui.form._kind === "weather" && (el.name === "weatherText" || el.name === "wind")) {
+    if (el.name === "weatherText" && el.value.trim()) {
+      ui.form.weatherKind = ui.form.weatherKind || "observed";
+      ui.form.weatherSource = ui.form.weatherSource || "Manual";
+      ui.form.weatherAt = ui.form.weatherAt || nowIso();
+    }
+    writeWeather(false);
+    const meta = document.getElementById("weather-meta");
+    if (meta) meta.textContent = weatherMeta(weatherFromForm(ui.form));
+  }
+  if (ui.form._kind === "film" && ["clips", "photos", "filmNote"].includes(el.name)) writeFilm();
+  if ((ui.form._kind === "trip" || ui.form._kind === "entry" || ui.form._kind === "wrap") && el.name === "weatherText") {
+    ui.form.weatherKind = ui.form.weatherKind || "observed";
+    ui.form.weatherSource = ui.form.weatherSource || "Manual";
+    ui.form.weatherAt = ui.form.weatherAt || nowIso();
+  }
+}
+
+async function onFile(input) {
+  const file = input.files && input.files[0];
+  if (!file || !ui.form) return;
+  if (file.type.startsWith("video/")) {
+    ui.form.videoName = file.name;
+    flash("Video stays in the camera roll. The log keeps the file name only.");
+    paint();
+    return;
+  }
+  if (!file.type.startsWith("image/")) {
+    flash("Choose a photo. Video stays in the camera roll.");
+    return;
+  }
+  try {
+    ui.form.photo = await resizeImage(file);
+    flash("Photo attached");
+    paint();
+  } catch (error) {
+    console.warn(error);
+    flash("That photo could not be read.");
+  }
+}
+
+app.addEventListener("click", (event) => {
+  const btn = event.target.closest("[data-action]");
+  if (!btn || !app.contains(btn)) return;
+  const run = actions[btn.dataset.action];
+  if (!run) return;
+  Promise.resolve(run(btn)).catch((error) => {
+    console.error(error);
+    flash("Something went wrong. The last successful save is still on this phone.");
+  });
+});
+app.addEventListener("input", (event) => onField(event.target));
+async function importFile(input) {
+  const file = input.files && input.files[0];
+  input.value = "";
+  if (!file) return;
+  try {
+    const payload = JSON.parse(await file.text());
+    const merged = importPayload(state, payload);
+    state = merged.state;
+    ui.boatId = state.settings.activeBoatId || ui.boatId;
+    await persist({ announce: importSummary(merged.stats) });
+    paint();
+  } catch (error) {
+    flash(error.message || "That backup could not be read.");
+  }
+}
+
+function importSummary(stats) {
+  const totals = Object.values(stats).reduce((sum, item) => ({
+    added: sum.added + item.added,
+    updated: sum.updated + item.updated,
+    skipped: sum.skipped + item.skipped,
+  }), { added: 0, updated: 0, skipped: 0 });
+  return `Backup merged. ${totals.added} added, ${totals.updated} updated, ${totals.skipped} already on this phone.`;
+}
+
+app.addEventListener("change", (event) => {
+  if (event.target?.id === "import-file") {
+    importFile(event.target);
+    return;
+  }
+  if (event.target?.type === "file") {
+    onFile(event.target);
+    return;
+  }
+  onField(event.target);
+});
+
+async function boot() {
+  const loaded = await loadState();
+  state = normalizeState(loaded || freshState());
+  ui.boatId = state.settings.activeBoatId || "hm2";
+  if (!loaded) await saveState(state);
+  paint();
+  window.addEventListener("online", () => {
+    ui.online = true;
+    updateSaveLabel();
+  });
+  window.addEventListener("offline", () => {
+    ui.online = false;
+    updateSaveLabel();
+  });
+  if (!location.search.includes("nosw=1") && "serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  }
+}
+
+boot().catch((error) => {
+  console.error(error);
+  app.textContent = `HM2 Log v5 could not start. ${error.message || ""}`;
+});
