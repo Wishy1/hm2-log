@@ -43,6 +43,10 @@ import {
   syncChanges,
   spaceSentences,
   undupeWord,
+  normalizeState,
+  phoneHref,
+  emailHref,
+  websiteHref,
 } from "./logic.js";
 
 assert.equal(sunDown(new Date("2026-06-21T20:00:00Z"), 48.29, -122.64), false);
@@ -292,5 +296,80 @@ assert.equal(spaceSentences("49°F"), "49°F");
 assert.equal(undupeWord("DungenessDungeness"), "Dungeness");
 assert.equal(undupeWord("Dungeness"), "Dungeness");
 assert.equal(undupeWord("Dungeness · 3"), "Dungeness · 3");
+
+const kept = normalizeState({
+  people: [{ id: "old", name: "Harbor Shop", categories: ["service"], phone: "360-555-0100", notes: "Ask for Dana", updatedAt: "2026-11-01T00:00:00.000Z" }],
+  trips: [{ id: "t-old", peopleIds: ["old"], eta: { factor: 1.5, speedKn: 6, appEta: "09:00" }, updatedAt: "2026-11-01T00:00:00.000Z" }],
+});
+const oldPerson = kept.people.find((person) => person.id === "old");
+assert.equal(oldPerson.name, "Harbor Shop");
+assert.equal(oldPerson.phone, "360-555-0100");
+assert.equal(oldPerson.notes, "Ask for Dana");
+assert.equal(oldPerson.email, "");
+assert.equal(oldPerson.address, "");
+assert.equal(oldPerson.website, "");
+assert.equal(kept.trips.find((trip) => trip.id === "t-old").eta.factor, 1.5);
+
+const richState = freshState();
+richState.people.push({
+  id: "yard",
+  name: "Yard",
+  categories: ["service"],
+  phone: "360-555-0199",
+  email: "desk@yard.example",
+  address: "12 Dock St\nAnacortes",
+  website: "http://yard.example/parts",
+  notes: "Parts",
+  updatedAt: "2026-11-12T00:00:00.000Z",
+});
+const yardOut = exportPayload(richState).people.find((person) => person.id === "yard");
+assert.equal(yardOut.phone, "360-555-0199");
+assert.equal(yardOut.email, "desk@yard.example");
+assert.equal(yardOut.address, "12 Dock St\nAnacortes");
+assert.equal(yardOut.website, "http://yard.example/parts");
+assert.equal(yardOut.notes, "Parts");
+const round = importPayload(freshState(), exportPayload(richState)).state.people.find((person) => person.id === "yard");
+assert.equal(round.email, "desk@yard.example");
+assert.equal(round.address, "12 Dock St\nAnacortes");
+assert.equal(round.website, "http://yard.example/parts");
+const oldFile = exportPayload(freshState());
+oldFile.people.push({ id: "legacy", name: "Harbor Shop", categories: ["service"], phone: "360-555-0100", notes: "Ask for Dana", updatedAt: "2026-11-02T00:00:00.000Z" });
+const legacy = importPayload(freshState(), oldFile).state.people.find((person) => person.id === "legacy");
+assert.equal(legacy.name, "Harbor Shop");
+assert.equal(legacy.phone, "360-555-0100");
+assert.equal(legacy.notes, "Ask for Dana");
+assert.equal(legacy.email, "");
+assert.equal(legacy.address, "");
+assert.equal(legacy.website, "");
+
+const peopleTab = sheetFromState(richState).People.find((person) => person.Name === "Yard");
+assert.equal(peopleTab.Phone, "360-555-0199");
+assert.equal(peopleTab.Email, "desk@yard.example");
+assert.equal(peopleTab.Address, "12 Dock St\nAnacortes");
+assert.equal(peopleTab.Website, "http://yard.example/parts");
+const personChange = syncChange(richState, "person", richState.people.find((person) => person.id === "yard"));
+assert.equal(personChange.row.Phone, "360-555-0199");
+assert.equal(personChange.row.Email, "desk@yard.example");
+assert.equal(personChange.row.Address, "12 Dock St\nAnacortes");
+assert.equal(personChange.row.Website, "http://yard.example/parts");
+
+assert.equal(phoneHref("360-555-0100"), "tel:3605550100");
+assert.equal(phoneHref("+1 (360) 555-0100"), "tel:+13605550100");
+assert.equal(phoneHref(""), "");
+assert.equal(phoneHref("ask Dana"), "");
+assert.equal(emailHref("desk@yard.example"), "mailto:desk@yard.example");
+assert.equal(emailHref(""), "");
+assert.equal(emailHref("not an email"), "");
+assert.equal(websiteHref("yard.example"), "https://yard.example/");
+assert.equal(websiteHref("http://yard.example/parts"), "https://yard.example/parts");
+assert.equal(websiteHref("https://yard.example/parts"), "https://yard.example/parts");
+assert.equal(websiteHref("javascript:alert(1)"), "");
+assert.equal(websiteHref(""), "");
+
+const assumed = passageEstimate({ from: cove, to: conner, speedKn: 7, departedAt: new Date("2026-11-10T15:00:00") });
+assert.equal(assumed.factor, 1.3);
+assert.ok(Math.abs(assumed.nm - straight * 1.3) < 0.01);
+const customFactor = passageEstimate({ from: cove, to: conner, factor: "1.5", speedKn: 7, departedAt: new Date("2026-11-10T15:00:00") });
+assert.equal(customFactor.factor, 1.5);
 
 console.log("logic.test.mjs ok");

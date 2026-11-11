@@ -201,7 +201,7 @@ a.tester-download {
 }
 .field { display: block; margin: 0 0 12px; }
 .field span, .checkline { display: block; font-weight: 700; margin-bottom: 6px; }
-input[type="text"], input[type="number"], input[type="search"], input[type="datetime-local"], input[type="time"], input[type="tel"], textarea, select {
+input[type="text"], input[type="number"], input[type="search"], input[type="datetime-local"], input[type="time"], input[type="tel"], input[type="email"], input[type="url"], textarea, select {
   width: 100%;
   min-height: 64px;
   padding: 14px;
@@ -220,6 +220,10 @@ input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-
 .rowmain { flex: 1; text-align: left; }
 .rowtitle { display: block; font-size: 20px; }
 .rowdetail, .rowmeta { display: block; margin-top: 4px; color: var(--muted); font-weight: 500; font-size: 18px; }
+.contact-address { white-space: pre-line; }
+.contact-links { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 0; }
+.contact-links:empty { display: none; }
+.contact-links a { color: var(--blue); font-size: 18px; font-weight: 650; text-decoration: underline; min-height: 44px; display: inline-flex; align-items: center; }
 .iconbtn { width: 56px; font-size: 22px; padding: 0; }
 .pill {
   display: inline-block;
