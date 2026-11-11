@@ -9,7 +9,7 @@ var HEADERS = {
   "Boat Activities": ["Id", "Boat", "Trip", "When", "Kind", "Quantity", "Unit", "Cost", "Currency", "Tank", "Notes", "Updated"],
   "Maintenance Tickets": ["Id", "Boat", "Trip", "Title", "Detail", "Status", "Updated"],
   Parts: ["Id", "Boat", "Name", "Part number", "Checked", "Updated"],
-  People: ["Id", "Name", "Categories", "Updated"],
+  People: ["Id", "Name", "Categories", "Updated", "Phone", "Email", "Address", "Website"],
   Places: ["Id", "Name", "Notes", "Updated"],
 };
 
@@ -63,10 +63,7 @@ function openOrCreateSheet_(props) {
   }
   Object.keys(HEADERS).forEach(function (name) {
     var sheet = ss.getSheetByName(name) || ss.insertSheet(name);
-    var headers = HEADERS[name];
-    if (sheet.getLastRow() === 0 || sheet.getRange(1, 1).getValue() !== "Id") {
-      sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-    }
+    ensureHeaders_(sheet, HEADERS[name]);
   });
   var leftover = ss.getSheetByName("Sheet1");
   if (leftover && ss.getSheets().length > 1) ss.deleteSheet(leftover);
@@ -89,6 +86,29 @@ function openOrCreateDoc_(props) {
     doc.getBody().appendParagraph("HM2 Log - Trip Journal").setHeading(DocumentApp.ParagraphHeading.TITLE);
   }
   return doc;
+}
+
+function ensureHeaders_(sheet, headers) {
+  var width = Math.max(sheet.getLastColumn(), 1);
+  var existing = [];
+  if (sheet.getLastRow() > 0) {
+    existing = sheet.getRange(1, 1, 1, width).getValues()[0].map(function (cell) {
+      return cell == null ? "" : String(cell);
+    });
+    while (existing.length && existing[existing.length - 1] === "") existing.pop();
+  }
+  if (!existing.length) {
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    return;
+  }
+  var next = existing.slice();
+  headers.forEach(function (header) {
+    if (next.indexOf(header) === -1) next.push(header);
+  });
+  var unchanged = next.length === existing.length && next.every(function (header, index) {
+    return header === existing[index];
+  });
+  if (!unchanged) sheet.getRange(1, 1, 1, next.length).setValues([next]);
 }
 
 function upsertRow_(ss, change) {

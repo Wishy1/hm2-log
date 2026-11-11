@@ -1,4 +1,4 @@
-const CACHE = "hm2log-v5-9";
+const CACHE = "hm2log-v5-10";
 const FILES = [
   "./",
   "./index.html",

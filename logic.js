@@ -378,6 +378,12 @@ export function normalizeState(state) {
     const me = next.people.find((person) => person.id === "myself");
     if (!me.categories.includes("crew")) me.categories = [...me.categories, "crew"];
   }
+  for (const person of next.people) {
+    if (person.phone == null) person.phone = "";
+    if (person.email == null) person.email = "";
+    if (person.address == null) person.address = "";
+    if (person.website == null) person.website = "";
+  }
   for (const trip of next.trips) {
     const ids = new Set(["myself", ...(trip.peopleIds || [])]);
     trip.peopleIds = [...ids];
@@ -394,6 +400,9 @@ export function myselfPerson() {
     serviceTags: [],
     businessId: "",
     phone: "",
+    email: "",
+    address: "",
+    website: "",
     notes: "Person 1 on every trip.",
     photo: "",
     createdAt: stamp,
@@ -524,6 +533,38 @@ export function countIds(list) {
   return new Set((list || []).map((item) => item && item.id).filter(Boolean)).size;
 }
 
+/** Phone, email, and website links. Blank or unusable values stay blank. */
+export function phoneHref(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  const compact = raw.replace(/[^\d+]/g, "");
+  const number = compact.startsWith("+") ? `+${compact.slice(1).replace(/\+/g, "")}` : compact.replace(/\+/g, "");
+  if (!/\d/.test(number)) return "";
+  return `tel:${number}`;
+}
+
+export function emailHref(value) {
+  const raw = String(value || "").trim();
+  if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(raw)) return "";
+  return `mailto:${raw}`;
+}
+
+export function websiteHref(value) {
+  const raw = String(value || "").trim();
+  if (!raw || /\s/.test(raw)) return "";
+  const withScheme = /^[a-z][a-z0-9+.-]*:/i.test(raw) ? raw : `https://${raw}`;
+  let url;
+  try {
+    url = new URL(withScheme);
+  } catch {
+    return "";
+  }
+  if (url.protocol !== "http:" && url.protocol !== "https:") return "";
+  if (!url.hostname || !url.hostname.includes(".")) return "";
+  url.protocol = "https:";
+  return url.href;
+}
+
 /** Shown in the sample demo. Not a real address and not a secret. */
 export const DEMO_ENDPOINT_LABEL = "demo endpoint";
 
@@ -636,6 +677,10 @@ export function sheetFromState(state) {
     People: (state.people || []).map((person) => ({
       Name: person.name || "",
       Categories: (person.categories || []).join(", "),
+      Phone: person.phone || "",
+      Email: person.email || "",
+      Address: person.address || "",
+      Website: person.website || "",
     })),
     Places: (state.places || []).map((place) => ({
       Name: place.name || "",
@@ -897,7 +942,16 @@ export function syncChange(state, kind, record) {
       recordId: record.id,
       updatedAt,
       journal: null,
-      row: { Id: record.id, Name: record.name || "", Categories: (record.categories || []).join(", "), Updated: updatedAt },
+      row: {
+        Id: record.id,
+        Name: record.name || "",
+        Categories: (record.categories || []).join(", "),
+        Phone: record.phone || "",
+        Email: record.email || "",
+        Address: record.address || "",
+        Website: record.website || "",
+        Updated: updatedAt,
+      },
     };
   }
   return {

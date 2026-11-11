@@ -22,6 +22,9 @@ import {
   normalizeState,
   nowIso,
   passageEstimate,
+  phoneHref,
+  emailHref,
+  websiteHref,
   removeDraft,
   scoreEta,
   sentenceFromChips,
@@ -968,7 +971,7 @@ function filmForm(trip) {
 }
 
 function blankPerson() {
-  return { _kind: "person", id: null, name: "", categories: [], serviceTags: [], businessName: "", phone: "", notes: "", photo: "" };
+  return { _kind: "person", id: null, name: "", categories: [], serviceTags: [], businessName: "", phone: "", email: "", address: "", website: "", notes: "", photo: "" };
 }
 function blankPlace() {
   return { _kind: "place", id: null, name: "", detail: "", tags: "", favorite: false, region: boat().region };
@@ -1340,10 +1343,7 @@ function etaEditor(form) {
     <h2>ETA game</h2>
     <p id="eta-distance">${esc(distance)}</p>
     ${estimate.straightNm == null ? field("Distance (nm)", "manualNm", form.manualNm || "", { type: "number", inputMode: "decimal", step: "0.1" }) : ""}
-    <div class="split">
-      ${field("Speed (kn)", "etaSpeed", form.etaSpeed || "7", { type: "number", inputMode: "decimal", step: "0.1" })}
-      ${field("Water factor", "etaFactor", form.etaFactor || "1.3", { type: "number", inputMode: "decimal", step: "0.1" })}
-    </div>
+    ${field("Speed (kn)", "etaSpeed", form.etaSpeed || "7", { type: "number", inputMode: "decimal", step: "0.1" })}
     <p class="meta" id="eta-readout">${esc(time)}</p>
     <p id="eta-guess"><strong>App's guess: ${esc(guess)}</strong></p>
     ${field("Your guess", "captainEta", form.captainEta || "", { type: "time" })}
@@ -1652,9 +1652,28 @@ function screenPeople() {
     <p class="hint">Service tags</p>
     <div class="chiprow">${SERVICE_TAGS.map((tag) => `<button type="button" class="chip${ui.serviceTag === tag ? " on" : ""}" data-action="serviceTag" data-value="${tag}">${esc(tag)}</button>`).join("")}</div>
     <button type="button" class="btn primary" data-action="addPerson">Add a person</button>
-    <div class="stack">${people.map((person) => `<button type="button" class="rowmain" data-action="openPerson" data-id="${esc(person.id)}"><span class="rowtitle">${esc(person.name)}</span><span class="rowdetail">${esc(person.notes || "")}</span><span class="rowmeta">${esc([...(person.categories || []).map((id) => PERSON_CATEGORIES.find((item) => item.id === id)?.label || id), businessName(person.businessId), ...(person.serviceTags || [])].filter(Boolean).join(" · "))}</span></button>`).join("")}</div>
+    <div class="stack">${people.map((person) => personRow(person)).join("")}</div>
     ${state.businesses.length ? `<section class="card"><h2>Companies</h2><div class="stack">${state.businesses.map((business) => `<p><strong>${esc(business.name)}</strong><br><span class="meta">${esc((business.serviceTags || []).join(" · "))}</span></p>`).join("")}</div></section>` : ""}
     ${backBtn()}`;
+}
+
+function contactAnchorHtml(kind, value) {
+  const href = kind === "phone" ? phoneHref(value) : kind === "email" ? emailHref(value) : websiteHref(value);
+  const label = String(value || "").trim();
+  if (!href || !label) return "";
+  const external = kind === "website" ? ` target="_blank" rel="noopener"` : "";
+  return `<a href="${esc(href)}"${external}>${esc(label)}</a>`;
+}
+
+function contactLinksHtml(person) {
+  return ["phone", "email", "website"].map((kind) => contactAnchorHtml(kind, person?.[kind])).filter(Boolean).join("");
+}
+
+function personRow(person) {
+  const address = String(person.address || "").trim();
+  const links = contactLinksHtml(person);
+  const meta = [...(person.categories || []).map((id) => PERSON_CATEGORIES.find((item) => item.id === id)?.label || id), businessName(person.businessId), ...(person.serviceTags || [])].filter(Boolean).join(" · ");
+  return `<div class="contact"><button type="button" class="rowmain" data-action="openPerson" data-id="${esc(person.id)}"><span class="rowtitle">${esc(person.name)}</span><span class="rowdetail">${esc(person.notes || "")}</span><span class="rowmeta">${esc(meta)}</span>${address ? `<span class="rowmeta contact-address">${esc(address)}</span>` : ""}</button>${links ? `<p class="contact-links">${links}</p>` : ""}</div>`;
 }
 
 function screenPerson() {
@@ -1665,7 +1684,13 @@ function screenPerson() {
     <div class="field"><span>Categories</span>${chips("categories", PERSON_CATEGORIES.map((item) => ({ value: item.id, label: item.label })), form.categories, true)}</div>
     <div class="field"><span>Service tags</span>${chips("serviceTags", SERVICE_TAGS.map((tag) => ({ value: tag, label: tag })), form.serviceTags, true)}</div>
     ${field("Company", "businessName", form.businessName, { placeholder: "Sample Marine Shop" })}
-    ${field("Phone", "phone", form.phone, { type: "tel" })}
+    ${field("Phone", "phone", form.phone || "", { type: "tel" })}
+    <p class="contact-links" id="link-phone">${contactAnchorHtml("phone", form.phone)}</p>
+    ${field("Email", "email", form.email || "", { type: "email" })}
+    <p class="contact-links" id="link-email">${contactAnchorHtml("email", form.email)}</p>
+    ${field("Address", "address", form.address || "", { area: true })}
+    ${field("Website", "website", form.website || "", { type: "url" })}
+    <p class="contact-links" id="link-website">${contactAnchorHtml("website", form.website)}</p>
     ${field("Notes", "notes", form.notes, { area: true })}
     <label class="field"><span>Photo</span><input type="file" accept="image/*" id="photo-file"></label>
     ${photoHtml(form.photo)}
@@ -2855,6 +2880,9 @@ const actions = {
       serviceTags: person.serviceTags || [],
       businessName: businessName(person.businessId),
       phone: person.phone || "",
+      email: person.email || "",
+      address: person.address || "",
+      website: person.website || "",
       notes: person.notes || "",
       photo: person.photo || "",
     };
@@ -2892,7 +2920,19 @@ const actions = {
         person = { id: uid(), createdAt: stamp };
         state.people.push(person);
       }
-      Object.assign(person, { name, categories, serviceTags, businessId, phone: ui.form.phone || "", notes: ui.form.notes || "", photo: ui.form.photo || "", updatedAt: stamp });
+      Object.assign(person, {
+        name,
+        categories,
+        serviceTags,
+        businessId,
+        phone: String(ui.form.phone || "").trim(),
+        email: String(ui.form.email || "").trim(),
+        address: String(ui.form.address || "").trim(),
+        website: String(ui.form.website || "").trim(),
+        notes: ui.form.notes || "",
+        photo: ui.form.photo || "",
+        updatedAt: stamp,
+      });
       if (ui.stash?.form?.peopleIds) ui.stash.form.peopleIds = Array.from(new Set([...(ui.stash.form.peopleIds || []), person.id, "myself"]));
       const backToTrip = !!ui.stash;
       await persist({ announce: "Contact saved" });
@@ -3262,6 +3302,10 @@ function onField(el) {
   }
   if (!ui.form) return;
   ui.form[el.name] = el.type === "checkbox" ? el.checked : el.value;
+  if (ui.form._kind === "person" && ["phone", "email", "website"].includes(el.name)) {
+    const slot = document.getElementById(`link-${el.name}`);
+    if (slot) slot.innerHTML = contactAnchorHtml(el.name, ui.form[el.name]);
+  }
   if (typeof ui.form[el.name] === "string" && (el.name === "catchName" || el.name === "notes" || el.name === "narrative" || el.name === "bestText" || el.name === "detail" || el.name === "filmNote" || /Note$/.test(el.name))) {
     const cleaned = el.name === "catchName" ? undupeWord(ui.form[el.name]) : spaceSentences(ui.form[el.name]);
     if (cleaned !== el.value) {
