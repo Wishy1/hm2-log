@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="hm2-tester-instructions" content="5">
+<title>HM2 Log v5 tester instructions</title>
+<style>
+  :root {
+    --navy: #0b2340;
+    --blue: #1f6feb;
+    --gold: #ffd166;
+    --ink: #0b2340;
+    --muted: #4a5a70;
+    --line: #d3dbe6;
+    --paper: #f7f9fc;
+    --card: #f4f8fd;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--paper); color: var(--ink); }
+  body {
+    font-family: -apple-system, system-ui, "Segoe UI", sans-serif;
+    font-size: 18px;
+    line-height: 1.45;
+  }
+  .mast {
+    background: var(--navy);
+    color: #fff;
+    padding: 28px 20px 22px;
+  }
+  .mast-inner { max-width: 40rem; margin: 0 auto; }
+  h1 {
+    font-family: Georgia, "Iowan Old Style", Palatino, serif;
+    font-size: 32px;
+    line-height: 1.15;
+    margin: 0 0 8px;
+    font-weight: 700;
+  }
+  .ver {
+    display: inline-block;
+    margin-left: 8px;
+    font-family: -apple-system, system-ui, "Segoe UI", sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    background: var(--gold);
+    color: var(--navy);
+    border-radius: 999px;
+    padding: 2px 8px;
+    vertical-align: 6px;
+  }
+  .mast p { margin: 0; color: #d5e4f5; }
+  main { max-width: 40rem; margin: 0 auto; padding: 8px 20px 48px; }
+  h2 {
+    font-family: Georgia, "Iowan Old Style", Palatino, serif;
+    font-size: 26px;
+    line-height: 1.2;
+    margin: 28px 0 8px;
+    font-weight: 700;
+  }
+  h3 { font-size: 20px; margin: 18px 0 6px; }
+  p { margin: 0 0 12px; }
+  a { color: var(--blue); }
+  ol, ul { margin: 0 0 12px; padding-left: 1.3em; }
+  li { margin: 0 0 8px; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92em;
+    background: #e7eef8;
+    padding: 0 4px;
+    border-radius: 4px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 5px solid var(--blue);
+    border-radius: 18px;
+    padding: 14px 16px;
+    margin: 16px 0;
+  }
+  .card.gold { border-left-color: var(--gold); background: #fffdf6; }
+  .url {
+    display: block;
+    background: var(--navy);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 16px;
+    padding: 16px;
+    font-weight: 700;
+    word-break: break-word;
+  }
+  a:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+  .quiet { color: var(--muted); }
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="mast-inner">
+    <h1>HM2 Log <span class="ver">v5</span></h1>
+    <p>Tester instructions. This file stands on its own.</p>
+  </div>
+</header>
+<main>
+  <section class="card gold">
+    <p>Open the log at this address:</p>
+    <p><a class="url" href="https://wishy1.github.io/hm2-log/">https://wishy1.github.io/hm2-log/</a></p>
+  </section>
+
+  <h2>What this is</h2>
+  <p>HM2 Log v5 is a phone-first log for two boats, Halve Maan II and Zeeotter. Trips, notes, fuel, water, washes, and pump-outs stay on the phone, in this browser.</p>
+  <p>The saved log is an IndexedDB database named <code>hm2log-v5</code>. If the phone cannot open IndexedDB, the same snapshot is kept in local storage under the key <code>hm2log-v5</code>. An unfinished form waits in local storage under <code>hm2log-v5-drafts</code> until you save it or discard it.</p>
+  <p>A normal save stays on the phone. The live site does not send the log to a server.</p>
+
+  <h2>Open it on a phone</h2>
+  <ol>
+    <li>On an iPhone, use Safari. On another phone, use the browser you usually use.</li>
+    <li>Go to <a href="https://wishy1.github.io/hm2-log/">https://wishy1.github.io/hm2-log/</a>.</li>
+    <li>Wait until you see Halve Maan II, a Zeeotter button, and Start a trip. The first open needs a signal.</li>
+  </ol>
+  <p>The bar along the bottom is Boat, Trip, Journal, Media, and More. Boat is the main page. Tap the HM2 Log title at the top to come back to Boat.</p>
+
+  <h2>Add it to an iPhone home screen</h2>
+  <p>The site is already a web app. It has a home-screen manifest and a service worker. There is nothing to get from the App Store.</p>
+  <ol>
+    <li>Open the address above in Safari.</li>
+    <li>Tap More (the … button) beside the address bar, then tap Share. On an older iPhone, or when Safari’s tabs sit at the top or the bottom, Share is the square with an arrow pointing up. Tap that.</li>
+    <li>Scroll the list and tap Add to Home Screen. If it is missing, scroll to the bottom of the list, tap Edit Actions, and add Add to Home Screen.</li>
+    <li>The name should read HM2 Log. If you see Open as Web App, turn that on. Then tap Add.</li>
+    <li>Leave Safari and tap the HM2 Log icon on the home screen.</li>
+  </ol>
+  <p>The icon should open the log on its own, without Safari’s address bar. After this first load, the service worker keeps a copy of the app on the phone, so the screen can open again when the signal is poor.</p>
+
+  <h2>What to try</h2>
+  <p>Use the phone you will actually test on. Five passes are enough: switch boats, start a trip, add boat activity, check the forecast, and save once with no signal.</p>
+
+  <h3>Switch boats</h3>
+  <p>On Boat, tap Zeeotter, then tap Halve Maan II. The filled blue button is the boat you are on. The line under HM2 Log v5 changes to that boat’s name. Halve Maan II records fuel and water in gallons and dollars. Zeeotter records them in liters and euros. Each boat keeps its own trips.</p>
+
+  <h3>Start a trip</h3>
+  <p>On Boat, under Current trip, tap Start a trip. The page needs a departure and a destination. The trip name can stay blank. The hour meter, the ETA game, Before you go, and the weather line can stay as they are. Scroll to the bottom and tap Depart.</p>
+  <ol>
+    <li>Tap Departure. In Search, type a place and tap it. Mariner Cove is Halve Maan II’s home dock. Jirnsum (RFU) is Zeeotter’s. Recents is empty until you have used a place. Favorites and All are there too.</li>
+    <li>Tap Destination and pick a different place the same way. La Conner is a short Halve Maan II hop. Sneek is a short Zeeotter hop.</li>
+    <li>Tap Depart.</li>
+  </ol>
+  <p>The trip should show as Underway, with the message “Underway. Saved on this phone.” A gold Add note bar sits under the header while a trip is underway. Save as planned keeps the trip without departing.</p>
+
+  <h3>Add boat activity</h3>
+  <p>Tap HM2 Log at the top to return to Boat. Under Add boat activity the page says dock work, a tank fill, washing, or a pump-out, and that no trip is required. Tap Add boat activity. Leave the entry as “No trip — boat activity only.”</p>
+  <ul>
+    <li>Dock work: tap Repair. Write what you did, or name the parts. Tap Save.</li>
+    <li>Tank fill: tap Fuel or Water. The tank name is already filled in. Enter the quantity you added and a total cost. Zero is a fine cost. Tap Save.</li>
+    <li>Wash: tap Wash, write what you washed, and tap Save.</li>
+    <li>Pump-out: tap Pump-out, choose a place or write a note, and tap Save.</li>
+  </ul>
+  <p>A saved activity shows in the list, and the green banner says “Saved on this phone.”</p>
+
+  <h3>Check the forecast</h3>
+  <p>On Boat, scroll to Forecast. Until you read one, it says “No conditions saved yet.” With a signal, tap Read conditions. The log asks Open-Meteo for that boat and saves the line on the phone. You should see “Forecast saved on this phone,” and the line on the card.</p>
+  <p>Forecast zones opens the outside forecast pages. Halve Maan II uses Northern Inland Waters &amp; San Juans, Admiralty Inlet, and Puget Sound &amp; Hood Canal. Zeeotter uses KNMI wind &amp; weather (Netherlands), Windfinder · IJsselmeer, and the UK inshore waters forecast. Those pages need a signal.</p>
+  <p>With no signal, Read conditions says “No signal. Type the conditions. The zone pages need a signal too.”</p>
+
+  <h3>Save with no signal</h3>
+  <p>This is already how the log works. Watch the line under the boat name in the header.</p>
+  <ol>
+    <li>While you have a signal, that line says “Saved on this phone.”</li>
+    <li>Turn on airplane mode, or leave the phone with no data.</li>
+    <li>The line should change to “No signal. Saved on this phone.”</li>
+    <li>Save a note or a boat activity anyway. It should still save. The entry is written to <code>hm2log-v5</code> on this phone. It does not wait for a signal.</li>
+    <li>Turn the signal back on. The line should return to “Saved on this phone.”</li>
+    <li>Leave the log and open it again. The trip and the activity should still be there.</li>
+  </ol>
+
+  <h2>Leave Google sync off</h2>
+  <div class="card gold">
+    <p>Leave Google sync off. On More, then Google sync, leave the web app address blank. Do not enter a token. Do not tap Save connection. Google sync is off on purpose. This test does not connect the log to a Google account. The screen should stay “Not connected.”</p>
+  </div>
+  <p>You can skip the rest of that screen. If you want a look at a pretend sync, the section Practice on this phone has Turn on sample demo. That draws a sample spreadsheet and a sample trip journal on this phone only. The endpoint line reads “demo endpoint.” Nothing is shared, and nothing leaves the phone. Turn sample demo off when you finish, if you turned it on.</p>
+
+  <h2>What to report</h2>
+  <p>Send Wishy anything that feels off, especially on a phone. A short note is enough.</p>
+  <ul>
+    <li>The phone, and on an iPhone the iOS version if you know it.</li>
+    <li>Whether you used Safari or the home-screen icon.</li>
+    <li>Which boat you were on, what you tapped, and what you expected.</li>
+    <li>Whether you had a signal.</li>
+  </ul>
+  <p>Please mention a save that disappeared, a button you could not reach, text that was cut off, a forecast that failed while you had a signal, or a home-screen icon that still showed the browser’s address bar.</p>
+  <p class="quiet">The log on this phone is only on this phone. Another phone does not see it. Clearing this site’s browser data deletes the log.</p>
+</main>
+</body>
+</html>

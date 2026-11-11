@@ -1213,6 +1213,10 @@ function screenHome() {
     <section class="card"><h2>Current trip</h2>
       ${current ? `<p><span class="pill${current.status === "underway" ? " warn" : ""}">${esc(statusLabel(current.status))}</span></p><p><strong>${esc(current.title)}</strong></p><p class="meta">${esc(current.tripCode || "")}</p><button type="button" class="btn primary" data-action="openTrip" data-id="${esc(current.id)}">Open trip log</button>` : `<p>No trip underway.</p><button type="button" class="btn primary" data-action="startTrip">Start a trip</button>`}
     </section>
+    <section class="card tester-card">
+      <p class="kicker">For testers</p>
+      <a class="btn block tester-download" href="hm2-log-v5-tester-instructions.html" download="HM2-Log-v5-tester-instructions.html" data-tester-instructions>Download tester instructions</a>
+    </section>
     <section class="card"><h2>Add boat activity</h2><p>Dock work, a tank fill, washing, or a pump-out. No trip required.</p>
       <button type="button" class="btn primary" data-action="activity">Add boat activity</button>
     </section>
@@ -3326,6 +3330,40 @@ async function onFile(input) {
 
 const LEAVE_ACTIONS = new Set(["nav", "goHome", "goBack", "back", "boat", "editTrip", "updateConditions", "addNote", "newEntry", "openEntry", "journal", "activity", "startTrip", "openTrip", "arrive", "best", "newMedia", "openMedia", "newTicket", "openTicket", "editTicket", "newPart", "openPart", "newPlace", "openPlace", "addPerson", "openPerson", "resumeDraft", "cancelForm", "cancelConditions"]);
 
+const TESTER_GUIDE = "hm2-log-v5-tester-instructions.html";
+let testerGuideText = "";
+
+function prefetchTesterGuide() {
+  fetch(TESTER_GUIDE)
+    .then((response) => (response.ok ? response.text() : ""))
+    .then((text) => {
+      if (text.includes("hm2-tester-instructions")) testerGuideText = text;
+    })
+    .catch(() => {});
+}
+
+function saveTesterGuide(event) {
+  const target = event.target instanceof Element ? event.target : event.target?.parentElement;
+  const link = target?.closest?.("[data-tester-instructions]");
+  if (!link || !testerGuideText) return;
+  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  const blob = new Blob([testerGuideText], { type: "application/octet-stream" });
+  const url = URL.createObjectURL(blob);
+  const saver = document.createElement("a");
+  saver.href = url;
+  saver.download = link.getAttribute("download") || "HM2-Log-v5-tester-instructions.html";
+  document.body.appendChild(saver);
+  saver.click();
+  saver.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+
+app.addEventListener("click", (event) => {
+  const target = event.target instanceof Element ? event.target : event.target?.parentElement;
+  if (target?.closest?.("[data-tester-instructions]")) saveTesterGuide(event);
+});
+
 app.addEventListener("click", (event) => {
   const btn = event.target.closest("[data-action]");
   if (!btn || !app.contains(btn)) return;
@@ -3422,6 +3460,7 @@ app.addEventListener("change", (event) => {
   }
 }
 
+prefetchTesterGuide();
 boot().catch((error) => {
   console.error(error);
   app.textContent = `HM2 Log v5 could not start. ${error.message || ""}`;

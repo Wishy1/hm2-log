@@ -1,4 +1,4 @@
-const CACHE = "hm2log-v5-8";
+const CACHE = "hm2log-v5-9";
 const FILES = [
   "./",
   "./index.html",
@@ -6,6 +6,7 @@ const FILES = [
   "./logic.js",
   "./styles.css",
   "./manifest.webmanifest",
+  "./hm2-log-v5-tester-instructions.html",
   "./icon-180.png",
   "./icon-192.png",
   "./icon-512.png",
